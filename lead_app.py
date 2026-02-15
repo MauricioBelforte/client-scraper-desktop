@@ -16,6 +16,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
+from src.constants import RUBROS_SUGERIDOS
 
 class TrelewLeadApp:
     """
@@ -57,18 +58,7 @@ class TrelewLeadApp:
         # Sección 1: Nueva Búsqueda (Online)
         tk.Label(search_frame, text="Nueva Búsqueda (Google Maps):", font=("Segoe UI", 9), bg="#f8f9fa").pack(side="left")
         
-        # Lista desplegable con rubros sugeridos (editable)
-        rubros_sugeridos = [
-            "Gimnasios", "Restaurantes", "Talleres Mecánicos", "Peluquerías", 
-            "Odontólogos", "Abogados", "Inmobiliarias", "Cervecerías", 
-            "Veterinarias", "Pizzerías", "Farmacias", "Escuelas de danza", 
-            "Estudios Contables", "Ferreterías", "Centros de Estética", 
-            "Barberías", "Psicólogos", "Nutricionistas", "Kinesiólogos", 
-            "Arquitectos", "Constructoras", "Salones de Eventos", 
-            "Servicios de Catering", "Escuelas de Idiomas", "Pet Shops", 
-            "Mueblerías", "Casas de Repuestos", "Heladerías", "Cafeterías"
-        ]
-        self.entry_rubro = ttk.Combobox(search_frame, values=rubros_sugeridos, width=28)
+        self.entry_rubro = ttk.Combobox(search_frame, values=RUBROS_SUGERIDOS, width=28)
         self.entry_rubro.pack(side="left", padx=5)
         self.entry_rubro.set("Gimnasios")
 
