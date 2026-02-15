@@ -428,7 +428,7 @@ class TrelewLeadApp:
             total = len(self.prospectos_datos)
             count = 0
             
-            # Iteramos sobre una copia de los items
+            # Iteramos sobre una copia de los items para poder modificar el diccionario original sin errores
             for nombre, datos in list(self.prospectos_datos.items()):
                 count += 1
                 
@@ -536,14 +536,14 @@ class TrelewLeadApp:
             original_window = driver.current_window_handle
             driver.switch_to.new_window('tab')
             
-            # Búsqueda OSINT: Nombre + Ciudad + palabras clave
+            # Búsqueda OSINT: Combinamos nombre, ciudad y palabras clave para maximizar la probabilidad de encontrar datos de contacto.
             query = f"{nombre} Trelew contacto email instagram facebook"
             driver.get(f"https://www.google.com/search?q={query.replace(' ', '+')}")
             time.sleep(random.uniform(2.5, 4)) # Espera humana
             
             # 1. Buscar Emails SOLO en los resultados (evitando header/scripts con datos de sesión)
             try:
-                # Buscamos dentro del contenedor principal de resultados (id="search" o "rso")
+                # Buscamos dentro del contenedor principal de resultados (id="search" o "rso") para evitar capturar emails de la UI de Google.
                 contenedor = driver.find_element(By.ID, "search")
                 texto_analisis = contenedor.get_attribute("innerHTML")
             except:
@@ -551,7 +551,7 @@ class TrelewLeadApp:
 
             # Regex para emails
             emails = re.findall(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}", texto_analisis)
-            # Filtrar basura técnica de Google
+            # Filtrar basura técnica: Excluimos dominios comunes de Google o ejemplos para obtener emails reales.
             emails_validos = [e for e in emails if not any(x in e for x in ['google.com', 'w3.org', 'rating', 'example', 'sentry', 'png', 'jpg', 'noreply'])]
             if emails_validos:
                 nuevos_datos['email'] = emails_validos[0] # Tomamos el primero que suele ser el más relevante
@@ -589,25 +589,25 @@ class TrelewLeadApp:
         options.add_argument("--lang=es-419") # Forzar español latino
         
         # --- MEDIDAS ANTI-DETECCIÓN (STEALTH) ---
-        # Estas opciones ocultan que el navegador está siendo controlado por software
+        # Estas opciones intentan ocultar que el navegador está siendo controlado por software de automatización.
         options.add_argument("--disable-blink-features=AutomationControlled") 
-        options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        options.add_experimental_option("useAutomationExtension", False)
+        options.add_experimental_option("excludeSwitches", ["enable-automation"]) # Oculta la barra "Chrome está siendo controlado..."
+        options.add_experimental_option("useAutomationExtension", False) # Desactiva extensiones de automatización
         
         # Forzamos WebGL y quitamos banderas de automatización
         # NOTA: Quitamos el User-Agent fijo para evitar conflictos con la versión real de Chrome instalada
         options.add_argument("--start-maximized") 
         # options.add_argument("--enable-webgl")
         # options.add_argument("--ignore-gpu-blocklist")
-        options.add_argument("--window-size=1920,1080") # Forzar resolución alta
+        options.add_argument("--window-size=1920,1080") # Forzar resolución alta para que carguen más elementos
         
         # --- OPTIMIZACIÓN DE RECURSOS (SEGUNDO PLANO) ---
         options.add_argument("--disable-background-timer-throttling")
         options.add_argument("--disable-backgrounding-occluded-windows")
         options.add_argument("--disable-renderer-backgrounding")
         
-        # --- PERFIL PERSISTENTE (Evita bloqueos y "Vista Limitada") ---
-        # Guarda cookies y caché en una carpeta local para parecer un usuario real recurrente
+        # --- PERFIL PERSISTENTE (La medida anti-bloqueo más importante) ---
+        # Guarda cookies, caché y sesiones en una carpeta local. Esto hace que el bot parezca un usuario real que vuelve a visitar el sitio.
         profile_dir = os.path.join(os.getcwd(), "selenium_profile")
         options.add_argument(f"--user-data-dir={profile_dir}")
         
@@ -626,7 +626,8 @@ class TrelewLeadApp:
                 raise e
 
             # --- TÉCNICA AVANZADA ANTI-DETECCIÓN (CDP) ---
-            # Inyecta el script antes de que cargue cualquier página para ocultar que es un robot de forma persistente
+            # Inyecta un script de JavaScript en cada página ANTES de que se cargue.
+            # Este script elimina la propiedad `navigator.webdriver`, que los sitios web usan para detectar bots.
             driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
                 "source": """
                     Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
@@ -652,6 +653,8 @@ class TrelewLeadApp:
                 return
 
             # --- SCROLL AUTOMÁTICO PARA CARGAR MÁS RESULTADOS ---
+            # En la lista inicial de resultados, hacemos scroll hacia abajo varias veces
+            # para forzar a Google Maps a cargar más negocios en el DOM antes de empezar a analizarlos.
             self.log("Haciendo scroll para cargar más resultados...")
             try:
                 feed = driver.find_element(By.XPATH, '//div[@role="feed"]')
@@ -664,8 +667,9 @@ class TrelewLeadApp:
 
             self.log("Identificando negocios sin sitio web...")
 
-            # Selector robusto: Busca tarjetas dentro del feed de resultados
-            # Usamos XPath para asegurar que el elemento contiene un enlace a un lugar (evita separadores)
+            # Selector robusto: Busca las "tarjetas" de cada negocio dentro del feed de resultados.
+            # Usamos un XPath que busca cualquier div que contenga un enlace a un lugar de Google Maps,
+            # lo que lo hace más resistente a cambios de clases CSS.
             locales = driver.find_elements(By.XPATH, "//div[@role='feed']/div/div[.//a[contains(@href, '/maps/place/')]]")
             
             if not locales:
@@ -788,8 +792,9 @@ class TrelewLeadApp:
 
                         # --- EXTRACCIÓN DE COMENTARIOS (NUEVO) ---
                         try:
-                            # 1. Intentar cambiar a la pestaña "Opiniones" para ver todas las reseñas
-                            # Usamos JS para evitar errores si el elemento está tapado
+                            # 1. Navegación a la pestaña "Opiniones"
+                            # Usamos un script de JS para hacer clic, ya que es más fiable que el .click() de Selenium
+                            # si el elemento está parcialmente oculto o hay otros elementos superpuestos.
                             try:
                                 driver.execute_script("""
                                     var tabs = document.querySelectorAll('button[role="tab"], button[aria-label*="Opiniones"], button[aria-label*="Reseñas"]');
@@ -808,7 +813,9 @@ class TrelewLeadApp:
                                 self.log(f"No se encontraron reseñas para {nombre} o la pestaña no cargó.")
                                 pass
                             
-                            # 2. SCROLL ROBUSTO Y MINIMIZACIÓN TEMPORAL
+                            # 2. SCROLL ROBUSTO EN RESEÑAS
+                            # Realizamos varios ciclos de scroll para cargar la mayor cantidad de reseñas posible.
+                            # El script busca cualquier div con barra de scroll y lo baja hasta el final.
                             self.log(f"Iniciando análisis de reseñas para {nombre}...")
                             for i in range(3): # Realizar 3 ciclos de scroll/carga
                                 # Hacemos scroll para pedir más contenido
@@ -834,7 +841,9 @@ class TrelewLeadApp:
                             reviews = driver.find_elements(By.CSS_SELECTOR, "div[data-review-id]")
                             
                             # --- MÉTODO DE RESPALDO: SCROLL POR TECLADO ---
-                            # Si el scroll JS no fue suficiente, usamos teclas físicas para forzar la carga
+                            # Si el scroll con JavaScript no cargó suficientes reseñas, simulamos la pulsación
+                            # de la tecla "Avance de Página" (Page Down), que es una interacción más "humana"
+                            # y a veces fuerza la carga de contenido que el scroll por JS no logra.
                             try:
                                 self.log("Reforzando carga de reseñas con teclado...")
                                 # Intentamos enfocar el último elemento o el contenedor principal
@@ -889,7 +898,8 @@ class TrelewLeadApp:
 
                         # --- VUELTA A INFORMACIÓN Y DATOS EXTRA (REDES/IMÁGENES) ---
                         try:
-                            # 1. Volver a la pestaña "Información" para ver datos de contacto y fotos
+                            # 1. Volver a la pestaña "Información" para buscar datos que no estaban en la vista principal.
+                            # Este patrón (Info -> Reseñas -> Info) asegura que todos los datos dinámicos se carguen.
                             driver.execute_script("""
                                 var tabs = document.querySelectorAll('button[role="tab"], button[aria-label*="Información"], button[aria-label*="Overview"]');
                                 for (var i = 0; i < tabs.length; i++) {
@@ -913,8 +923,9 @@ class TrelewLeadApp:
                                     time.sleep(1.5)
                             except: pass
 
-                            # 3. Búsqueda de Redes Sociales y Email (Estrategia Robusta)
-                            # Buscamos por selectores CSS específicos y XPath para mayor precisión
+                            # 3. Búsqueda de Redes Sociales y Email (Estrategia de Respaldo)
+                            # Buscamos enlaces que apunten a dominios específicos (facebook, instagram) o que contengan "mailto:".
+                            # El XPath se limita al panel principal (`div[role='main']`) para no capturar enlaces del resto de la página.
                             posibles_redes = driver.find_elements(By.XPATH, "//div[@role='main']//a[contains(@href, 'facebook.com') or contains(@href, 'instagram.com') or contains(@href, 'mailto:')]")
                             
                             for link in posibles_redes:
@@ -955,7 +966,8 @@ class TrelewLeadApp:
                         except Exception: pass
 
                         # --- LÓGICA DE FUSIÓN INTELIGENTE (MERGE) ---
-                        # Recuperamos datos previos si existen para no perder información valiosa
+                        # Si ya teníamos datos de este negocio de una búsqueda anterior, no sobrescribimos
+                        # información valiosa (ej. un email encontrado manualmente) con un resultado vacío ("No detectado").
                         datos_previos = self.prospectos_datos.get(nombre, {})
                         
                         # Lista de campos a verificar para no sobrescribir con vacíos
