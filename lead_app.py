@@ -16,7 +16,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
-from src.constants import RUBROS_SUGERIDOS
+from src.constants import RUBROS_SUGERIDOS, DATA_FOLDER, PROFILE_FOLDER
 
 class TrelewLeadApp:
     """
@@ -30,8 +30,8 @@ class TrelewLeadApp:
         self.root.configure(bg="#f8f9fa")
 
         # Crear carpeta de almacenamiento si no existe
-        if not os.path.exists("fichas_leads"):
-            os.makedirs("fichas_leads")
+        if not os.path.exists(DATA_FOLDER):
+            os.makedirs(DATA_FOLDER)
 
         # Configuración de Estilos para una apariencia moderna
         self.style = ttk.Style()
@@ -131,7 +131,7 @@ class TrelewLeadApp:
 
     def actualizar_lista_fichas(self):
         """Lee la carpeta 'fichas_leads' y actualiza el combobox."""
-        fichas = [f.replace(".json", "") for f in os.listdir("fichas_leads") if f.endswith(".json")]
+        fichas = [f.replace(".json", "") for f in os.listdir(DATA_FOLDER) if f.endswith(".json")]
         self.combo_fichas['values'] = fichas
         if fichas:
             self.combo_fichas.current(0)
@@ -142,7 +142,7 @@ class TrelewLeadApp:
         if not seleccion:
             return
         
-        filepath = os.path.join("fichas_leads", f"{seleccion}.json")
+        filepath = os.path.join(DATA_FOLDER, f"{seleccion}.json")
         try:
             with open(filepath, 'r', encoding='utf-8') as f:
                 datos_cargados = json.load(f)
@@ -354,7 +354,7 @@ class TrelewLeadApp:
         
         # --- LÓGICA DE FUSIÓN: Cargar datos previos si existen ---
         self.prospectos_datos = {}
-        archivo_previo = f"fichas_leads/{rubro}.json"
+        archivo_previo = os.path.join(DATA_FOLDER, f"{rubro}.json")
         
         if os.path.exists(archivo_previo):
             try:
@@ -405,7 +405,7 @@ class TrelewLeadApp:
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option("useAutomationExtension", False)
         options.add_argument("--start-maximized") 
-        profile_dir = os.path.join(os.getcwd(), "selenium_profile")
+        profile_dir = os.path.join(os.getcwd(), PROFILE_FOLDER)
         options.add_argument(f"--user-data-dir={profile_dir}")
         
         driver = None
@@ -445,7 +445,7 @@ class TrelewLeadApp:
             # Guardado final
             if rubro:
                 try:
-                    nombre_archivo = f"fichas_leads/{rubro}.json"
+                    nombre_archivo = os.path.join(DATA_FOLDER, f"{rubro}.json")
                     with open(nombre_archivo, 'w', encoding='utf-8') as f:
                         json.dump(self.prospectos_datos, f, ensure_ascii=False, indent=4)
                 except: pass
@@ -473,7 +473,7 @@ class TrelewLeadApp:
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option("useAutomationExtension", False)
         options.add_argument("--start-maximized") 
-        profile_dir = os.path.join(os.getcwd(), "selenium_profile")
+        profile_dir = os.path.join(os.getcwd(), PROFILE_FOLDER)
         options.add_argument(f"--user-data-dir={profile_dir}")
         
         driver = None
@@ -497,7 +497,7 @@ class TrelewLeadApp:
                     self.prospectos_datos[nombre] = datos
                     if rubro:
                         try:
-                            nombre_archivo = f"fichas_leads/{rubro}.json"
+                            nombre_archivo = os.path.join(DATA_FOLDER, f"{rubro}.json")
                             with open(nombre_archivo, 'w', encoding='utf-8') as f:
                                 json.dump(self.prospectos_datos, f, ensure_ascii=False, indent=4)
                         except: pass
@@ -598,7 +598,7 @@ class TrelewLeadApp:
         
         # --- PERFIL PERSISTENTE (La medida anti-bloqueo más importante) ---
         # Guarda cookies, caché y sesiones en una carpeta local. Esto hace que el bot parezca un usuario real que vuelve a visitar el sitio.
-        profile_dir = os.path.join(os.getcwd(), "selenium_profile")
+        profile_dir = os.path.join(os.getcwd(), PROFILE_FOLDER)
         options.add_argument(f"--user-data-dir={profile_dir}")
         
         # options.add_argument("--headless") # Activar si se prefiere ocultar la ventana
@@ -986,7 +986,7 @@ class TrelewLeadApp:
                         # --- GUARDADO INCREMENTAL (PERSISTENCIA) ---
                         # Guardamos en cada iteración para evitar pérdida de datos si se cierra el navegador
                         try:
-                            nombre_archivo = f"fichas_leads/{rubro}.json"
+                            nombre_archivo = os.path.join(DATA_FOLDER, f"{rubro}.json")
                             with open(nombre_archivo, 'w', encoding='utf-8') as f:
                                 json.dump(self.prospectos_datos, f, ensure_ascii=False, indent=4)
                         except Exception: pass
@@ -1008,7 +1008,7 @@ class TrelewLeadApp:
             
             # --- GUARDADO AUTOMÁTICO AL FINALIZAR ---
             if self.prospectos_datos:
-                nombre_archivo = f"fichas_leads/{rubro}.json"
+                nombre_archivo = os.path.join(DATA_FOLDER, f"{rubro}.json")
                 with open(nombre_archivo, 'w', encoding='utf-8') as f:
                     json.dump(self.prospectos_datos, f, ensure_ascii=False, indent=4)
                 self.log(f"Datos guardados en {nombre_archivo}")
