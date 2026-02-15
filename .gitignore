@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+
+# Selenium / Chrome
+selenium_profile/
+chromedriver.exe
+*.log
+
+# Datos recolectados (Opcional: para no subir tus leads)
+fichas_leads/*.json
+fichas_respaldo/*.json
+Imagenes extras/
