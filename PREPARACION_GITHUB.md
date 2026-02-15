@@ -4,7 +4,7 @@ Sigue esta lista de verificación para dejar tu proyecto **client-scraper-deskto
 
 ## 1. Documentación y Archivos Base 📄
 - [x] **Crear `README.md`**: Ya tienes un borrador. Asegúrate de que esté actualizado con las últimas funciones (Enriquecimiento masivo, Búsqueda profunda).
-- [ ] **Crear `LICENSE`**: (Pendiente para futura mejora) Agrega un archivo llamado `LICENSE` con el texto de la licencia MIT.
+- [x] **Crear `LICENSE`**: Agrega un archivo llamado `LICENSE` (sin extensión) con el texto de la licencia MIT (recomendada para open source).
 - [x] **Crear `.gitignore`**: Vital para no subir archivos basura, perfiles de navegador pesados o datos privados.
 - [x] **Crear `requirements.txt`**: Generado con las dependencias básicas (`selenium`, `webdriver-manager`).
 
@@ -47,5 +47,4 @@ Crea un archivo llamado `requirements.txt` y pega esto:
 ```text
 selenium
 webdriver-manager
-requests
 ```
