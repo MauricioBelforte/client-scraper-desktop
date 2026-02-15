@@ -11,6 +11,8 @@ Sigue esta lista de verificación para dejar tu proyecto **client-scraper-deskto
 ## 2. Limpieza y Seguridad 🔒
 - [ ] **Revisar Datos Sensibles**: Asegúrate de que no haya contraseñas, emails personales hardcodeados o claves API reales en el código (`lead_app.py`).
 - [ ] **Verificar `selenium_profile`**: Asegúrate de que la carpeta de perfil de Chrome NO se suba (esto se maneja con el `.gitignore`).
+- [x] **Revisar Datos Sensibles**: Asegúrate de que no haya contraseñas, emails personales hardcodeados o claves API reales en el código (`lead_app.py`).
+- [x] **Verificar `selenium_profile`**: Asegúrate de que la carpeta de perfil de Chrome NO se suba (esto se maneja con el `.gitignore`).
 
 ## 3. Código y Estructura 🛠️
 - [ ] **Comentarios**: Revisa `lead_app.py` y agrega comentarios explicativos en las funciones complejas (como la lógica de scroll o los selectores XPath).
