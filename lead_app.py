@@ -19,6 +19,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import src.constants as constantes
 from src.gestor_datos import GestorDatos
 from src.utilidades import abrir_whatsapp
+from src.scroll_strategies import ejecutar_scroll_agresivo
 
 class TrelewLeadApp:
     """
@@ -129,6 +130,15 @@ class TrelewLeadApp:
         """Actualiza la barra de estado inferior."""
         self.status_label.config(text=f"⚙️ {mensaje}")
         self.root.update_idletasks()
+
+    def solicitar_confirmacion_usuario(self, mensaje):
+        """Muestra un cartel y detiene el hilo hasta que el usuario acepte."""
+        event = threading.Event()
+        def show():
+            messagebox.showinfo("Pausa Manual", mensaje)
+            event.set()
+        self.root.after(0, show)
+        event.wait()
 
     def actualizar_lista_fichas(self):
         """Lee la carpeta 'fichas_leads' y actualiza el combobox."""
@@ -799,25 +809,8 @@ class TrelewLeadApp:
                             # Realizamos varios ciclos de scroll para cargar la mayor cantidad de reseñas posible.
                             # El script busca cualquier div con barra de scroll y lo baja hasta el final.
                             self.log(f"Iniciando análisis de reseñas para {nombre}...")
-                            for i in range(3): # Realizar 3 ciclos de scroll/carga
-                                # Hacemos scroll para pedir más contenido
-                                driver.execute_script("""
-                                    var divs = document.querySelectorAll('div');
-                                    for (var j = 0; j < divs.length; j++) {
-                                        var s = window.getComputedStyle(divs[j]);
-                                        if ((s.overflowY === 'auto' || s.overflowY === 'scroll') && divs[j].scrollHeight > divs[j].clientHeight) {
-                                            if (divs[j].clientHeight > 100) {
-                                                divs[j].scrollTop = divs[j].scrollHeight;
-                                                divs[j].dispatchEvent(new WheelEvent('wheel', { deltaY: 1000, bubbles: true }));
-                                            }
-                                        }
-                                    }
-                                """)
-                                
-                                # Espera simple para carga de reseñas sin minimizar
-                                self.log(f"Cargando reseñas (ciclo {i+1}/3)...")
-                                time.sleep(random.uniform(2, 4))
-                                time.sleep(1) # Pequeña pausa para que se redibuje
+                            # ESTRATEGIA DE SCROLL AGRESIVA (LEGACY)
+                            # ejecutar_scroll_agresivo(driver, self.log)
 
                             # Buscar tarjetas de review (div con data-review-id es un selector fuerte)
                             reviews = driver.find_elements(By.CSS_SELECTOR, "div[data-review-id]")
@@ -829,16 +822,35 @@ class TrelewLeadApp:
                             try:
                                 self.log("Reforzando carga de reseñas con teclado...")
                                 # Intentamos enfocar el contenedor principal (evitando clicks en botones de reseñas)
-                                foco = driver.find_element(By.CSS_SELECTOR, "div[role='main']")
-                                # Clic en el borde superior izquierdo para evitar botones interactivos
-                                ActionChains(driver).move_to_element_with_offset(foco, 10, 10).click().perform()
-                                time.sleep(0.5)
                                 
-                                for _ in range(3): # 3 bajadas de página adicionales
-                                    ActionChains(driver).send_keys(Keys.PAGE_DOWN).perform()
-                                    time.sleep(1.5)
+                                # CORRECCIÓN: Selección precisa del panel por nombre (igual que en Info)
+                                candidates = driver.find_elements(By.CSS_SELECTOR, "div[role='main']")
+                                foco = None
+                                for c in candidates:
+                                    if c.is_displayed():
+                                        try:
+                                            h1_text = c.find_element(By.TAG_NAME, "h1").text
+                                            if nombre.lower() in h1_text.lower() or h1_text.lower() in nombre.lower():
+                                                foco = c
+                                                break
+                                        except: pass
                                 
-                                reviews = driver.find_elements(By.CSS_SELECTOR, "div[data-review-id]")
+                                # Fallback: Si no coincide nombre, usamos el último visible
+                                if not foco:
+                                    visibles = [x for x in candidates if x.is_displayed()]
+                                    if visibles:
+                                        foco = visibles[-1]
+
+                                if foco:
+                                    # Clic en el borde superior izquierdo para evitar botones interactivos
+                                    ActionChains(driver).move_to_element_with_offset(foco, 10, 10).click().perform()
+                                    time.sleep(0.5)
+                                    
+                                    for _ in range(3): # 3 bajadas de página adicionales
+                                        ActionChains(driver).send_keys(Keys.PAGE_DOWN).perform()
+                                        time.sleep(1.5)
+                                    
+                                    reviews = driver.find_elements(By.CSS_SELECTOR, "div[data-review-id]")
                             except: pass
                             
                             # Fallback: Si no hay reseñas (falló la pestaña), intentar scrollear el panel principal (Overview)
@@ -879,6 +891,10 @@ class TrelewLeadApp:
 
                         except: pass 
 
+                        # --- PUNTO DE PAUSA SOLICITADO ---
+                        # Frenamos aquí para verificar visualmente antes de volver a la info general
+                        self.solicitar_confirmacion_usuario(f"Terminé de leer reseñas de: {nombre}.\n\nVoy a intentar volver a la descripción general.\nVerifica el navegador.")
+
                         # --- VUELTA A INFORMACIÓN Y DATOS EXTRA (REDES/IMÁGENES) ---
                         try:
                             # 1. Volver a la pestaña "Información" para buscar datos que no estaban en la vista principal.
@@ -902,11 +918,24 @@ class TrelewLeadApp:
                             try:
                                 # Buscamos todos los paneles y usamos el que es visible para evitar interactuar con paneles ocultos/viejos
                                 candidates = driver.find_elements(By.CSS_SELECTOR, "div[role='main']")
+                                
+                                # Buscamos el panel que corresponde al negocio actual por nombre
                                 for c in candidates:
                                     if c.is_displayed():
-                                        main_div = c
-                                        break
+                                        try:
+                                            h1_text = c.find_element(By.TAG_NAME, "h1").text
+                                            # Comparación laxa para evitar problemas con mayúsculas/espacios
+                                            if nombre.lower() in h1_text.lower() or h1_text.lower() in nombre.lower():
+                                                main_div = c
+                                                break
+                                        except: pass
                                 
+                                # Fallback: Si no coincide nombre, usamos el último visible
+                                if not main_div:
+                                    visibles = [x for x in candidates if x.is_displayed()]
+                                    if visibles:
+                                        main_div = visibles[-1]
+
                                 if main_div:
                                     # Hacemos varios scrolls progresivos para asegurar que carguen secciones inferiores (Redes, "Del propietario")
                                     for _ in range(3):
