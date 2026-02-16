@@ -18,6 +18,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import src.constants as constantes
 from src.gestor_datos import GestorDatos
+from src.utilidades import abrir_whatsapp
 
 class TrelewLeadApp:
     """
@@ -218,7 +219,7 @@ class TrelewLeadApp:
 
         # WhatsApp (Verde/Rojo)
         c_wa = constantes.COLOR_WHATSAPP if has_wa else constantes.COLOR_PELIGRO
-        tk.Button(btn_grid, text="WhatsApp", bg=c_wa, fg=constantes.COLOR_BLANCO, font=constantes.FUENTE_PEQUENA_NEGRITA, relief="flat", cursor="hand2" if has_wa else "arrow", command=lambda: self.abrir_whatsapp(nombre, tel) if has_wa else None).grid(row=0, column=0, padx=2, pady=2, sticky="ew")
+        tk.Button(btn_grid, text="WhatsApp", bg=c_wa, fg=constantes.COLOR_BLANCO, font=constantes.FUENTE_PEQUENA_NEGRITA, relief="flat", cursor="hand2" if has_wa else "arrow", command=lambda: abrir_whatsapp(nombre, tel) if has_wa else None).grid(row=0, column=0, padx=2, pady=2, sticky="ew")
 
         # Facebook (Azul/Rojo)
         c_fb = constantes.COLOR_FACEBOOK if has_fb else constantes.COLOR_PELIGRO
@@ -374,21 +375,6 @@ class TrelewLeadApp:
                 self.prospectos_datos = {}
         
         threading.Thread(target=self.ejecutar_scraping, args=(rubro,), daemon=True).start()
-
-    def abrir_whatsapp(self, nombre, tel):
-        """Procesa el contacto y abre el navegador con la API de WhatsApp."""
-        if "Sin" in tel or not tel:
-            messagebox.showwarning("Error", constantes.MSJ_ERROR_SIN_TELEFONO)
-            return
-
-        # Limpieza de número para formato internacional
-        numero_limpio = "".join(filter(str.isdigit, tel))
-        if not numero_limpio.startswith("54"):
-            numero_limpio = "549" + numero_limpio
-
-        mensaje = f"Hola {nombre}, vi tu negocio en Maps. Noté que no tienen sitio web propio y me gustaría enviarte una propuesta para potenciar su presencia digital en Trelew. ¿Te interesaría conversar?"
-        url = f"https://wa.me/{numero_limpio}?text={mensaje.replace(' ', '%20')}"
-        webbrowser.open(url)
 
     def lanzar_enriquecimiento_masivo(self):
         if not self.prospectos_datos:
