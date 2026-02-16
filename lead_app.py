@@ -19,7 +19,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import src.constants as constantes
 from src.gestor_datos import GestorDatos
 from src.utilidades import abrir_whatsapp
-from src.scroll_strategies import ejecutar_scroll_agresivo
+from src.scroll_strategies import estrategia_scroll_js_focalizado, estrategia_scroll_teclado
 
 class TrelewLeadApp:
     """
@@ -808,50 +808,35 @@ class TrelewLeadApp:
                             # 2. SCROLL ROBUSTO EN RESEÑAS
                             # Realizamos varios ciclos de scroll para cargar la mayor cantidad de reseñas posible.
                             # El script busca cualquier div con barra de scroll y lo baja hasta el final.
-                            self.log(f"Iniciando análisis de reseñas para {nombre}...")
-                            # ESTRATEGIA DE SCROLL AGRESIVA (LEGACY)
-                            # ejecutar_scroll_agresivo(driver, self.log)
-
-                            # Buscar tarjetas de review (div con data-review-id es un selector fuerte)
-                            reviews = driver.find_elements(By.CSS_SELECTOR, "div[data-review-id]")
+                            self.log(f"Analizando reseñas de {nombre}...")
                             
-                            # --- MÉTODO DE RESPALDO: SCROLL POR TECLADO ---
-                            # Si el scroll con JavaScript no cargó suficientes reseñas, simulamos la pulsación
-                            # de la tecla "Avance de Página" (Page Down), que es una interacción más "humana"
-                            # y a veces fuerza la carga de contenido que el scroll por JS no logra.
+                            # --- PASO 1: IDENTIFICAR EL PANEL CORRECTO ---
+                            # Buscamos el panel visible que tenga el título del negocio
+                            panel_resenas = None
                             try:
-                                self.log("Reforzando carga de reseñas con teclado...")
-                                # Intentamos enfocar el contenedor principal (evitando clicks en botones de reseñas)
-                                
-                                # CORRECCIÓN: Selección precisa del panel por nombre (igual que en Info)
                                 candidates = driver.find_elements(By.CSS_SELECTOR, "div[role='main']")
-                                foco = None
                                 for c in candidates:
                                     if c.is_displayed():
                                         try:
                                             h1_text = c.find_element(By.TAG_NAME, "h1").text
                                             if nombre.lower() in h1_text.lower() or h1_text.lower() in nombre.lower():
-                                                foco = c
+                                                panel_resenas = c
                                                 break
                                         except: pass
-                                
                                 # Fallback: Si no coincide nombre, usamos el último visible
-                                if not foco:
+                                if not panel_resenas:
                                     visibles = [x for x in candidates if x.is_displayed()]
-                                    if visibles:
-                                        foco = visibles[-1]
-
-                                if foco:
-                                    # Clic en el borde superior izquierdo para evitar botones interactivos
-                                    ActionChains(driver).move_to_element_with_offset(foco, 10, 10).click().perform()
-                                    time.sleep(0.5)
-                                    
-                                    for _ in range(3): # 3 bajadas de página adicionales
-                                        ActionChains(driver).send_keys(Keys.PAGE_DOWN).perform()
-                                        time.sleep(1.5)
-                                    
-                                    reviews = driver.find_elements(By.CSS_SELECTOR, "div[data-review-id]")
+                                    if visibles: panel_resenas = visibles[-1]
                             except: pass
+
+                            # --- PASO 2: EJECUTAR ESTRATEGIAS MODULARES ---
+                            if panel_resenas:
+                                # Podemos llamar a una, a la otra, o a ambas en secuencia
+                                # estrategia_scroll_js_focalizado(driver, panel_resenas, self.log)
+                                 estrategia_scroll_teclado(driver, panel_resenas, self.log)
+
+                            # Buscar tarjetas de review (div con data-review-id es un selector fuerte)
+                            reviews = driver.find_elements(By.CSS_SELECTOR, "div[data-review-id]")
                             
                             # Fallback: Si no hay reseñas (falló la pestaña), intentar scrollear el panel principal (Overview)
                             # A veces las reseñas están abajo en la portada y no en la pestaña dedicada.

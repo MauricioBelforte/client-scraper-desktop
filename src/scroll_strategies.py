@@ -1,31 +1,69 @@
 import time
 import random
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
 
-def ejecutar_scroll_agresivo(driver, logger=None):
-    """
-    Estrategia de scroll agresiva que busca todos los divs con scroll y los baja.
-    NOTA: Puede afectar el feed principal si no se tiene cuidado.
-    """
-    if logger:
-        logger("Iniciando scroll agresivo (Estrategia Legacy)...")
 
-    for i in range(3): # Realizar 3 ciclos de scroll/carga
-        # Hacemos scroll para pedir más contenido
-        driver.execute_script("""
-            var divs = document.querySelectorAll('div');
-            for (var j = 0; j < divs.length; j++) {
-                var s = window.getComputedStyle(divs[j]);
-                if ((s.overflowY === 'auto' || s.overflowY === 'scroll') && divs[j].scrollHeight > divs[j].clientHeight) {
-                    if (divs[j].clientHeight > 100) {
-                        divs[j].scrollTop = divs[j].scrollHeight;
-                        divs[j].dispatchEvent(new WheelEvent('wheel', { deltaY: 1000, bubbles: true }));
-                    }
-                }
+
+
+def estrategia_scroll_js_focalizado(driver, parent_element, logger=None):
+    """
+    QUÉ HACE:
+    Ejecuta un scroll rápido manipulando el DOM directamente con JavaScript,
+    pero limitado a un contenedor específico.
+
+    CÓMO LO HACE:
+    Busca todos los 'div' dentro de 'parent_element'. Si tienen scroll vertical
+    (scrollHeight > clientHeight), mueve la barra hasta el final.
+
+    VENTAJA:
+    - Velocidad: Es instantáneo.
+    - Seguridad: Al recibir un 'parent_element', no afecta al menú lateral ni a otros elementos.
+    """
+    if logger: logger("Ejecutando Estrategia 1: Scroll JS (Rápido)...")
+    
+    # Script optimizado para buscar scrollbars solo dentro del padre
+    driver.execute_script("""
+        var parent = arguments[0];
+        var divs = parent.querySelectorAll('div');
+        for (var i = 0; i < divs.length; i++) {
+            var d = divs[i];
+            if (d.scrollHeight > d.clientHeight) {
+                d.scrollTop = d.scrollHeight;
             }
-        """)
-        
-        # Espera simple para carga de reseñas sin minimizar
-        if logger:
-            logger(f"Cargando reseñas (ciclo {i+1}/3)...")
-        time.sleep(random.uniform(2, 4))
-        time.sleep(1) # Pequeña pausa para que se redibuje
+        }
+    """, parent_element)
+    
+    time.sleep(1.5) # Breve espera para carga
+
+
+
+
+
+
+def estrategia_scroll_teclado(driver, parent_element, logger=None):
+    """
+    QUÉ HACE:
+    Simula pulsaciones físicas de teclas (Page Down) sobre el elemento.
+
+    CÓMO LO HACE:
+    1. Hace clic en una esquina neutral del elemento para darle 'foco'.
+    2. Envía la tecla PAGE_DOWN varias veces con pausas humanas.
+
+    VENTAJA:
+    - Naturalidad: Google Maps detecta esto como un humano real.
+    - Efectividad: A menudo activa eventos de carga (lazy load) que JS ignora.
+    """
+    if logger: logger("Ejecutando Estrategia 2: Scroll Teclado (Humano)...")
+
+    try:
+        # 1. Dar foco (Clic en esquina superior izquierda, offset 10,10)
+        ActionChains(driver).move_to_element_with_offset(parent_element, 10, 10).click().perform()
+        time.sleep(0.5)
+
+        # 2. Pulsar teclas
+        for _ in range(3):
+            ActionChains(driver).send_keys(Keys.PAGE_DOWN).perform()
+            time.sleep(random.uniform(1.0, 1.5))
+    except Exception as e:
+        if logger: logger(f"⚠️ Falló estrategia teclado: {e}")
