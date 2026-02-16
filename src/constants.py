@@ -14,73 +14,76 @@ RUBROS_SUGERIDOS = [
 
 # Nombres de las carpetas del sistema.
 # Si se requiere cambiar el nombre de una carpeta, se cambia el texto de la derecha, no el nombre de la variable.
-DATA_FOLDER = "fichas_leads"
-PROFILE_FOLDER = "selenium_profile"
+CARPETA_DATOS = "fichas_leads"
+CARPETA_PERFIL = "selenium_profile"
 
 # --- CONFIGURACIÓN DE ESTILO (UI) ---
 
 # Colores Generales
-COLOR_BG = "#f8f9fa"
-COLOR_PRIMARY = "#1a73e8"
-COLOR_WHITE = "white"
-COLOR_BORDER = "#dee2e6"
-COLOR_TEXT_MUTED = "#6c757d"
-COLOR_TEXT_DARK = "#212529"
-COLOR_TEXT_LABEL = "#495057"
-COLOR_STATUS_BG = "#e9ecef"
+COLOR_FONDO = "#f8f9fa"
+COLOR_PRIMARIO = "#1a73e8"
+COLOR_BLANCO = "white"
+COLOR_BORDE = "#dee2e6"
+COLOR_TEXTO_TENUE = "#6c757d"
+COLOR_TEXTO_OSCURO = "#212529"
+COLOR_TEXTO_ETIQUETA = "#495057"
+COLOR_FONDO_ESTADO = "#e9ecef"
+COLOR_ENLACE = "blue"
+COLOR_FONDO_COMENTARIO = "#f1f3f4"
+COLOR_TEXTO_COMENTARIO = "#5f6368"
 
 # Colores de Acciones/Marcas
 COLOR_WHATSAPP = "#25D366"
-COLOR_DANGER = "#dc3545"
+COLOR_PELIGRO = "#dc3545"
 COLOR_FACEBOOK = "#3b5998"
 COLOR_INSTAGRAM = "#833AB4"
 COLOR_EMAIL = "#ffc107"
-COLOR_DARK_BTN = "#343a40"
-COLOR_INFO_BTN = "#17a2b8"
-COLOR_SEARCH_BTN = "#6f42c1"
+COLOR_BTN_OSCURO = "#343a40"
+COLOR_BTN_INFO = "#17a2b8"
+COLOR_BTN_BUSCAR = "#6f42c1"
 
 # Fuentes
-FONT_TITLE = ("Segoe UI", 18, "bold")
-FONT_SUBTITLE = ("Segoe UI", 14, "bold")
-FONT_NORMAL = ("Segoe UI", 10)
-FONT_BOLD = ("Segoe UI", 10, "bold")
-FONT_SMALL = ("Segoe UI", 9)
-FONT_SMALL_BOLD = ("Segoe UI", 9, "bold")
-FONT_ITALIC = ("Segoe UI", 10, "italic")
-FONT_TINY = ("Segoe UI", 8, "italic")
-FONT_LINK = ("Segoe UI", 10, "underline")
+FUENTE_TITULO = ("Segoe UI", 18, "bold")
+FUENTE_SUBTITULO = ("Segoe UI", 14, "bold")
+FUENTE_NORMAL = ("Segoe UI", 10)
+FUENTE_NEGRITA = ("Segoe UI", 10, "bold")
+FUENTE_PEQUENA = ("Segoe UI", 9)
+FUENTE_PEQUENA_NEGRITA = ("Segoe UI", 9, "bold")
+FUENTE_ITALICA = ("Segoe UI", 10, "italic")
+FUENTE_DIMINUTA = ("Segoe UI", 8, "italic")
+FUENTE_LINK = ("Segoe UI", 10, "underline")
 
 # --- TEXTOS DE LA INTERFAZ (UI) ---
-APP_TITLE = "Trelew Digital Leads - Prospector de Negocios"
-HEADER_TEXT = "TRELEW LEAD PROSPECTOR"
-SEARCH_FRAME_TITLE = " Gestión de Búsquedas "
-LABEL_NEW_SEARCH = "Nueva Búsqueda (Google Maps):"
-BTN_SEARCH = "🔍 BUSCAR Y GUARDAR"
-BTN_ENRICH = "🌍 ENRIQUECER TODOS"
-LABEL_LOAD_FILE = "📂 Cargar Ficha Guardada:"
-BTN_LOAD = "CARGAR"
-LABEL_RESULTS = "Emprendimientos Encontrados"
-COL_NAME = "Nombre"
-COL_STATUS = "Estado"
-CARD_PLACEHOLDER = "Selecciona un comercio\npara ver el detalle"
-STATUS_READY = "Listo para prospectar en Trelew"
-CARD_HEADER = "DETALLE DEL CLIENTE"
-LABEL_PHONE = "📱 Teléfono:"
-LABEL_WEB = "🌐 Web:"
-LABEL_CITY = "📍 Ciudad:"
-VALUE_NO_WEB = "No posee (Oportunidad)"
-VALUE_CITY = "Trelew, Chubut"
-BTN_CONTACT_ALL = "CONTACTAR POR TODOS LOS MEDIOS"
-BTN_VIEW_SHEET = "📄 VER FICHA TÉCNICA (WEB DEMO)"
-BTN_GOOGLE_SEARCH = "🌍 BUSCAR DATOS EXTRA (GOOGLE)"
-SHEET_HEADER = "DATOS PÚBLICOS PARA WEB DEMO"
-SECTION_COMMENTS = "Últimos Comentarios (Testimonios):"
-MSG_NO_COMMENTS = "No se encontraron comentarios recientes."
-FOOTER_NOTE = "* Los datos se guardan automáticamente en la carpeta 'fichas_leads'"
+TITULO_APP = "Trelew Digital Leads - Prospector de Negocios"
+TEXTO_ENCABEZADO = "TRELEW LEAD PROSPECTOR"
+TITULO_FRAME_BUSQUEDA = " Gestión de Búsquedas "
+ETIQUETA_NUEVA_BUSQUEDA = "Nueva Búsqueda (Google Maps):"
+BTN_BUSCAR = "🔍 BUSCAR Y GUARDAR"
+BTN_ENRIQUECER = "🌍 ENRIQUECER TODOS"
+ETIQUETA_CARGAR_ARCHIVO = "📂 Cargar Ficha Guardada:"
+BTN_CARGAR = "CARGAR"
+ETIQUETA_RESULTADOS = "Emprendimientos Encontrados"
+COLUMNA_NOMBRE = "Nombre"
+COLUMNA_ESTADO = "Estado"
+TEXTO_PLACEHOLDER_CARD = "Selecciona un comercio\npara ver el detalle"
+ESTADO_LISTO = "Listo para prospectar en Trelew"
+ENCABEZADO_CARD = "DETALLE DEL CLIENTE"
+ETIQUETA_TELEFONO = "📱 Teléfono:"
+ETIQUETA_WEB = "🌐 Web:"
+ETIQUETA_CIUDAD = "📍 Ciudad:"
+VALOR_SIN_WEB = "No posee (Oportunidad)"
+VALOR_CIUDAD = "Trelew, Chubut"
+BTN_CONTACTAR_TODOS = "CONTACTAR POR TODOS LOS MEDIOS"
+BTN_VER_FICHA = "📄 VER FICHA TÉCNICA (WEB DEMO)"
+BTN_BUSCAR_GOOGLE = "🌍 BUSCAR DATOS EXTRA (GOOGLE)"
+ENCABEZADO_FICHA = "DATOS PÚBLICOS PARA WEB DEMO"
+SECCION_COMENTARIOS = "Últimos Comentarios (Testimonios):"
+MSJ_SIN_COMENTARIOS = "No se encontraron comentarios recientes."
+NOTA_PIE = "* Los datos se guardan automáticamente en la carpeta 'fichas_leads'"
 
 # --- MENSAJES Y ALERTAS ---
-MSG_WARN_RUBRO = "Ingresa un rubro comercial para comenzar."
-MSG_ERR_NO_PHONE = "Este comercio no dispone de un teléfono válido."
-MSG_WARN_NO_LIST = "Primero debes buscar o cargar una lista de emprendimientos."
-MSG_CONFIRM_ENRICH = "Esto buscará datos extra en Google para {} contactos.\nEl proceso puede tardar unos minutos.\n¿Deseas continuar?"
-MSG_BROWSER_LOCKED = "No se pudo iniciar el robot.\n\nCierra todas las ventanas de Chrome (o el script de configuración) antes de buscar."
+MSJ_ADVERTENCIA_RUBRO = "Ingresa un rubro comercial para comenzar."
+MSJ_ERROR_SIN_TELEFONO = "Este comercio no dispone de un teléfono válido."
+MSJ_ADVERTENCIA_SIN_LISTA = "Primero debes buscar o cargar una lista de emprendimientos."
+MSJ_CONFIRMAR_ENRIQUECIMIENTO = "Esto buscará datos extra en Google para {} contactos.\nEl proceso puede tardar unos minutos.\n¿Deseas continuar?"
+MSJ_NAVEGADOR_BLOQUEADO = "No se pudo iniciar el robot.\n\nCierra todas las ventanas de Chrome (o el script de configuración) antes de buscar."
