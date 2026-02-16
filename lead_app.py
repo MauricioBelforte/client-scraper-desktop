@@ -828,9 +828,10 @@ class TrelewLeadApp:
                             # y a veces fuerza la carga de contenido que el scroll por JS no logra.
                             try:
                                 self.log("Reforzando carga de reseñas con teclado...")
-                                # Intentamos enfocar el último elemento o el contenedor principal
-                                foco = reviews[-1] if reviews else driver.find_element(By.CSS_SELECTOR, "div[role='main']")
-                                ActionChains(driver).move_to_element(foco).click().perform()
+                                # Intentamos enfocar el contenedor principal (evitando clicks en botones de reseñas)
+                                foco = driver.find_element(By.CSS_SELECTOR, "div[role='main']")
+                                # Clic en el borde superior izquierdo para evitar botones interactivos
+                                ActionChains(driver).move_to_element_with_offset(foco, 10, 10).click().perform()
                                 time.sleep(0.5)
                                 
                                 for _ in range(3): # 3 bajadas de página adicionales
@@ -992,6 +993,11 @@ class TrelewLeadApp:
                         
                         self.root.after(0, lambda n=nombre: actualizar_ui(n))
                     
+                    # Limpieza preventiva: Cerrar posibles modales (Share, Fotos) con ESC
+                    try:
+                        ActionChains(driver).send_keys(Keys.ESCAPE).perform()
+                    except: pass
+
                     # Pausa entre cada ítem analizado
                     time.sleep(random.uniform(2, 4)) # Aumentado para mayor precisión
                     
