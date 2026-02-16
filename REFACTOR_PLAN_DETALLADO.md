@@ -9,7 +9,7 @@ client-scraper-desktop/
 │   ├── __init__.py
 │   ├── constants.py      # (Fase 1)
 │   ├── utils.py          # (Fase 2)
-│   ├── data_manager.py   # (Fase 3)
+│   ├── gestor_datos.py   # (Fase 3)
 │   ├── ui_manager.py     # (Fase 4)
 │   └── scraper.py        # (Fase 5)
 ├── lead_app.py           # (Se convertirá en el orquestador/controlador)
@@ -44,10 +44,10 @@ client-scraper-desktop/
 
 *Objetivo: Crear una clase dedicada exclusivamente a leer y escribir archivos en el disco.*
 
-- [ ] **9. Crear Clase `DataManager`:** Crea el archivo `src/data_manager.py` con una clase `DataManager`. Su `__init__` debe recibir el path de la carpeta de datos.
-- [ ] **10. Mover Lógica de Guardado:** Mueve la lógica de `open(..., 'w')` y `json.dump()` de `ejecutar_scraping` y `ejecutar_enriquecimiento_masivo` a un método `save_prospects(self, filename, data)` en `DataManager`.
-- [ ] **11. Mover Lógica de Carga:** Mueve la lógica de `open(..., 'r')` y `json.load()` de `cargar_ficha_offline` y `start_scraping_thread` a un método `load_prospects(self, filename)` en `DataManager`.
-- [ ] **12. Mover Lógica de Listado de Fichas:** Mueve la lógica de `os.listdir()` de `actualizar_lista_fichas` a un método `get_saved_file_names(self)` en `DataManager`.
+- [x] **9. Crear Clase `GestorDatos`:** Crea el archivo `src/gestor_datos.py` con una clase `GestorDatos`. Su `__init__` debe recibir el path de la carpeta de datos.
+- [ ] **10. Mover Lógica de Guardado:** Mueve la lógica de `open(..., 'w')` y `json.dump()` de `ejecutar_scraping` y `ejecutar_enriquecimiento_masivo` a un método `guardar_datos(self, nombre_archivo, datos)` en `GestorDatos`.
+- [x] **11. Mover Lógica de Carga:** Mueve la lógica de `open(..., 'r')` y `json.load()` de `cargar_ficha_offline` y `start_scraping_thread` a un método `cargar_datos(self, nombre_archivo)` en `GestorDatos`.
+- [x] **12. Mover Lógica de Listado de Fichas:** Mueve la lógica de `os.listdir()` de `actualizar_lista_fichas` a un método `obtener_archivos(self)` en `GestorDatos`.
 
 ---
 
@@ -124,9 +124,9 @@ client-scraper-desktop/
 *Objetivo: Dejar `lead_app.py` como un archivo pequeño y limpio que solo orquesta las demás clases.*
 
 - [ ] **47. Refactorizar `TrelewLeadApp`:** Una vez que toda la lógica ha sido movida, `TrelewLeadApp` (que podría renombrarse a `AppController`) solo debe:
-    - En `__init__`: Instanciar `DataManager`, `UIManager` y `Scraper`.
+    - En `__init__`: Instanciar `GestorDatos`, `UIManager` y `Scraper`.
     - Mantener el estado principal de la aplicación (el diccionario `prospectos_datos`).
-    - Contener los métodos que son llamados por los eventos de la UI (ej. `start_scraping_thread`), los cuales a su vez llamarán a los métodos correspondientes en `Scraper` y `DataManager`, y luego usarán `UIManager` para actualizar la vista.
+    - Contener los métodos que son llamados por los eventos de la UI (ej. `start_scraping_thread`), los cuales a su vez llamarán a los métodos correspondientes en `Scraper` y `GestorDatos`, y luego usarán `UIManager` para actualizar la vista.
 
 ---
 

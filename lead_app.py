@@ -17,6 +17,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from src.constants import RUBROS_SUGERIDOS, DATA_FOLDER, PROFILE_FOLDER
+from src.gestor_datos import GestorDatos
 
 class TrelewLeadApp:
     """
@@ -29,9 +30,8 @@ class TrelewLeadApp:
         self.root.geometry("1100x700")
         self.root.configure(bg="#f8f9fa")
 
-        # Crear carpeta de almacenamiento si no existe
-        if not os.path.exists(DATA_FOLDER):
-            os.makedirs(DATA_FOLDER)
+        # Inicializar Gestor de Datos
+        self.gestor_datos = GestorDatos(DATA_FOLDER)
 
         # Configuración de Estilos para una apariencia moderna
         self.style = ttk.Style()
@@ -78,7 +78,7 @@ class TrelewLeadApp:
         self.combo_fichas.pack(side="left", padx=5)
         self.actualizar_lista_fichas() # Cargar lista inicial
         
-        self.btn_cargar = ttk.Button(search_frame, text="ABRIR FICHA", command=self.cargar_ficha_offline)
+        self.btn_cargar = ttk.Button(search_frame, text="CARGAR", command=self.cargar_ficha_offline)
         self.btn_cargar.pack(side="left", padx=5)
 
         # --- Contenedor Principal (Split View: Maestro-Detalle) ---
@@ -131,7 +131,7 @@ class TrelewLeadApp:
 
     def actualizar_lista_fichas(self):
         """Lee la carpeta 'fichas_leads' y actualiza el combobox."""
-        fichas = [f.replace(".json", "") for f in os.listdir(DATA_FOLDER) if f.endswith(".json")]
+        fichas = self.gestor_datos.obtener_archivos()
         self.combo_fichas['values'] = fichas
         if fichas:
             self.combo_fichas.current(0)
@@ -142,10 +142,8 @@ class TrelewLeadApp:
         if not seleccion:
             return
         
-        filepath = os.path.join(DATA_FOLDER, f"{seleccion}.json")
         try:
-            with open(filepath, 'r', encoding='utf-8') as f:
-                datos_cargados = json.load(f)
+            datos_cargados = self.gestor_datos.cargar_datos(seleccion)
             
             # Limpiar UI y memoria
             self.tree.delete(*self.tree.get_children())
@@ -282,8 +280,17 @@ class TrelewLeadApp:
 
         # Habilitar scroll con la rueda del ratón
         def _on_mousewheel(event):
-            canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+            try:
+                canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+            except tk.TclError:
+                pass
         canvas.bind_all("<MouseWheel>", _on_mousewheel)
+
+        # Limpiar evento al cerrar la ventana para evitar errores
+        def on_close():
+            canvas.unbind_all("<MouseWheel>")
+            top.destroy()
+        top.protocol("WM_DELETE_WINDOW", on_close)
 
         tk.Label(info_frame, text="DATOS PÚBLICOS PARA WEB DEMO", font=("Segoe UI", 14, "bold"), bg="white", fg="#1a73e8", pady=15).pack()
 
