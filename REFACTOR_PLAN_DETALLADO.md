@@ -25,7 +25,7 @@ client-scraper-desktop/
 - [x] **1. Crear Módulo de Constantes:** Crea la carpeta `src` y dentro el archivo `src/constants.py`.
 - [x] **2. Mover `RUBROS_SUGERIDOS`:** Corta la lista `rubros_sugeridos` de `lead_app.py` y pégala en `src/constants.py` como `RUBROS_SUGERIDOS`. Importa y úsala en `setup_ui`.
 - [x] **3. Mover Nombres de Carpetas:** Crea constantes en `src/constants.py` para `"fichas_leads"` y `"selenium_profile"`. Por ejemplo: `DATA_FOLDER = "fichas_leads"`. Reemplaza el texto literal en el código por estas constantes.
-- [ ] **4. Mover Colores y Fuentes:** Crea constantes para los códigos de color (`#f8f9fa`, `#1a73e8`, etc.) y las definiciones de fuentes (`("Segoe UI", 10)`) en `src/constants.py`. Reemplaza los valores en el código.
+- [x] **4. Mover Colores y Fuentes:** Crea constantes para los códigos de color (`#f8f9fa`, `#1a73e8`, etc.) y las definiciones de fuentes (`("Segoe UI", 10)`) en `src/constants.py`. Reemplaza los valores en el código.
 - [ ] **5. Mover Textos de la UI:** Crea constantes para todos los textos fijos de la UI (títulos de ventanas, etiquetas, mensajes de error) en `src/constants.py`.
 
 ---
