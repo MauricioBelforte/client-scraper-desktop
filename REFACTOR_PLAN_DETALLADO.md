@@ -8,7 +8,7 @@ client-scraper-desktop/
 ├── src/
 │   ├── __init__.py
 │   ├── constants.py      # (Fase 1)
-│   ├── utils.py          # (Fase 2)
+│   ├── utilidades.py     # (Fase 2)
 │   ├── gestor_datos.py   # (Fase 3)
 │   ├── ui_manager.py     # (Fase 4)
 │   └── scraper.py        # (Fase 5)
@@ -34,9 +34,9 @@ client-scraper-desktop/
 
 *Objetivo: Aislar funciones puras que no dependen del estado de la aplicación (no usan `self`).*
 
-- [ ] **6. Crear Módulo de Utilidades:** Crea el archivo `src/utils.py`.
-- [ ] **7. Mover `abrir_whatsapp`:** Mueve el método `abrir_whatsapp` a `src/utils.py` como una función normal (sin `self`). Importa y actualiza la llamada en `mostrar_detalle`.
-- [ ] **8. Crear `create_whatsapp_url`:** Dentro de `utils.py`, crea una función `create_whatsapp_url(nombre, tel)` que contenga solo la lógica de limpiar el número y formatear la URL. La función `abrir_whatsapp` ahora llamará a esta y luego a `webbrowser.open()`.
+- [x] **6. Crear Módulo de Utilidades:** Crea el archivo `src/utilidades.py`.
+- [ ] **7. Mover `abrir_whatsapp`:** Mueve el método `abrir_whatsapp` a `src/utilidades.py` como una función normal (sin `self`). Importa y actualiza la llamada en `mostrar_detalle`.
+- [ ] **8. Crear `create_whatsapp_url`:** Dentro de `utilidades.py`, crea una función `create_whatsapp_url(nombre, tel)` que contenga solo la lógica de limpiar el número y formatear la URL. La función `abrir_whatsapp` ahora llamará a esta y luego a `webbrowser.open()`.
 
 ---
 
