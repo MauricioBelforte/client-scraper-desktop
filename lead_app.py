@@ -26,7 +26,7 @@ class TrelewLeadApp:
     """
     def __init__(self, root):
         self.root = root
-        self.root.title("Trelew Digital Leads - Prospector de Negocios")
+        self.root.title(constantes.APP_TITLE)
         self.root.geometry("1100x700")
         self.root.configure(bg=constantes.COLOR_BG)
 
@@ -48,37 +48,37 @@ class TrelewLeadApp:
         header = tk.Frame(self.root, bg=constantes.COLOR_PRIMARY, height=70)
         header.pack(fill="x")
         
-        tk.Label(header, text="TRELEW LEAD PROSPECTOR", font=constantes.FONT_TITLE, 
+        tk.Label(header, text=constantes.HEADER_TEXT, font=constantes.FONT_TITLE, 
                  bg=constantes.COLOR_PRIMARY, fg=constantes.COLOR_WHITE).pack(pady=15)
 
         # --- Panel de Control: Búsqueda ---
-        search_frame = tk.LabelFrame(self.root, text=" Gestión de Búsquedas ", font=constantes.FONT_BOLD, bg=constantes.COLOR_BG, pady=10, padx=10)
+        search_frame = tk.LabelFrame(self.root, text=constantes.SEARCH_FRAME_TITLE, font=constantes.FONT_BOLD, bg=constantes.COLOR_BG, pady=10, padx=10)
         search_frame.pack(fill="x", padx=20)
 
         # Sección 1: Nueva Búsqueda (Online)
-        tk.Label(search_frame, text="Nueva Búsqueda (Google Maps):", font=constantes.FONT_SMALL, bg=constantes.COLOR_BG).pack(side="left")
+        tk.Label(search_frame, text=constantes.LABEL_NEW_SEARCH, font=constantes.FONT_SMALL, bg=constantes.COLOR_BG).pack(side="left")
         
         self.entry_rubro = ttk.Combobox(search_frame, values=constantes.RUBROS_SUGERIDOS, width=28)
         self.entry_rubro.pack(side="left", padx=5)
         self.entry_rubro.set("Gimnasios")
 
-        self.btn_buscar = ttk.Button(search_frame, text="🔍 BUSCAR Y GUARDAR", command=self.start_scraping_thread)
+        self.btn_buscar = ttk.Button(search_frame, text=constantes.BTN_SEARCH, command=self.start_scraping_thread)
         self.btn_buscar.pack(side="left", padx=10)
 
         # Botón para enriquecimiento masivo
-        self.btn_enrich_all = ttk.Button(search_frame, text="🌍 ENRIQUECER TODOS", command=self.lanzar_enriquecimiento_masivo)
+        self.btn_enrich_all = ttk.Button(search_frame, text=constantes.BTN_ENRICH, command=self.lanzar_enriquecimiento_masivo)
         self.btn_enrich_all.pack(side="left", padx=5)
 
         # Separador visual
         ttk.Separator(search_frame, orient="vertical").pack(side="left", fill="y", padx=20)
 
         # Sección 2: Cargar Ficha (Offline)
-        tk.Label(search_frame, text="📂 Cargar Ficha Guardada:", font=c.FONT_SMALL, bg=c.COLOR_BG).pack(side="left")
+        tk.Label(search_frame, text=constantes.LABEL_LOAD_FILE, font=constantes.FONT_SMALL, bg=constantes.COLOR_BG).pack(side="left")
         self.combo_fichas = ttk.Combobox(search_frame, width=25, state="readonly")
         self.combo_fichas.pack(side="left", padx=5)
         self.actualizar_lista_fichas() # Cargar lista inicial
         
-        self.btn_cargar = ttk.Button(search_frame, text="CARGAR", command=self.cargar_ficha_offline)
+        self.btn_cargar = ttk.Button(search_frame, text=constantes.BTN_LOAD, command=self.cargar_ficha_offline)
         self.btn_cargar.pack(side="left", padx=5)
 
         # --- Contenedor Principal (Split View: Maestro-Detalle) ---
@@ -89,12 +89,12 @@ class TrelewLeadApp:
         left_panel = tk.Frame(main_container, bg=constantes.COLOR_WHITE, relief="flat")
         left_panel.pack(side="left", fill="both", expand=True)
 
-        tk.Label(left_panel, text="Emprendimientos Encontrados", font=constantes.FONT_BOLD, bg=constantes.COLOR_WHITE, pady=5).pack()
+        tk.Label(left_panel, text=constantes.LABEL_RESULTS, font=constantes.FONT_BOLD, bg=constantes.COLOR_WHITE, pady=5).pack()
 
         columns = ("nombre", "estado")
         self.tree = ttk.Treeview(left_panel, columns=columns, show="headings")
-        self.tree.heading("nombre", text="Nombre")
-        self.tree.heading("estado", text="Estado")
+        self.tree.heading("nombre", text=constantes.COL_NAME)
+        self.tree.heading("estado", text=constantes.COL_STATUS)
         self.tree.column("nombre", width=250)
         self.tree.column("estado", width=100)
         
@@ -113,7 +113,7 @@ class TrelewLeadApp:
         self.right_panel.pack_propagate(False)
 
         # Mensaje de ayuda inicial
-        self.card_placeholder = tk.Label(self.right_panel, text="Selecciona un comercio\npara ver el detalle", 
+        self.card_placeholder = tk.Label(self.right_panel, text=constantes.CARD_PLACEHOLDER, 
                                          font=constantes.FONT_ITALIC, fg=constantes.COLOR_TEXT_MUTED, bg=constantes.COLOR_BG, pady=100)
         self.card_placeholder.pack()
 
@@ -121,7 +121,7 @@ class TrelewLeadApp:
         self.detail_card = tk.Frame(self.right_panel, bg=constantes.COLOR_WHITE, highlightbackground=constantes.COLOR_BORDER, highlightthickness=1)
         
         # --- Barra de Estado (Feedback al usuario) ---
-        self.status_label = tk.Label(self.root, text="Listo para prospectar en Trelew", bd=1, relief="flat", anchor="w", bg=constantes.COLOR_STATUS_BG, padx=10)
+        self.status_label = tk.Label(self.root, text=constantes.STATUS_READY, bd=1, relief="flat", anchor="w", bg=constantes.COLOR_STATUS_BG, padx=10)
         self.status_label.pack(side="bottom", fill="x")
 
     def log(self, mensaje):
@@ -179,7 +179,7 @@ class TrelewLeadApp:
         # Header de la Card
         card_header = tk.Frame(self.detail_card, bg=constantes.COLOR_PRIMARY, pady=10)
         card_header.pack(fill="x")
-        tk.Label(card_header, text="DETALLE DEL CLIENTE", font=constantes.FONT_SMALL_BOLD, bg=constantes.COLOR_PRIMARY, fg=constantes.COLOR_WHITE).pack()
+        tk.Label(card_header, text=constantes.CARD_HEADER, font=constantes.FONT_SMALL_BOLD, bg=constantes.COLOR_PRIMARY, fg=constantes.COLOR_WHITE).pack()
 
         # Cuerpo de la Card
         body = tk.Frame(self.detail_card, bg=constantes.COLOR_WHITE, padx=15, pady=15)
@@ -188,9 +188,9 @@ class TrelewLeadApp:
         tk.Label(body, text=nombre, font=constantes.FONT_SUBTITLE, bg=constantes.COLOR_WHITE, wraplength=280, justify="center").pack(pady=(0, 10))
         
         # Filas de información
-        self.create_info_row(body, "📱 Teléfono:", datos.get('telefono', 'No disponible'))
-        self.create_info_row(body, "🌐 Web:", "No posee (Oportunidad)")
-        self.create_info_row(body, "📍 Ciudad:", "Trelew, Chubut")
+        self.create_info_row(body, constantes.LABEL_PHONE, datos.get('telefono', 'No disponible'))
+        self.create_info_row(body, constantes.LABEL_WEB, constantes.VALUE_NO_WEB)
+        self.create_info_row(body, constantes.LABEL_CITY, constantes.VALUE_CITY)
 
         # Separador visual
         tk.Frame(body, height=1, bg=constantes.COLOR_BORDER).pack(fill="x", pady=15)
@@ -236,15 +236,15 @@ class TrelewLeadApp:
         # 3. Botón "Contactar por todos" (Gris/Rojo)
         has_any = has_wa or has_fb or has_ig or has_email
         c_all = constantes.COLOR_DARK_BTN if has_any else constantes.COLOR_DANGER
-        tk.Button(body, text="CONTACTAR POR TODOS LOS MEDIOS", bg=c_all, fg=constantes.COLOR_WHITE, font=constantes.FONT_SMALL_BOLD, relief="flat", cursor="hand2" if has_any else "arrow", command=self.contactar_todos_placeholder).pack(fill="x", pady=(5, 5))
+        tk.Button(body, text=constantes.BTN_CONTACT_ALL, bg=c_all, fg=constantes.COLOR_WHITE, font=constantes.FONT_SMALL_BOLD, relief="flat", cursor="hand2" if has_any else "arrow", command=self.contactar_todos_placeholder).pack(fill="x", pady=(5, 5))
 
         # Botón de información detallada (Ficha Técnica)
-        btn_info = tk.Button(body, text="📄 VER FICHA TÉCNICA (WEB DEMO)", bg=constantes.COLOR_INFO_BTN, fg=constantes.COLOR_WHITE, 
+        btn_info = tk.Button(body, text=constantes.BTN_VIEW_SHEET, bg=constantes.COLOR_INFO_BTN, fg=constantes.COLOR_WHITE, 
                            font=constantes.FONT_BOLD, relief="flat", cursor="hand2",
                            command=lambda: self.mostrar_info_detallada(nombre, datos))
         btn_info.pack(fill="x", pady=5)
         
-        btn_enrich = tk.Button(body, text="🌍 BUSCAR DATOS EXTRA (GOOGLE)", bg=constantes.COLOR_SEARCH_BTN, fg=constantes.COLOR_WHITE, 
+        btn_enrich = tk.Button(body, text=constantes.BTN_GOOGLE_SEARCH, bg=constantes.COLOR_SEARCH_BTN, fg=constantes.COLOR_WHITE, 
                            font=constantes.FONT_SMALL_BOLD, relief="flat", cursor="hand2",
                            command=lambda: self.lanzar_busqueda_externa(nombre))
         btn_enrich.pack(fill="x", pady=5)
@@ -291,7 +291,7 @@ class TrelewLeadApp:
             top.destroy()
         top.protocol("WM_DELETE_WINDOW", on_close)
 
-        tk.Label(info_frame, text="DATOS PÚBLICOS PARA WEB DEMO", font=constantes.FONT_SUBTITLE, bg=constantes.COLOR_WHITE, fg=constantes.COLOR_PRIMARY, pady=15).pack()
+        tk.Label(info_frame, text=constantes.SHEET_HEADER, font=constantes.FONT_SUBTITLE, bg=constantes.COLOR_WHITE, fg=constantes.COLOR_PRIMARY, pady=15).pack()
 
         # Función auxiliar para filas de datos
         def add_row(label, value):
@@ -326,7 +326,7 @@ class TrelewLeadApp:
         if imgs: add_row("Imágenes:", f"{len(imgs)} capturadas (URLs)")
 
         # Sección de Comentarios
-        tk.Label(info_frame, text="Últimos Comentarios (Testimonios):", font=constantes.FONT_BOLD, bg=constantes.COLOR_WHITE, pady=10).pack(anchor="w")
+        tk.Label(info_frame, text=constantes.SECTION_COMMENTS, font=constantes.FONT_BOLD, bg=constantes.COLOR_WHITE, pady=10).pack(anchor="w")
         comentarios_frame = tk.Frame(info_frame, bg=constantes.COLOR_COMMENT_BG, padx=10, pady=10)
         comentarios_frame.pack(fill="x")
         
@@ -336,10 +336,10 @@ class TrelewLeadApp:
                 tk.Label(comentarios_frame, text=f"👤 {com['autor']} ({com['rating']})", font=constantes.FONT_SMALL_BOLD, bg=constantes.COLOR_COMMENT_BG, anchor="w").pack(fill="x")
                 tk.Label(comentarios_frame, text=f"💬 {com['texto'][:100]}...", font=constantes.FONT_SMALL, bg=constantes.COLOR_COMMENT_BG, anchor="w", fg=constantes.COLOR_COMMENT_TEXT).pack(fill="x", pady=(0, 5))
         else:
-            tk.Label(comentarios_frame, text="No se encontraron comentarios recientes.", bg=constantes.COLOR_COMMENT_BG).pack()
+            tk.Label(comentarios_frame, text=constantes.MSG_NO_COMMENTS, bg=constantes.COLOR_COMMENT_BG).pack()
 
         # Nota al pie
-        tk.Label(info_frame, text="* Los datos se guardan automáticamente en la carpeta 'fichas_leads'", font=constantes.FONT_TINY, bg=constantes.COLOR_WHITE, pady=15, fg=constantes.COLOR_TEXT_MUTED).pack()
+        tk.Label(info_frame, text=constantes.FOOTER_NOTE, font=constantes.FONT_TINY, bg=constantes.COLOR_WHITE, pady=15, fg=constantes.COLOR_TEXT_MUTED).pack()
 
     def create_info_row(self, parent, label, value):
         """Crea una fila de información etiquetada dentro de la Card."""
@@ -352,7 +352,7 @@ class TrelewLeadApp:
         """Inicia el proceso de búsqueda en un hilo separado para evitar bloqueos de UI."""
         rubro = self.entry_rubro.get()
         if not rubro:
-            messagebox.showwarning("Atención", "Ingresa un rubro comercial para comenzar.")
+            messagebox.showwarning("Atención", constantes.MSG_WARN_RUBRO)
             return
         
         self.btn_buscar.config(state="disabled")
@@ -378,7 +378,7 @@ class TrelewLeadApp:
     def abrir_whatsapp(self, nombre, tel):
         """Procesa el contacto y abre el navegador con la API de WhatsApp."""
         if "Sin" in tel or not tel:
-            messagebox.showwarning("Error", "Este comercio no dispone de un teléfono válido.")
+            messagebox.showwarning("Error", constantes.MSG_ERR_NO_PHONE)
             return
 
         # Limpieza de número para formato internacional
@@ -392,11 +392,11 @@ class TrelewLeadApp:
 
     def lanzar_enriquecimiento_masivo(self):
         if not self.prospectos_datos:
-            messagebox.showwarning("Atención", "Primero debes buscar o cargar una lista de emprendimientos.")
+            messagebox.showwarning("Atención", constantes.MSG_WARN_NO_LIST)
             return
         
         rubro = self.entry_rubro.get()
-        confirm = messagebox.askyesno("Confirmar", f"Esto buscará datos extra en Google para {len(self.prospectos_datos)} contactos.\nEl proceso puede tardar unos minutos.\n¿Deseas continuar?")
+        confirm = messagebox.askyesno("Confirmar", constantes.MSG_CONFIRM_ENRICH.format(len(self.prospectos_datos)))
         if confirm:
             self.log("Iniciando enriquecimiento masivo...")
             threading.Thread(target=self.ejecutar_enriquecimiento_masivo, args=(rubro,), daemon=True).start()
@@ -616,7 +616,7 @@ class TrelewLeadApp:
                 # Capturar error si el perfil está bloqueado (Chrome ya abierto)
                 if "user data directory is already in use" in str(e) or "Chrome failed to start" in str(e):
                     self.log("❌ Error: El perfil de Chrome está en uso.")
-                    self.root.after(0, lambda: messagebox.showerror("Navegador Bloqueado", "No se pudo iniciar el robot.\n\nCierra todas las ventanas de Chrome (o el script de configuración) antes de buscar."))
+                    self.root.after(0, lambda: messagebox.showerror("Navegador Bloqueado", constantes.MSG_BROWSER_LOCKED))
                     self.btn_buscar.config(state="normal")
                     return
                 raise e

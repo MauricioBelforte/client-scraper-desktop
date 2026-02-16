@@ -49,3 +49,38 @@ FONT_SMALL_BOLD = ("Segoe UI", 9, "bold")
 FONT_ITALIC = ("Segoe UI", 10, "italic")
 FONT_TINY = ("Segoe UI", 8, "italic")
 FONT_LINK = ("Segoe UI", 10, "underline")
+
+# --- TEXTOS DE LA INTERFAZ (UI) ---
+APP_TITLE = "Trelew Digital Leads - Prospector de Negocios"
+HEADER_TEXT = "TRELEW LEAD PROSPECTOR"
+SEARCH_FRAME_TITLE = " Gestión de Búsquedas "
+LABEL_NEW_SEARCH = "Nueva Búsqueda (Google Maps):"
+BTN_SEARCH = "🔍 BUSCAR Y GUARDAR"
+BTN_ENRICH = "🌍 ENRIQUECER TODOS"
+LABEL_LOAD_FILE = "📂 Cargar Ficha Guardada:"
+BTN_LOAD = "CARGAR"
+LABEL_RESULTS = "Emprendimientos Encontrados"
+COL_NAME = "Nombre"
+COL_STATUS = "Estado"
+CARD_PLACEHOLDER = "Selecciona un comercio\npara ver el detalle"
+STATUS_READY = "Listo para prospectar en Trelew"
+CARD_HEADER = "DETALLE DEL CLIENTE"
+LABEL_PHONE = "📱 Teléfono:"
+LABEL_WEB = "🌐 Web:"
+LABEL_CITY = "📍 Ciudad:"
+VALUE_NO_WEB = "No posee (Oportunidad)"
+VALUE_CITY = "Trelew, Chubut"
+BTN_CONTACT_ALL = "CONTACTAR POR TODOS LOS MEDIOS"
+BTN_VIEW_SHEET = "📄 VER FICHA TÉCNICA (WEB DEMO)"
+BTN_GOOGLE_SEARCH = "🌍 BUSCAR DATOS EXTRA (GOOGLE)"
+SHEET_HEADER = "DATOS PÚBLICOS PARA WEB DEMO"
+SECTION_COMMENTS = "Últimos Comentarios (Testimonios):"
+MSG_NO_COMMENTS = "No se encontraron comentarios recientes."
+FOOTER_NOTE = "* Los datos se guardan automáticamente en la carpeta 'fichas_leads'"
+
+# --- MENSAJES Y ALERTAS ---
+MSG_WARN_RUBRO = "Ingresa un rubro comercial para comenzar."
+MSG_ERR_NO_PHONE = "Este comercio no dispone de un teléfono válido."
+MSG_WARN_NO_LIST = "Primero debes buscar o cargar una lista de emprendimientos."
+MSG_CONFIRM_ENRICH = "Esto buscará datos extra en Google para {} contactos.\nEl proceso puede tardar unos minutos.\n¿Deseas continuar?"
+MSG_BROWSER_LOCKED = "No se pudo iniciar el robot.\n\nCierra todas las ventanas de Chrome (o el script de configuración) antes de buscar."
