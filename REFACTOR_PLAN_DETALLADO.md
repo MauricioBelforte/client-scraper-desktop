@@ -38,7 +38,7 @@ client-scraper-desktop/
 
 - [x] **6. Crear Módulo de Utilidades:** Crea el archivo `src/utilidades.py`.
 - [x] **7. Mover `abrir_whatsapp`:** Mueve el método `abrir_whatsapp` a `src/utilidades.py` como una función normal (sin `self`). Importa y actualiza la llamada en `mostrar_detalle`.
-- [ ] **8. Crear `create_whatsapp_url`:** Dentro de `utilidades.py`, crea una función `create_whatsapp_url(nombre, tel)` que contenga solo la lógica de limpiar el número y formatear la URL. La función `abrir_whatsapp` ahora llamará a esta y luego a `webbrowser.open()`.
+- [x] **8. Crear `create_whatsapp_url`:** Dentro de `utilidades.py`, crea una función `create_whatsapp_url(nombre, tel)` que contenga solo la lógica de limpiar el número y formatear la URL. La función `abrir_whatsapp` ahora llamará a esta y luego a `webbrowser.open()`.
 
 ---
 

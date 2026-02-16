@@ -64,8 +64,11 @@ class TrelewLeadApp:
         self.entry_rubro.pack(side="left", padx=5)
         self.entry_rubro.set("Gimnasios")
 
-        self.btn_buscar = ttk.Button(search_frame, text=constantes.BTN_BUSCAR, command=self.start_scraping_thread)
-        self.btn_buscar.pack(side="left", padx=10)
+        self.btn_rapido = ttk.Button(search_frame, text=constantes.BTN_MODO_RAPIDO, command=lambda: self.start_scraping_thread("js"))
+        self.btn_rapido.pack(side="left", padx=5)
+
+        self.btn_humano = ttk.Button(search_frame, text=constantes.BTN_MODO_HUMANO, command=lambda: self.start_scraping_thread("teclado"))
+        self.btn_humano.pack(side="left", padx=5)
 
         # Botón para enriquecimiento masivo
         self.btn_enrich_all = ttk.Button(search_frame, text=constantes.BTN_ENRIQUECER, command=self.lanzar_enriquecimiento_masivo)
@@ -359,14 +362,15 @@ class TrelewLeadApp:
         tk.Label(row, text=label, font=constantes.FUENTE_PEQUENA_NEGRITA, bg=constantes.COLOR_BLANCO, fg=constantes.COLOR_TEXTO_ETIQUETA).pack(side="left")
         tk.Label(row, text=value, font=constantes.FUENTE_PEQUENA, bg=constantes.COLOR_BLANCO, fg=constantes.COLOR_TEXTO_OSCURO).pack(side="left", padx=5)
 
-    def start_scraping_thread(self):
+    def start_scraping_thread(self, estrategia="teclado"):
         """Inicia el proceso de búsqueda en un hilo separado para evitar bloqueos de UI."""
         rubro = self.entry_rubro.get()
         if not rubro:
             messagebox.showwarning("Atención", constantes.MSJ_ADVERTENCIA_RUBRO)
             return
         
-        self.btn_buscar.config(state="disabled")
+        self.btn_rapido.config(state="disabled")
+        self.btn_humano.config(state="disabled")
         self.tree.delete(*self.tree.get_children())
         
         # --- LÓGICA DE FUSIÓN: Cargar datos previos si existen ---
@@ -384,7 +388,7 @@ class TrelewLeadApp:
             except Exception:
                 self.prospectos_datos = {}
         
-        threading.Thread(target=self.ejecutar_scraping, args=(rubro,), daemon=True).start()
+        threading.Thread(target=self.ejecutar_scraping, args=(rubro, estrategia), daemon=True).start()
 
     def lanzar_enriquecimiento_masivo(self):
         if not self.prospectos_datos:
@@ -399,7 +403,8 @@ class TrelewLeadApp:
 
     def ejecutar_enriquecimiento_masivo(self, rubro):
         self.btn_enrich_all.config(state="disabled")
-        self.btn_buscar.config(state="disabled")
+        self.btn_rapido.config(state="disabled")
+        self.btn_humano.config(state="disabled")
         
         options = Options()
         options.add_argument("--lang=es-419")
@@ -461,7 +466,8 @@ class TrelewLeadApp:
             if driver:
                 driver.quit()
             self.btn_enrich_all.config(state="normal")
-            self.btn_buscar.config(state="normal")
+            self.btn_rapido.config(state="normal")
+            self.btn_humano.config(state="normal")
 
     def lanzar_busqueda_externa(self, nombre):
         rubro = self.entry_rubro.get()
@@ -574,9 +580,9 @@ class TrelewLeadApp:
         
         return nuevos_datos
 
-    def ejecutar_scraping(self, rubro):
+    def ejecutar_scraping(self, rubro, estrategia="teclado"):
         """Lógica de scraping con Selenium y detección de sitios web."""
-        self.log(f"Iniciando búsqueda para: {rubro}")
+        self.log(f"Iniciando búsqueda ({estrategia}) para: {rubro}")
         options = Options()
         options.add_argument("--lang=es-419") # Forzar español latino
         
@@ -613,7 +619,8 @@ class TrelewLeadApp:
                 if "user data directory is already in use" in str(e) or "Chrome failed to start" in str(e):
                     self.log("❌ Error: El perfil de Chrome está en uso.")
                     self.root.after(0, lambda: messagebox.showerror("Navegador Bloqueado", constantes.MSJ_NAVEGADOR_BLOQUEADO))
-                    self.btn_buscar.config(state="normal")
+                    self.btn_rapido.config(state="normal")
+                    self.btn_humano.config(state="normal")
                     return
                 raise e
 
@@ -641,7 +648,8 @@ class TrelewLeadApp:
             except:
                 self.log("No se encontraron resultados o la carga fue muy lenta.")
                 driver.quit()
-                self.btn_buscar.config(state="normal")
+                self.btn_rapido.config(state="normal")
+                self.btn_humano.config(state="normal")
                 return
 
             # --- SCROLL AUTOMÁTICO PARA CARGAR MÁS RESULTADOS ---
@@ -832,8 +840,10 @@ class TrelewLeadApp:
                             # --- PASO 2: EJECUTAR ESTRATEGIAS MODULARES ---
                             if panel_resenas:
                                 # Podemos llamar a una, a la otra, o a ambas en secuencia
-                                # estrategia_scroll_js_focalizado(driver, panel_resenas, self.log)
-                                 estrategia_scroll_teclado(driver, panel_resenas, self.log)
+                                if estrategia == "js":
+                                    estrategia_scroll_js_focalizado(driver, panel_resenas, self.log)
+                                else:
+                                    estrategia_scroll_teclado(driver, panel_resenas, self.log)
 
                             # Buscar tarjetas de review (div con data-review-id es un selector fuerte)
                             reviews = driver.find_elements(By.CSS_SELECTOR, "div[data-review-id]")
@@ -1042,11 +1052,13 @@ class TrelewLeadApp:
 
             driver.quit()
             self.log("Proceso completado con éxito.")
-            self.btn_buscar.config(state="normal")
+            self.btn_rapido.config(state="normal")
+            self.btn_humano.config(state="normal")
             
         except Exception as e:
             self.log(f"Error: {e}")
-            self.btn_buscar.config(state="normal")
+            self.btn_rapido.config(state="normal")
+            self.btn_humano.config(state="normal")
 
 if __name__ == "__main__":
     root = tk.Tk()

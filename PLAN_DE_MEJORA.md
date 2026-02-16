@@ -26,11 +26,11 @@ Separar el proceso de recolección en dos vías independientes y crear una insta
 ## 3. Checklist de Implementación
 
 ### Fase 1: Interfaz de Búsqueda (UI Principal)
-- [ ] Modificar `setup_ui` en `lead_app.py`.
-- [ ] Reemplazar el botón actual "BUSCAR Y GUARDAR" por dos botones:
-  - [ ] ⚡ **Modo Rápido (JS)**: Ejecuta `estrategia_scroll_js_focalizado`.
-  - [ ] 👤 **Modo Humano (Teclado)**: Ejecuta `estrategia_scroll_teclado`.
-- [ ] Agregar tooltips o etiquetas que expliquen la diferencia (Velocidad vs. Profundidad).
+- [x] Modificar `setup_ui` en `lead_app.py`.
+- [x] Reemplazar el botón actual "BUSCAR Y GUARDAR" por dos botones:
+  - [x] ⚡ **Modo Rápido (JS)**: Ejecuta `estrategia_scroll_js_focalizado`.
+  - [x] 👤 **Modo Humano (Teclado)**: Ejecuta `estrategia_scroll_teclado`.
+- [x] Agregar tooltips o etiquetas que expliquen la diferencia (Velocidad vs. Profundidad).
 
 ### Fase 2: Lógica de Scraping y Guardado
 - [ ] Refactorizar `ejecutar_scraping` para aceptar un argumento `modo_estrategia`.
