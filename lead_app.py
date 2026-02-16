@@ -898,18 +898,30 @@ class TrelewLeadApp:
                             # 2. SCROLL PROFUNDO EN INFORMACIÓN (MEJORADO)
                             # El usuario solicitó priorizar la captura de datos aunque demore más.
                             self.log(f"Escaneando a fondo perfil de {nombre}...")
+                            main_div = None
                             try:
-                                main_div = driver.find_element(By.CSS_SELECTOR, "div[role='main']")
-                                # Hacemos varios scrolls progresivos para asegurar que carguen secciones inferiores (Redes, "Del propietario")
-                                for _ in range(3):
-                                    driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", main_div)
-                                    time.sleep(1.5)
+                                # Buscamos todos los paneles y usamos el que es visible para evitar interactuar con paneles ocultos/viejos
+                                candidates = driver.find_elements(By.CSS_SELECTOR, "div[role='main']")
+                                for c in candidates:
+                                    if c.is_displayed():
+                                        main_div = c
+                                        break
+                                
+                                if main_div:
+                                    # Hacemos varios scrolls progresivos para asegurar que carguen secciones inferiores (Redes, "Del propietario")
+                                    for _ in range(3):
+                                        driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", main_div)
+                                        time.sleep(1.5)
                             except: pass
 
                             # 3. Búsqueda de Redes Sociales y Email (Estrategia de Respaldo)
                             # Buscamos enlaces que apunten a dominios específicos (facebook, instagram) o que contengan "mailto:".
                             # El XPath se limita al panel principal (`div[role='main']`) para no capturar enlaces del resto de la página.
-                            posibles_redes = driver.find_elements(By.XPATH, "//div[@role='main']//a[contains(@href, 'facebook.com') or contains(@href, 'instagram.com') or contains(@href, 'mailto:')]")
+                            posibles_redes = []
+                            if main_div:
+                                posibles_redes = main_div.find_elements(By.XPATH, ".//a[contains(@href, 'facebook.com') or contains(@href, 'instagram.com') or contains(@href, 'mailto:')]")
+                            else:
+                                posibles_redes = driver.find_elements(By.XPATH, "//div[@role='main']//a[contains(@href, 'facebook.com') or contains(@href, 'instagram.com') or contains(@href, 'mailto:')]")
                             
                             for link in posibles_redes:
                                 url = link.get_attribute("href")
