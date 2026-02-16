@@ -1,5 +1,7 @@
 # 📋 Plan de Refactorización Detallado: client-scraper-desktop
 
+> **Nota:** Las normas de estilo y commits se encuentran en `GEMINI.md`.
+ 
 Esta guía desglosa la refactorización de `lead_app.py` en tareas atómicas y específicas. Cada ítem representa una única pieza de lógica que debe ser extraída y modularizada. El objetivo es que cada commit sea pequeño, enfocado y fácil de revisar.
 
 **Estructura de Carpetas Objetivo:**
