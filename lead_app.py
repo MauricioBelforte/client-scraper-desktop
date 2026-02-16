@@ -336,6 +336,12 @@ class TrelewLeadApp:
         if datos.get("facebook"): add_row("Facebook:", datos["facebook"])
         if datos.get("instagram"): add_row("Instagram:", datos["instagram"])
         
+        # Mostrar enlaces extra encontrados en la web
+        enlaces = datos.get("enlaces_extra", [])
+        if enlaces:
+            for i, link in enumerate(enlaces, 1):
+                add_row(f"Web Extra {i}:", link)
+
         imgs = datos.get("imagenes", [])
         if imgs: add_row("Imágenes:", f"{len(imgs)} capturadas (URLs)")
 
@@ -757,7 +763,8 @@ class TrelewLeadApp:
                             "whatsapp": "No",
                             "email": "No detectado",
                             "facebook": social_url if "facebook.com" in social_url else "No detectado",
-                            "instagram": social_url if "instagram.com" in social_url else "No detectado"
+                            "instagram": social_url if "instagram.com" in social_url else "No detectado",
+                            "enlaces_extra": []
                         }
 
                         try:
@@ -892,19 +899,47 @@ class TrelewLeadApp:
 
                         # --- VUELTA A INFORMACIÓN Y DATOS EXTRA (REDES/IMÁGENES) ---
                         try:
+                            self.log("Volviendo a pestaña Descripción general...")
                             # 1. Volver a la pestaña "Información" para buscar datos que no estaban en la vista principal.
                             # Este patrón (Info -> Reseñas -> Info) asegura que todos los datos dinámicos se carguen.
-                            driver.execute_script("""
-                                var tabs = document.querySelectorAll('button[role="tab"], button[aria-label*="Información"], button[aria-label*="Overview"]');
-                                for (var i = 0; i < tabs.length; i++) {
-                                    var txt = tabs[i].textContent || tabs[i].getAttribute('aria-label');
-                                    if (txt && (txt.includes('Información') || txt.includes('Overview'))) {
-                                        tabs[i].click();
-                                        break;
+                            tab_switched = False
+                            # Estrategia A: Búsqueda por XPath específicos (más robusto)
+                            xpaths_tab = [
+                                "//button[contains(@aria-label, 'Descripción general')]",
+                                "//div[contains(text(), 'Descripción general')]",
+                                "//span[contains(text(), 'Descripción general')]",
+                                "//button[contains(@aria-label, 'Información')]",
+                                "//div[contains(text(), 'Información')]",
+                                "//span[contains(text(), 'Información')]",
+                                "//button[contains(@aria-label, 'Overview')]"
+                            ]
+                            
+                            for xpath in xpaths_tab:
+                                try:
+                                    elements = driver.find_elements(By.XPATH, xpath)
+                                    for el in elements:
+                                        if el.is_displayed():
+                                            # Intentar click directo o en el padre botón
+                                            driver.execute_script("arguments[0].click();", el)
+                                            tab_switched = True
+                                            break
+                                    if tab_switched: break
+                                except: pass
+                            
+                            # Estrategia B: Fallback JS original
+                            if not tab_switched:
+                                driver.execute_script("""
+                                    var tabs = document.querySelectorAll('button[role="tab"], button[aria-label*="Información"], button[aria-label*="Overview"], button[aria-label*="Descripción general"]');
+                                    for (var i = 0; i < tabs.length; i++) {
+                                        var txt = tabs[i].textContent || tabs[i].getAttribute('aria-label');
+                                        if (txt && (txt.includes('Información') || txt.includes('Overview') || txt.includes('Descripción general'))) {
+                                            tabs[i].click();
+                                            break;
+                                        }
                                     }
-                                }
-                            """)
-                            time.sleep(2)
+                                """)
+                            
+                            time.sleep(2.5) # Espera vital para que cargue el contenido de la pestaña
 
                             # 2. SCROLL PROFUNDO EN INFORMACIÓN (MEJORADO)
                             # El usuario solicitó priorizar la captura de datos aunque demore más.
@@ -932,10 +967,22 @@ class TrelewLeadApp:
                                         main_div = visibles[-1]
 
                                 if main_div:
-                                    # Hacemos varios scrolls progresivos para asegurar que carguen secciones inferiores (Redes, "Del propietario")
-                                    for _ in range(3):
+                                    # Usamos la estrategia de teclado para que el scroll sea visible y active lazy load
+                                    # FIX: Hacemos clic en el TÍTULO (H1) en lugar de un punto arbitrario para evitar abrir fotos
+                                    try:
+                                        h1_safe = main_div.find_element(By.TAG_NAME, "h1")
+                                        ActionChains(driver).move_to_element(h1_safe).click().perform()
+                                        time.sleep(0.5)
+                                        for _ in range(6): # Aumentamos iteraciones para llegar al final (Web Results)
+                                            ActionChains(driver).send_keys(Keys.PAGE_DOWN).perform()
+                                            time.sleep(1.0)
+                                        
+                                        # Scroll final forzado con JS para asegurar que llegamos al fondo absoluto
                                         driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", main_div)
-                                        time.sleep(1.5)
+                                        time.sleep(1.0)
+                                    except:
+                                        # Fallback a JS si no se puede hacer clic en el título
+                                        driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", main_div)
                             except: pass
 
                             # 3. Búsqueda de Redes Sociales y Email (Estrategia de Respaldo)
@@ -982,6 +1029,32 @@ class TrelewLeadApp:
                                 src = img.get_attribute("src")
                                 if src and "http" in src and "googleusercontent" in src and len(datos_extra["imagenes"]) < 3:
                                     datos_extra["imagenes"].append(src)
+                            
+                            # 6. Recolectar "Resultados web" (Enlaces extra al final del panel)
+                            # Capturamos hasta 3 enlaces externos que no sean de Google ni redes ya detectadas.
+                            try:
+                                root_element = main_div if main_div else driver.find_element(By.CSS_SELECTOR, "div[role='main']")
+                                links_raw = root_element.find_elements(By.TAG_NAME, "a")
+                                for link in links_raw:
+                                    try:
+                                        url = link.get_attribute("href")
+                                        if not url or "javascript" in url or "mailto" in url or "tel" in url: continue
+                                        
+                                        # Filtros de ruido (Google Maps internals)
+                                        if "google.com" in url or "goo.gl" in url: continue
+                                        
+                                        # Filtros de redes ya capturadas
+                                        if "facebook.com" in url or "instagram.com" in url: continue
+                                        
+                                        # Evitar duplicados y limitar a 3
+                                        if url not in datos_extra["enlaces_extra"] and len(datos_extra["enlaces_extra"]) < 3:
+                                            datos_extra["enlaces_extra"].append(url)
+                                    except: continue
+                            except: pass
+
+                            # --- PUNTO DE PAUSA SOLICITADO 2 ---
+                            self.solicitar_confirmacion_usuario(f"Finalicé la revisión extra de: {nombre}.\n\nVoy a pasar al siguiente emprendimiento.")
+
                         except Exception: pass
 
                         # --- LÓGICA DE FUSIÓN INTELIGENTE (MERGE) ---
@@ -1009,6 +1082,10 @@ class TrelewLeadApp:
                         if not datos_extra["comentarios"] and datos_previos.get("comentarios"):
                             datos_extra["comentarios"] = datos_previos["comentarios"]
                         
+                        # Fusión de enlaces extra
+                        if not datos_extra["enlaces_extra"] and datos_previos.get("enlaces_extra"):
+                            datos_extra["enlaces_extra"] = datos_previos["enlaces_extra"]
+
                         # Guardar (ahora sí, datos combinados)
                         self.prospectos_datos[nombre] = datos_extra
                         
