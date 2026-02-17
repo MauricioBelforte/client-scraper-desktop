@@ -19,6 +19,8 @@ import src.constants as constantes
 from src.gestor_datos import GestorDatos
 from src.utilidades import abrir_whatsapp
 from src.scroll_strategies import estrategia_scroll_js_focalizado, estrategia_scroll_teclado
+from controlador_ia import generar_contenido_ia, limpiar_datos_ia
+from generador_web import generar_web_profesional
 
 class TrelewLeadApp:
     """
@@ -261,6 +263,12 @@ class TrelewLeadApp:
                            font=constantes.FUENTE_PEQUENA_NEGRITA, relief="flat", cursor="hand2",
                            command=lambda: self.lanzar_busqueda_externa(nombre))
         btn_enrich.pack(fill="x", pady=5)
+        
+        # Botón Generar Web (IA) - Punto 16
+        btn_web = tk.Button(body, text="✨ GENERAR WEB (IA)", bg="#efc355", fg="#111111", 
+                           font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2",
+                           command=lambda: self.lanzar_generacion_web(nombre, datos))
+        btn_web.pack(fill="x", pady=(10, 5))
 
     def contactar_todos_placeholder(self):
         pass
@@ -366,6 +374,34 @@ class TrelewLeadApp:
         row.pack(fill="x", pady=2)
         tk.Label(row, text=label, font=constantes.FUENTE_PEQUENA_NEGRITA, bg=constantes.COLOR_BLANCO, fg=constantes.COLOR_TEXTO_ETIQUETA).pack(side="left")
         tk.Label(row, text=value, font=constantes.FUENTE_PEQUENA, bg=constantes.COLOR_BLANCO, fg=constantes.COLOR_TEXTO_OSCURO).pack(side="left", padx=5)
+
+    def lanzar_generacion_web(self, nombre, datos):
+        """Inicia el proceso de generación web en un hilo aparte."""
+        if messagebox.askyesno("Generar Web", f"¿Deseas generar automáticamente el sitio web para:\n{nombre}?"):
+            threading.Thread(target=self.ejecutar_generacion_web_thread, args=(nombre, datos), daemon=True).start()
+
+    def ejecutar_generacion_web_thread(self, nombre, datos):
+        self.log(f"🚀 Iniciando motor de IA para {nombre}...")
+        try:
+            # 1. Limpieza de datos
+            self.log("🧹 Fase 1: Normalizando datos con IA...")
+            datos_limpios = limpiar_datos_ia(datos)
+            
+            # 2. Generación de contenido
+            self.log("🧠 Fase 2: Redactando textos persuasivos...")
+            textos_ai = generar_contenido_ia(nombre, datos_limpios)
+            
+            # 3. Construcción de la web
+            self.log("🎨 Fase 3: Maquetando sitio web...")
+            resultado = generar_web_profesional(nombre, datos_limpios, textos_ai)
+            
+            self.log("✅ ¡Sitio web creado con éxito!")
+            self.root.after(0, lambda: messagebox.showinfo("Proceso Finalizado", f"Web generada correctamente.\n\n{resultado}"))
+            
+        except Exception as e:
+            error_msg = str(e)
+            self.log(f"❌ Error en generación: {error_msg}")
+            self.root.after(0, lambda: messagebox.showerror("Error Crítico", f"No se pudo generar la web:\n{error_msg}"))
 
     def start_scraping_thread(self, estrategia="teclado"):
         """Inicia el proceso de búsqueda en un hilo separado para evitar bloqueos de UI."""

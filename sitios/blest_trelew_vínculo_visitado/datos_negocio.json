@@ -1,0 +1,44 @@
+{
+  "telefono": "+54 280 4029289",
+  "direccion": "Gales 255, U9100 Trelew, Chubut",
+  "categoria": "Fábrica de cerveza",
+  "overall_rating": 4.6,
+  "total_reviews": 231,
+  "horario": "No especificado",
+  "comentarios": [
+    {
+      "autor": "Luis Muñoz",
+      "texto": "Local con buen ambiente, bajo nivel de ruido, buena atención, sin embargo, su comida podría mejorar bastante, las porciones son pequeñas y la pizza... mejor ni hablar. Las papas estaban buenísimas eso si.…",
+      "rating": 2
+    },
+    {
+      "autor": null,
+      "texto": "Local con buen ambiente, bajo nivel de ruido, buena atención, sin embargo, su comida podría mejorar bastante, las porciones son pequeñas y la pizza... mejor ni hablar. Las papas estaban buenísimas eso si.…",
+      "rating": 2
+    },
+    {
+      "autor": "catalina sotto",
+      "texto": "Muy ricas papas, tienen menú vegetariano y para niños, a veces te dan la opcion de adaptar platos segun lo que pidas y riquisima cerveza",
+      "rating": 5
+    },
+    {
+      "autor": null,
+      "texto": "Muy ricas papas, tienen menú vegetariano y para niños, a veces te dan la opcion de adaptar platos segun lo que pidas y riquisima cerveza",
+      "rating": 5
+    },
+    {
+      "autor": "claudio murillo",
+      "texto": "la atención no se , tuve qie ir a buscar al,mozo por que estuvimos casi 30 minutos y nadie nos atendía. lemdije si por favor podía tomarnos el pedido , ni nos había visto. a largo que había poca gente .…",
+      "rating": 2
+    }
+  ],
+  "imagenes": [
+    "https://lh3.googleusercontent.com/gps-cs-s/AHVAweqbVKfHgfDt76ZHAtSmXWMNu9yMkpD58eLCZVVNnIBnywZcLIEaf2VAr3etAgUFmRgeEgzJ3cwolrR3HEdVoEsRjn2-tjDWJ80VGduJCm9qgcCb0wyP-TJHrmJOmMNJpLWgs7k=w80-h106-k-no",
+    "https://lh3.googleusercontent.com/gps-cs-s/AHVAweq0NsRa9-OT8FTdA8h0v-sYXRB65gtTNFtaa36DRYqc4sHf3zb9hxDtIpVgCgCsl0iwxHwr4QLG7Z2e3MZHdkFBZRwJnr-0f2p4vdb-R60RqLU3oP5H-wBwyl-nc0xQxkh3smj7eA=w163-h92-k-no",
+    "https://lh3.googleusercontent.com/gps-cs-s/AHVAwer2H3qudtagtXXuoD725XAxrN6V-XKy2VsTkZB8tTvTBxe4fKmjdKazY50ameCru86XYfCwAKkENpQ6CaQX5VHDVE9lNVNgQ76QB9DM2vl8BlAiM9Ce_GJ5NPV9vxr0B86EPKnKVA=w163-h92-k-no"
+  ],
+  "whatsapp": "Probable",
+  "email": "No detectado",
+  "facebook": "No detectado",
+  "instagram": "No detectado"
+}
