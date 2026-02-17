@@ -1,9 +1,8 @@
 {
-  "telefono": "+54 280 461-5294",
-  "direccion": "Uruguay 911, U9100 Trelew, Chubut",
-  "categoria": "Cervecería artesanal",
-  "rating_value": 4.4,
-  "rating_count": 434,
+  "telefono": "+54 9 280 484 6779",
+  "direccion": "Sarmiento 442, U9100 Trelew, Chubut",
+  "categoria": "Cervecería al Aire Libre",
+  "rating": 4.4,
   "horario": "No especificado",
   "comentarios": [
     {
@@ -12,7 +11,7 @@
       "rating": 1
     },
     {
-      "autor": null,
+      "autor": "Anónimo",
       "texto": "No pidan la picada, es incomible, la milanesa parece vieja, viene sin los aros de cebolla y bastante chica la porción que de por sí no me la pude terminar por que estaba horrible",
       "rating": 1
     },
@@ -22,23 +21,23 @@
       "rating": 1
     },
     {
-      "autor": null,
+      "autor": "Anónimo",
       "texto": "Si queres comer fugazzeta no pidas acá porque que ofrecen masa con queso y cebolla cruda, pésimo. Tal cual lo ves en la foto, se te van las ganas de volver a comer fugazzeta",
       "rating": 1
     },
     {
       "autor": "Guadalupe Soto Ziede",
-      "texto": "me cobraron casi $20.000 esta bandeja de ñoquis que había pedido con salsa boloñesa. pésimo nunca más vuelvo a pedir.",
+      "texto": "Me cobraron casi $20.000 esta bandeja de ñoquis que había pedido con salsa boloñesa. Pésimo, nunca más vuelvo a pedir.",
       "rating": 1
     }
   ],
   "imagenes": [
     "https://lh3.googleusercontent.com/gps-cs-s/AHVAwertnwelcA6BhITFju0vzXLst4tqz6r0bJOcw8qFcFlslCD7ib-sTqvGtW5vHC64P0nQ3EoegQ2D2mCqRx_fFvpVlVtS-n9-RGZg3LsSK96TRGqX-c6WPNTBwQ-ucFBXQfkmE1LZ=w163-h92-k-no",
-    "https://lh3.googleusercontent.com/gps-cs-s/AHVAweqbVKfHgfDt76ZHAtSmXWMNu9yMkpD58eLCZVVnIBnywZcLIEaf2VAr3etAgUFmRgeEgzJ3cwolrR3HEdVoEsRjn2-tjDWJ80VGduJCm9qgcCb0wyP-TJHrmJOmMNJpLWgs7k=w80-h106-k-no",
+    "https://lh3.googleusercontent.com/gps-cs-s/AHVAweqbVKfHgfDt76ZHAtSmXWMNu9yMkpD58eLCZVVNnIBnywZcLIEaf2VAr3etAgUFmRgeEgzJ3cwolrR3HEdVoEsRjn2-tjDWJ80VGduJCm9qgcCb0wyP-TJHrmJOmMNJpLWgs7k=w80-h106-k-no",
     "https://lh3.googleusercontent.com/gps-cs-s/AHVAweq0NsRa9-OT8FTdA8h0v-sYXRB65gtTNFtaa36DRYqc4sHf3zb9hxDtIpVgCgCsl0iwxHwr4QLG7Z2e3MZHdkFBZRwJnr-0f2p4vdb-R60RqLU3oP5H-wBwyl-nc0xQxkh3smj7eA=w163-h92-k-no"
   ],
   "whatsapp": "Probable",
   "email": "No detectado",
-  "facebook": "No detectado",
-  "instagram": "No detectado"
+  "facebook": "https://www.facebook.com/diarioelchubut/posts/trelewel-domingo-con-la-presencia-de-amigos-y-futuros-clientes-abri%C3%B3-sus-puertas/1257388343083894/",
+  "instagram": "https://www.instagram.com/garden.cerveceria/"
 }

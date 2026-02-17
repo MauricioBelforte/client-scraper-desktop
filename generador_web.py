@@ -2,19 +2,47 @@ import os
 import re
 import json
 import urllib.parse
-import random
 import datetime
+import random
+import requests
 
-# Pegá aquí tu CSS completo tal cual me lo pasaste
-def generar_url_imagen(prompt, width=800, height=600, nologo=True, seed=""):
-    """Genera una URL de Pollinations.ai para una imagen."""
-    # Codificar el prompt para URL (espacios -> %20, acentos, etc.)
-    prompt_encoded = urllib.parse.quote(prompt)
-    url = f"https://image.pollinations.ai/prompt/{prompt_encoded}?width={width}&height={height}"
-    # Si no hay semilla, generar una aleatoria para evitar caché y forzar generación
-    seed_final = seed if seed else random.randint(1, 999999)
-    url += f"&seed={seed_final}"
-    return url
+def generar_y_guardar_imagen(prompt: str, ruta_guardado: str):
+    """
+    Genera una imagen usando Cloudflare Workers AI y la guarda en un archivo.
+
+    Args:
+        prompt (str): El prompt para la generación de la imagen.
+        ruta_guardado (str): La ruta completa del archivo donde se guardará la imagen.
+
+    Returns:
+        bool: True si la imagen se generó y guardó, False en caso de error.
+    """
+    try:
+        account_id = os.getenv("CLOUDFLARE_ACCOUNT_ID")
+        api_token = os.getenv("CLOUDFLARE_API_TOKEN")
+        if not account_id or not api_token:
+            print("[AVISO] Variables de entorno CLOUDFLARE_ACCOUNT_ID o CLOUDFLARE_API_TOKEN no encontradas. Omitiendo generación de imagen.")
+            return False
+
+        # Modelo recomendado para velocidad y calidad general.
+        model = "@cf/stabilityai/stable-diffusion-xl-base-1.0"
+        url = f"https://api.cloudflare.com/client/v4/accounts/{account_id}/ai/run/{model}"
+        
+        headers = {"Authorization": f"Bearer {api_token}"}
+        payload = {"prompt": prompt}
+
+        response = requests.post(url, headers=headers, json=payload)
+
+        if response.status_code == 200:
+            with open(ruta_guardado, 'wb') as f:
+                f.write(response.content)
+            return True
+        else:
+            print(f"[ERROR] Error al generar imagen con Cloudflare ({response.status_code}): {response.text}")
+            return False
+    except Exception as e:
+        print(f"[ERROR] Excepción al llamar a la API de Cloudflare: {e}")
+        return False
 
 def generar_web_profesional(nombre_negocio, data_json, textos_ai=None):
     """
@@ -36,7 +64,7 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None):
     with open(f"{ruta_web}/datos_negocio.json", "w", encoding="utf-8") as f:
         json.dump(data_json, f, ensure_ascii=False, indent=2)
 
-    # --- Lógica de Imágenes Dinámicas con IA (Pollinations) ---
+    # --- Lógica de Imágenes Dinámicas con IA (Cloudflare) ---
     categoria_raw = data_json.get('categoria', 'negocio').lower()
     # Simplificar categoría para el prompt (ej: "taller mecánico" -> "taller")
     categoria_simple = categoria_raw.split(" ")[0]
@@ -81,8 +109,19 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None):
     
     prompts = prompts_por_categoria.get(categoria_simple, prompts_por_categoria["default"])
 
-    url_logo = generar_url_imagen(prompts["logo"], width=300, height=300)
-    url_fondo = generar_url_imagen(prompts["fondo"], width=1920, height=1080)
+    # Generar y guardar imágenes, obteniendo sus rutas relativas
+    ruta_logo_local = f"{ruta_web}/assets/img/logo.png"
+    if generar_y_guardar_imagen(prompts["logo"], ruta_logo_local):
+        url_logo = "assets/img/logo.png"
+    else:
+        url_logo = "https://via.placeholder.com/300" # Fallback
+
+    # Para el fondo, lo guardamos pero lo referenciamos en el CSS
+    ruta_fondo_local = f"{ruta_web}/assets/img/fondo_hero.jpg"
+    generar_y_guardar_imagen(prompts["fondo"], ruta_fondo_local)
+    # La URL del fondo se inyectará directamente en el CSS
+    url_fondo_css = "assets/img/fondo_hero.jpg"
+
 
     # --- Link de WhatsApp (definido antes para usarlo como fallback) ---
     tel = "".join(filter(str.isdigit, data_json.get('telefono', '')))
@@ -98,16 +137,49 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None):
     lema_hero = textos_ai.get('lema_corto', f"Calidad y confianza en cada detalle.")
 
     # Procesar Reseñas
+    comentarios_reales = data_json.get('comentarios', [])
+    comentarios_filtrados = []
+    
+    # 1. Filtrar solo reseñas buenas (4 o 5 estrellas/puntos)
+    for c in comentarios_reales:
+        rating_raw = str(c.get('rating', '')).lower()
+        if '4' in rating_raw or '5' in rating_raw:
+            comentarios_filtrados.append(c)
+            
+    # 2. Seleccionar top 3 o rellenar con ficticios
+    comentarios_finales = comentarios_filtrados[:3]
+    
+    nombres_fake = ["Juan Pérez", "María González", "José López", "Ana Martínez", "Carlos Rodríguez"]
+    textos_fake = [
+        "¡Excelente servicio! Superaron mis expectativas totalmente.",
+        "Muy profesionales y atentos. Definitivamente volveré.",
+        "La calidad es increíble y el trato muy amable. 100% recomendado.",
+        "Una experiencia fantástica, cuidaron cada detalle.",
+        "Me encantó, son los mejores en lo que hacen."
+    ]
+    
+    while len(comentarios_finales) < 3:
+        idx = len(comentarios_finales)
+        comentarios_finales.append({
+            "autor": nombres_fake[idx % len(nombres_fake)],
+            "texto": textos_fake[idx % len(textos_fake)],
+            "rating": "⭐⭐⭐⭐⭐"
+        })
+
     comentarios_html = ""
-    for i, c in enumerate(data_json.get('comentarios', [])[:6]):
-        if not c.get('texto'): continue
-        url_testimonio = generar_url_imagen(prompts["testimonio"], width=400, height=300, seed=f"{nombre_slug}{i}")
+    for i, c in enumerate(comentarios_finales):
+        ruta_testimonio_local = f"{ruta_web}/assets/img/testimonio_{i}.jpg"
+        if generar_y_guardar_imagen(prompts["testimonio"], ruta_testimonio_local):
+            url_testimonio = f"assets/img/testimonio_{i}.jpg"
+        else:
+            url_testimonio = "https://via.placeholder.com/150" # Fallback
         comentarios_html += f'''
-        <article class="tarjeta-producto">
-            <img src="{url_testimonio}">
-            <h3 class="libre-baskerville">{c.get('autor') or 'Cliente Satisfecho'}</h3>
-            <p>"{c.get('texto')[:140]}..."</p>
-            <span class="precio-real">{c.get('rating', '⭐⭐⭐⭐⭐')}</span>
+        <article class="tarjeta-testimonio">
+            <img src="{url_testimonio}" alt="Foto de {c.get('autor')}">
+            <span class="comillas-testimonio">“</span>
+            <p class="texto-testimonio">"{c.get('texto')[:140]}..."</p>
+            <div class="estrellas-testimonio">⭐⭐⭐⭐⭐</div>
+            <h3 class="autor-testimonio">{c.get('autor')}</h3>
         </article>
         '''
 
@@ -218,7 +290,7 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None):
     html {{ scroll-behavior: smooth; }}
     body {{ 
         font-family: var(--fuente-base); 
-        background: linear-gradient(180deg, #000000b8 42%, #00000095 84%), url('{url_fondo}');
+        background: linear-gradient(180deg, #000000b8 42%, #00000095 84%), url('{url_fondo_css}');
         background-size: cover; background-attachment: fixed; 
         color: var(--color-texto-claro);
         background-color: var(--color-fondo-oscuro);
@@ -230,7 +302,7 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None):
     h1, h2, h3 {{ font-family: var(--fuente-secundaria); }}
 
     /* --- Estilos Generales y Componentes --- */
-    .barra-navegacion {{ width: 100%; display: flex; flex-direction: column; align-items: center; padding: var(--espaciado-md); }}
+    .barra-navegacion {{ width: 100%; display: flex; flex-direction: column; align-items: center; padding: var(--espaciado-sm); }}
     .logo img {{ width: 10.5rem; height: 10.5rem; border-radius: 50%; border: 3px solid var(--color-primario); }}
     .seccion-hero {{ text-align: center; padding: var(--espaciado-lg) var(--espaciado-md); min-height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }}
     .seccion-hero h1 {{ font-size: var(--font-size-xxl); }}
@@ -243,6 +315,16 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None):
     .tarjeta-producto img {{ width: 100%; height: 15rem; object-fit: cover; border-radius: 0.5rem; }}
     .tarjeta-beneficio {{ background: var(--color-fondo-claro); color: var(--color-texto-inverso); text-align: center; padding: 2rem 1rem; display: flex; align-items: center; justify-content: center; }}
     .tarjeta-beneficio h3 {{ font-size: var(--font-size-sm); }}
+    
+    /* --- Estilos Nuevos para Testimonios --- */
+    .tarjeta-testimonio {{ background: var(--color-fondo-claro); border-radius: var(--radio-card); padding: 2rem; display: flex; flex-direction: column; align-items: center; text-align: center; color: var(--color-texto-inverso); transition: var(--transicion-estandar); position: relative; }}
+    .tarjeta-testimonio:hover {{ transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }}
+    .tarjeta-testimonio img {{ width: 6rem; height: 6rem; border-radius: 50%; object-fit: cover; border: 3px solid var(--color-primario); margin-bottom: 1rem; }}
+    .comillas-testimonio {{ font-size: 4rem; line-height: 0.5; font-family: serif; color: var(--color-primario); display: block; margin-bottom: 1rem; margin-top: 0.5rem; opacity: 0.8; }}
+    .texto-testimonio {{ font-style: italic; margin-bottom: 1rem; font-size: 1.1rem; }}
+    .estrellas-testimonio {{ color: #FFD700; margin-bottom: 0.5rem; font-size: 1.2rem; letter-spacing: 2px; }}
+    .autor-testimonio {{ font-weight: bold; font-family: var(--fuente-secundaria); font-size: 1rem; text-transform: uppercase; }}
+
     .precio-real {{ color: var(--color-acento-oscuro); font-weight: bold; font-size: var(--font-size-sm); margin-top: var(--espaciado-sm); display: block; }}
     .posicion-fixed {{ position: fixed; bottom: 5vh; right: 2vw; background: #2cc748; border-radius: 50%; padding: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 1000; }}
     .seccion-beneficios, .seccion-presentacion, .seccion-productos {{ padding: var(--espaciado-lg) var(--espaciado-md); text-align: center; }}
@@ -289,7 +371,7 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None):
     <body>
         <nav class="barra-navegacion">
             <div class="logo">
-                <img src="{url_logo}" alt="Logo">
+                <img src="{url_logo}" alt="Logo de {nombre_negocio}">
             </div>
         </nav>
 

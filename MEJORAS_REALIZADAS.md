@@ -27,6 +27,7 @@ Este documento rastrea el progreso de las optimizaciones realizadas en **Trelew 
 - [x] **Feedback de Estado:** Mensajes en la barra inferior indicando qué está haciendo el robot paso a paso.
 - [ ] **Barra de Progreso:** (Pendiente) Visualización porcentual o indeterminada.
 - [ ] **Botón de Stop/Pausa:** (Pendiente) Para detener el robot sin cerrar la app.
+- [ ] **Gestión Manual (Eliminar):** (Pendiente) Opción con clic derecho para borrar un lead de la lista.
 
 ## 4. Calidad de Código 🛠️
 - [x] **Refactorización de Scroll:** Se eliminaron las coordenadas fijas (que fallaban en distintas resoluciones) por lógica basada en el DOM.
@@ -36,6 +37,7 @@ Este documento rastrea el progreso de las optimizaciones realizadas en **Trelew 
 ## 5. Ideas de Expansión 📈
 - [ ] **Búsqueda Multi-Ciudad:** (Pendiente) Campo de texto para cambiar "Trelew" por otra ciudad.
 - [x] **Validación de WhatsApp:** (Implementado) Lógica de detección de celulares.
+- [ ] **Mapas Interactivos en Web Generada:** (Pendiente) Reemplazar el enlace al mapa por un mapa de Google Maps incrustado (iframe).
 
 ---
 *Resumen:* Se ha logrado una estabilidad muy alta en la recolección de datos (incluyendo imágenes y correos) y se ha mejorado significativamente la interfaz de contacto. El siguiente paso lógico sería la exportación a Excel y la limpieza de código modular.

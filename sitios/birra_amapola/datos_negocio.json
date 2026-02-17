@@ -1,0 +1,33 @@
+{
+  "telefono": "+54 280 495-6138",
+  "direccion": "Cambrin 56, 9100 Trelew, Chubut",
+  "categoria": "Bar",
+  "rating": 4.4,
+  "horario": null,
+  "comentarios": [
+    {
+      "autor": "Alan Jones",
+      "texto": "No pidan la picada, es incomible, la milanesa parece vieja, viene sin los aros de cebolla y bastante chica la porción que de por sí no me la pude terminar por que estaba horrible",
+      "rating": 1
+    },
+    {
+      "autor": "Gise Enc",
+      "texto": "Si queres comer fugazzeta no pidas acá porque que ofrecen masa con queso y cebolla cruda, pésimo. Tal cual lo ves en la foto, se te van las ganas de volver a comer fugazzeta",
+      "rating": 1
+    },
+    {
+      "autor": "Guadalupe Soto Ziede",
+      "texto": "me cobraron casi $20.000 esta bandeja de ñoquis que había pedido con salsa boloñesa. pésimo nunca más vuelvo a pedir.",
+      "rating": 1
+    }
+  ],
+  "imagenes": [
+    "https://lh3.googleusercontent.com/gps-cs-s/AHVAwertnwelcA6BhITFju0vzXLst4tqz6r0bJOcw8qFcFlslCD7ib-sTqvGtW5vHC64P0nQ3EoegQ2D2mCqRx_fFvpVlVtS-n9-RGZg3LsSK96TRGqX-c6WPNTBwQ-ucFBXQfkmE1LZ=w163-h92-k-no",
+    "https://lh3.googleusercontent.com/gps-cs-s/AHVAweqbVKfHgfDt76ZHAtSmXWMNu9yMkpD58eLCZVVnIBnywZcLIEaf2VAr3etAgUFmRgeEgzJ3cwolrR3HEdVoEsRjn2-tjDWJ80VGduJCm9qgcCb0wyP-TJHrmJOmMNJpLWgs7k=w80-h106-k-no",
+    "https://lh3.googleusercontent.com/gps-cs-s/AHVAweq0NsRa9-OTdA8h0v-sYXRB65gtTNFtaa36DRYqc4sHf3zb9hxDtIpVgCgCsl0iwxHwr4QLG7Z2e3MZHdkFBZRwJnr-0f2p4vdb-R60RqLU3oP5H-wBwyl-nc0xQxkh3smj7eA=w163-h92-k-no"
+  ],
+  "whatsapp": null,
+  "email": null,
+  "facebook": null,
+  "instagram": null
+}

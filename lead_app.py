@@ -31,6 +31,7 @@ class TrelewLeadApp:
         self.root = root
         self.root.title(constantes.TITULO_APP)
         self.root.geometry("1100x700")
+        self.root.state('zoomed')
         self.root.configure(bg=constantes.COLOR_FONDO)
 
         # Inicializar Gestor de Datos
@@ -134,6 +135,38 @@ class TrelewLeadApp:
         """Actualiza la barra de estado inferior."""
         self.status_label.config(text=f"⚙️ {mensaje}")
         self.root.update_idletasks()
+
+    def limpiar_nombre(self, nombre):
+        """Elimina sufijos de estado de navegación del nombre del negocio."""
+        if not nombre: return ""
+        # Regex robusto: detecta guiones, puntos medios (·) y variaciones de "Vínculo visitado"
+        patron = r"(?i)(\s*[-·]?\s*(Vínculo visitado|Visited link|Enlace visitado))"
+        nombre_limpio = re.sub(patron, "", nombre)
+        return nombre_limpio.strip()
+
+    def fusionar_datos(self, datos_prioritarios, datos_secundarios):
+        """
+        Combina dos diccionarios. Mantiene los datos de 'datos_prioritarios' 
+        salvo que estén vacíos y 'datos_secundarios' tenga información.
+        """
+        resultado = datos_prioritarios.copy()
+        valores_nulos = ["Sin teléfono", "No disponible", "No especificado", "N/A", "No detectado", "", None, "General"]
+        
+        for k, v in datos_secundarios.items():
+            val_prio = resultado.get(k)
+            
+            # Si el prioritario no tiene dato válido y el secundario sí, lo tomamos
+            if val_prio in valores_nulos and v not in valores_nulos:
+                resultado[k] = v
+            
+            # Fusión inteligente de listas (imágenes, enlaces)
+            elif isinstance(v, list) and isinstance(val_prio, list):
+                if k in ["imagenes", "enlaces_extra"]:
+                    # Unir y quitar duplicados
+                    resultado[k] = list(set(val_prio + v))
+                elif not val_prio and v:
+                    resultado[k] = v
+        return resultado
 
     def solicitar_confirmacion_usuario(self, mensaje):
         """Muestra un cartel y detiene el hilo hasta que el usuario acepte."""
@@ -454,6 +487,40 @@ class TrelewLeadApp:
         
         driver = None
         try:
+            # --- FASE 0: LIMPIEZA Y FUSIÓN DE DUPLICADOS ---
+            self.log("♻️ Optimizando base de datos (fusionando duplicados)...")
+            claves_a_eliminar = []
+            nuevos_items = {}
+            
+            # Iteramos sobre una copia para detectar nombres sucios
+            for nombre_sucio, datos in list(self.prospectos_datos.items()):
+                nombre_limpio = self.limpiar_nombre(nombre_sucio)
+                
+                # Si el nombre estaba sucio (ej: tenía "- Vínculo visitado")
+                if nombre_sucio != nombre_limpio:
+                    claves_a_eliminar.append(nombre_sucio)
+                    
+                    # Recuperamos datos existentes del nombre limpio (si hay)
+                    datos_existentes = self.prospectos_datos.get(nombre_limpio, nuevos_items.get(nombre_limpio, {}))
+                    
+                    # Fusionamos: Priorizamos lo que ya existía limpio, rellenamos con lo sucio
+                    if datos_existentes:
+                        datos_fusionados = self.fusionar_datos(datos_existentes, datos)
+                    else:
+                        datos_fusionados = datos
+                    
+                    nuevos_items[nombre_limpio] = datos_fusionados
+            
+            # Aplicar cambios a la base de datos principal
+            for k in claves_a_eliminar:
+                del self.prospectos_datos[k]
+            self.prospectos_datos.update(nuevos_items)
+            
+            # Refrescar UI
+            self.root.after(0, lambda: self.tree.delete(*self.tree.get_children()))
+            for nombre in self.prospectos_datos:
+                self.root.after(0, lambda n=nombre: self.tree.insert("", "end", iid=n, values=(n, "OPTIMIZADO ⚡")))
+
             driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
             driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
                 "source": "Object.defineProperty(navigator, 'webdriver', { get: () => undefined });"
@@ -471,7 +538,8 @@ class TrelewLeadApp:
                     continue
 
                 self.log(f"Enriqueciendo {count}/{total}: {nombre}...")
-                nuevos_datos = self.buscar_datos_externos(driver, nombre)
+                categoria = datos.get("categoria", "")
+                nuevos_datos = self.buscar_datos_externos(driver, nombre, categoria)
                 
                 if nuevos_datos:
                     actualizado = False
@@ -524,13 +592,16 @@ class TrelewLeadApp:
                 "source": "Object.defineProperty(navigator, 'webdriver', { get: () => undefined });"
             })
             
-            nuevos_datos = self.buscar_datos_externos(driver, nombre)
+            datos = self.prospectos_datos.get(nombre, {})
+            categoria = datos.get("categoria", "")
+            nuevos_datos = self.buscar_datos_externos(driver, nombre, categoria)
             
             if nuevos_datos:
-                datos = self.prospectos_datos.get(nombre, {})
                 actualizado = False
                 for k, v in nuevos_datos.items():
-                    if v and datos.get(k) == 'No detectado':
+                    # En búsqueda manual individual, sobrescribimos (pisamos) los datos
+                    # porque el usuario indica implícitamente que los actuales no le sirven.
+                    if v:
                         datos[k] = v
                         actualizado = True
                 
@@ -552,19 +623,19 @@ class TrelewLeadApp:
             if driver:
                 driver.quit()
 
-    def buscar_datos_externos(self, driver, nombre):
+    def buscar_datos_externos(self, driver, nombre, categoria=""):
         """
         Método de respaldo: Busca en Google Search si faltan datos clave.
         Abre una nueva pestaña, busca y extrae emails o redes sociales de los resultados.
         """
-        self.log(f"🔍 Buscando datos extra en Google para: {nombre}...")
+        self.log(f"🔍 Buscando en Google: {nombre} ({categoria})...")
         nuevos_datos = {}
         try:
             original_window = driver.current_window_handle
             driver.switch_to.new_window('tab')
             
             # Búsqueda OSINT: Combinamos nombre, ciudad y palabras clave para maximizar la probabilidad de encontrar datos de contacto.
-            query = f"{nombre} Trelew contacto email instagram facebook"
+            query = f"{nombre} {categoria} Trelew contacto email instagram facebook"
             driver.get(f"https://www.google.com/search?q={query.replace(' ', '+')}")
             time.sleep(random.uniform(2.5, 4)) # Espera humana
             
@@ -711,9 +782,11 @@ class TrelewLeadApp:
                 try:
                     # Intentar obtener el nombre desde el enlace principal (más estable que clases aleatorias)
                     try:
-                        nombre = local.find_element(By.CSS_SELECTOR, "a[href*='/maps/place/']").get_attribute("aria-label")
+                        nombre_raw = local.find_element(By.CSS_SELECTOR, "a[href*='/maps/place/']").get_attribute("aria-label")
                     except:
-                        nombre = local.text.split("\n")[0] # Fallback si falla el selector
+                        nombre_raw = local.text.split("\n")[0] # Fallback si falla el selector
+                    
+                    nombre = self.limpiar_nombre(nombre_raw)
                     
                     # Verificación lógica de presencia web
                     botones_web = [b for b in local.find_elements(By.TAG_NAME, "a") if "Sitio web" in str(b.get_attribute("aria-label"))]
@@ -1085,32 +1158,14 @@ class TrelewLeadApp:
                         # información valiosa (ej. un email encontrado manualmente) con un resultado vacío ("No detectado").
                         datos_previos = self.prospectos_datos.get(nombre, {})
                         
-                        # Lista de campos a verificar para no sobrescribir con vacíos
-                        campos_verificar = ["telefono", "direccion", "categoria", "rating", "horario", "facebook", "instagram", "imagenes", "whatsapp", "email"]
-                        valores_nulos = ["Sin teléfono", "No disponible", "No especificado", "N/A", "No detectado", "", None]
-
-                        for campo in campos_verificar:
-                            nuevo_valor = datos_extra.get(campo)
-                            viejo_valor = datos_previos.get(campo)
-                            
-                            # Si el nuevo valor es "nulo" y el viejo servía, nos quedamos con el viejo
-                            if nuevo_valor in valores_nulos and viejo_valor not in valores_nulos:
-                                datos_extra[campo] = viejo_valor
-
-                        # Fusión de imágenes: si no encontramos nuevas, mantenemos las viejas
-                        if not datos_extra["imagenes"] and datos_previos.get("imagenes"):
-                            datos_extra["imagenes"] = datos_previos["imagenes"]
-
-                        # Fusión de comentarios: Si no encontramos nuevos, mantenemos los viejos
-                        if not datos_extra["comentarios"] and datos_previos.get("comentarios"):
-                            datos_extra["comentarios"] = datos_previos["comentarios"]
-                        
-                        # Fusión de enlaces extra
-                        if not datos_extra["enlaces_extra"] and datos_previos.get("enlaces_extra"):
-                            datos_extra["enlaces_extra"] = datos_previos["enlaces_extra"]
+                        # Usamos la nueva función de fusión
+                        # Prioridad: datos_extra (lo nuevo que acabamos de scrapear)
+                        # Respaldo: datos_previos (lo que ya teníamos)
+                        # Si datos_extra trae "No detectado" y datos_previos tenía email, se queda el email.
+                        datos_fusionados = self.fusionar_datos(datos_extra, datos_previos)
 
                         # Guardar (ahora sí, datos combinados)
-                        self.prospectos_datos[nombre] = datos_extra
+                        self.prospectos_datos[nombre] = datos_fusionados
                         
                         # --- GUARDADO INCREMENTAL (PERSISTENCIA) ---
                         # Guardamos en cada iteración para evitar pérdida de datos si se cierra el navegador
