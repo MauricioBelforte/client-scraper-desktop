@@ -47,7 +47,7 @@ client-scraper-desktop/
 *Objetivo: Crear una clase dedicada exclusivamente a leer y escribir archivos en el disco.*
 
 - [x] **9. Crear Clase `GestorDatos`:** Crea el archivo `src/gestor_datos.py` con una clase `GestorDatos`. Su `__init__` debe recibir el path de la carpeta de datos.
-- [ ] **10. Mover Lógica de Guardado:** Mueve la lógica de `open(..., 'w')` y `json.dump()` de `ejecutar_scraping` y `ejecutar_enriquecimiento_masivo` a un método `guardar_datos(self, nombre_archivo, datos)` en `GestorDatos`.
+- [x] **10. Mover Lógica de Guardado:** Mueve la lógica de `open(..., 'w')` y `json.dump()` de `ejecutar_scraping` y `ejecutar_enriquecimiento_masivo` a un método `guardar_datos(self, nombre_archivo, datos)` en `GestorDatos`.
 - [x] **11. Mover Lógica de Carga:** Mueve la lógica de `open(..., 'r')` y `json.load()` de `cargar_ficha_offline` y `start_scraping_thread` a un método `cargar_datos(self, nombre_archivo)` en `GestorDatos`.
 - [x] **12. Mover Lógica de Listado de Fichas:** Mueve la lógica de `os.listdir()` de `actualizar_lista_fichas` a un método `obtener_archivos(self)` en `GestorDatos`.
 

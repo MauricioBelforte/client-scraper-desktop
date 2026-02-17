@@ -14,12 +14,32 @@ class GestorDatos:
         return [f.replace(".json", "") for f in os.listdir(self.carpeta_datos) if f.endswith(".json")]
 
     def cargar_datos(self, nombre_archivo):
-        """Carga el contenido de un archivo JSON dado su nombre (sin extensión)."""
-        ruta_archivo = os.path.join(self.carpeta_datos, f"{nombre_archivo}.json")
+        """Carga el contenido de un archivo JSON dado su nombre (con o sin extensión)."""
+        if not nombre_archivo.endswith(".json"):
+            nombre_archivo += ".json"
+            
+        ruta_archivo = os.path.join(self.carpeta_datos, nombre_archivo)
         if not os.path.exists(ruta_archivo):
             return {}
         
-        with open(ruta_archivo, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        try:
+            with open(ruta_archivo, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception:
+            return {}
 
-    # Aquí agregaremos guardar_datos en el siguiente paso
+    def guardar_datos(self, nombre_archivo, datos):
+        """Guarda un diccionario en un archivo JSON (con o sin extensión)."""
+        if not nombre_archivo:
+            return False
+            
+        if not nombre_archivo.endswith(".json"):
+            nombre_archivo += ".json"
+            
+        ruta_archivo = os.path.join(self.carpeta_datos, nombre_archivo)
+        try:
+            with open(ruta_archivo, 'w', encoding='utf-8') as f:
+                json.dump(datos, f, ensure_ascii=False, indent=4)
+            return True
+        except Exception:
+            return False

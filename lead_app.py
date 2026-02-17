@@ -3,7 +3,6 @@ from tkinter import ttk, messagebox
 import threading
 import random
 import time
-import json
 import os
 import webbrowser
 import re
@@ -381,18 +380,14 @@ class TrelewLeadApp:
         
         # --- LÓGICA DE FUSIÓN: Cargar datos previos si existen ---
         self.prospectos_datos = {}
-        archivo_previo = os.path.join(constantes.CARPETA_DATOS, f"{rubro}.json")
         
-        if os.path.exists(archivo_previo):
-            try:
-                with open(archivo_previo, 'r', encoding='utf-8') as f:
-                    self.prospectos_datos = json.load(f)
-                # Cargar en la lista visualmente (usando el nombre como ID para evitar duplicados)
-                for nombre in self.prospectos_datos:
-                    self.tree.insert("", "end", iid=nombre, values=(nombre, "HISTÓRICO 📁"))
-                self.log(f"Se cargaron {len(self.prospectos_datos)} registros previos. Buscando actualizaciones...")
-            except Exception:
-                self.prospectos_datos = {}
+        # Usamos GestorDatos para cargar (Refactor Fase 3)
+        self.prospectos_datos = self.gestor_datos.cargar_datos(f"{rubro}.json")
+        
+        if self.prospectos_datos:
+            for nombre in self.prospectos_datos:
+                self.tree.insert("", "end", iid=nombre, values=(nombre, "HISTÓRICO 📁"))
+            self.log(f"Se cargaron {len(self.prospectos_datos)} registros previos. Buscando actualizaciones...")
         
         threading.Thread(target=self.ejecutar_scraping, args=(rubro, estrategia), daemon=True).start()
 
@@ -457,11 +452,7 @@ class TrelewLeadApp:
 
             # Guardado final
             if rubro:
-                try:
-                    nombre_archivo = os.path.join(constantes.CARPETA_DATOS, f"{rubro}.json")
-                    with open(nombre_archivo, 'w', encoding='utf-8') as f:
-                        json.dump(self.prospectos_datos, f, ensure_ascii=False, indent=4)
-                except: pass
+                self.gestor_datos.guardar_datos(f"{rubro}.json", self.prospectos_datos)
 
             self.log("Enriquecimiento masivo completado.")
             self.root.after(0, self.actualizar_lista_fichas)
@@ -510,11 +501,7 @@ class TrelewLeadApp:
                 if actualizado:
                     self.prospectos_datos[nombre] = datos
                     if rubro:
-                        try:
-                            nombre_archivo = os.path.join(constantes.CARPETA_DATOS, f"{rubro}.json")
-                            with open(nombre_archivo, 'w', encoding='utf-8') as f:
-                                json.dump(self.prospectos_datos, f, ensure_ascii=False, indent=4)
-                        except: pass
+                        self.gestor_datos.guardar_datos(f"{rubro}.json", self.prospectos_datos)
                     
                     self.log(f"Datos actualizados para {nombre}")
                     self.root.after(0, lambda: self.mostrar_detalle(None) if self.tree.selection() and self.tree.item(self.tree.selection()[0])['values'][0] == nombre else None)
@@ -895,7 +882,7 @@ class TrelewLeadApp:
 
                         # --- PUNTO DE PAUSA SOLICITADO ---
                         # Frenamos aquí para verificar visualmente antes de volver a la info general
-                        self.solicitar_confirmacion_usuario(f"Terminé de leer reseñas de: {nombre}.\n\nVoy a intentar volver a la descripción general.\nVerifica el navegador.")
+                        # self.solicitar_confirmacion_usuario(f"Terminé de leer reseñas de: {nombre}.\n\nVoy a intentar volver a la descripción general.\nVerifica el navegador.")
 
                         # --- VUELTA A INFORMACIÓN Y DATOS EXTRA (REDES/IMÁGENES) ---
                         try:
@@ -1053,7 +1040,7 @@ class TrelewLeadApp:
                             except: pass
 
                             # --- PUNTO DE PAUSA SOLICITADO 2 ---
-                            self.solicitar_confirmacion_usuario(f"Finalicé la revisión extra de: {nombre}.\n\nVoy a pasar al siguiente emprendimiento.")
+                            # self.solicitar_confirmacion_usuario(f"Finalicé la revisión extra de: {nombre}.\n\nVoy a pasar al siguiente emprendimiento.")
 
                         except Exception: pass
 
@@ -1091,11 +1078,7 @@ class TrelewLeadApp:
                         
                         # --- GUARDADO INCREMENTAL (PERSISTENCIA) ---
                         # Guardamos en cada iteración para evitar pérdida de datos si se cierra el navegador
-                        try:
-                            nombre_archivo = os.path.join(constantes.CARPETA_DATOS, f"{rubro}.json")
-                            with open(nombre_archivo, 'w', encoding='utf-8') as f:
-                                json.dump(self.prospectos_datos, f, ensure_ascii=False, indent=4)
-                        except Exception: pass
+                        self.gestor_datos.guardar_datos(f"{rubro}.json", self.prospectos_datos)
                         
                         # Actualizar UI de forma inteligente (sin duplicar filas)
                         def actualizar_ui(n):
@@ -1119,10 +1102,8 @@ class TrelewLeadApp:
             
             # --- GUARDADO AUTOMÁTICO AL FINALIZAR ---
             if self.prospectos_datos:
-                nombre_archivo = os.path.join(constantes.CARPETA_DATOS, f"{rubro}.json")
-                with open(nombre_archivo, 'w', encoding='utf-8') as f:
-                    json.dump(self.prospectos_datos, f, ensure_ascii=False, indent=4)
-                self.log(f"Datos guardados en {nombre_archivo}")
+                self.gestor_datos.guardar_datos(f"{rubro}.json", self.prospectos_datos)
+                self.log(f"Datos guardados en {rubro}.json")
                 self.root.after(0, self.actualizar_lista_fichas) # Actualizar lista desplegable
             else:
                 self.log("⚠️ Finalizado sin nuevos datos guardados.")
