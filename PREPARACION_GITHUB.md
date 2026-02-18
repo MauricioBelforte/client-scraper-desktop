@@ -17,9 +17,9 @@ Sigue esta lista de verificación para dejar tu proyecto **client-scraper-deskto
 - [ ] **Limpieza de Logs**: Verifica que los `print` o logs de consola sean útiles y no "ruido" de depuración.
 
 ## 4. Publicación en GitHub 🐙
-- [ ] **Crear Repositorio**: Ve a GitHub.com -> New Repository. Sugerencia de nombre: `client-scraper-desktop`.
-- [ ] **Inicializar Git**: Ejecutar `git init` en la carpeta.
-- [ ] **Primer Commit**: Subir los archivos limpios.
+- [x] **Crear Repositorio**: Ve a GitHub.com -> New Repository. Sugerencia de nombre: `client-scraper-desktop`.
+- [x] **Inicializar Git**: Ejecutar `git init` en la carpeta.
+- [x] **Primer Commit**: Subir los archivos limpios.
 
 ---
 
