@@ -89,3 +89,67 @@ MSJ_ERROR_SIN_TELEFONO = "Este comercio no dispone de un teléfono válido."
 MSJ_ADVERTENCIA_SIN_LISTA = "Primero debes buscar o cargar una lista de emprendimientos."
 MSJ_CONFIRMAR_ENRIQUECIMIENTO = "Esto buscará datos extra en Google para {} contactos.\nEl proceso puede tardar unos minutos.\n¿Deseas continuar?"
 MSJ_NAVEGADOR_BLOQUEADO = "No se pudo iniciar el robot.\n\nCierra todas las ventanas de Chrome (o el script de configuración) antes de buscar."
+
+# --- SISTEMA DE PALETAS DE COLORES (DEFINICIÓN CENTRAL) ---
+PALETAS_COLORES = {
+    "NOCTURNA_GOURMET": {
+        "colores": {
+            "primario": "#efc355",       # Dorado
+            "fondo": "#111111",          # Negro
+            "texto": "#e9e9e9",          # Blanco humo
+            "texto_inverso": "#181818",  # Texto oscuro sobre dorado
+            "overlay": "#000000b8",      # Oscurecer fondo
+            "fondo_tarjeta": "#ffffff"   # Fondo tarjeta
+        },
+        "categorias": [
+            "restaurante", "bar", "cerveceria", "cervecería", "pub", "disco", 
+            "hamburgueseria", "hamburguesería", "pizzeria", "pizzería", "sushi", 
+            "parrilla", "gastrono", "cafeteria", "cafetería", "heladeria", 
+            "evento", "catering", "hotel", "bodega", "vinoteca"
+        ]
+    },
+    "SALUD_PROFESIONAL": {
+        "colores": {
+            "primario": "#0d6efd",       # Azul Profesional
+            "fondo": "#ffffff",          # Blanco
+            "texto": "#212529",          # Gris oscuro
+            "texto_inverso": "#ffffff",  # Blanco sobre azul
+            "overlay": "#ffffff00",      # Aclarar fondo (Overlay blanco)
+            "fondo_tarjeta": "#ffffff"   # Fondo tarjeta
+        },
+        "categorias": [
+            "medico", "médico", "odont", "kinesio", "salud", "clinic", "clínica",
+            "farmacia", "abogado", "contab", "estudio", "inmobiliaria", 
+            "arquitecto", "veterinaria", "psicolog", "nutricion", "consultorio"
+        ]
+    },
+    "ESTETICA_BELLEZA": {
+        "colores": {
+            "primario": "#d63384",       # Rosa fuerte
+            "fondo": "#fff0f5",          # Lavanda muy claro / Blanco rosado
+            "texto": "#ffe8ea",          
+            "texto_inverso": "#ffffff",  # Blanco sobre rosa
+            "overlay": "#0000004f",      # Oscurecer fondo (Overlay negro semitransparente)   
+            "fondo_tarjeta": "#ffe5fa"   # Fondo tarjeta (Rosa claro solicitado)
+        },
+        "categorias": [
+            "peluqu", "estetic", "estética", "belleza", "uñas", "makeup", 
+            "moda", "ropa", "indumentaria", "zapateria", "lenceria", "danza", "spa"
+        ]
+    },
+    "FUERZA_TECNICA": {
+        "colores": {
+            "primario": "#ff4500",       # Naranja Rojizo (OrangeRed)
+            "fondo": "#1a1a1a",          # Gris muy oscuro
+            "texto": "#f0f0f0",          # Blanco grisáceo
+            "texto_inverso": "#ffffff",  # Blanco sobre naranja
+            "overlay": "#000000d9",      # Oscurecer fondo fuerte
+            "fondo_tarjeta": "#ffffff"   # Fondo tarjeta
+        },
+        "categorias": [
+            "taller", "mecanic", "mecánic", "gimnasio", "gym", "crossfit", "fitness", 
+            "ferreteria", "construc", "obra", "repuestos", "muebleria", "pet shop", 
+            "computacion", "tecnic", "reparacion"
+        ]
+    }
+}

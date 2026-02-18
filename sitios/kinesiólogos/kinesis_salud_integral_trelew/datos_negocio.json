@@ -1,0 +1,21 @@
+{
+  "nombre": "Kinesis Salud Integral Trelew",
+  "categoria": "Kinesiólogos",
+  "direccion": "Rivadavia 789, Trelew, Chubut",
+  "telefono": "+54 9 280 4567890",
+  "rating": "4.9",
+  "comentarios": [
+    {
+      "autor": "Ana Gómez",
+      "texto": "¡Excelente atención y profesionalismo! Mi recuperación fue rápida y efectiva.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Martín Torres",
+      "texto": "Muy recomendados. Un equipo cálido y que realmente se preocupa por tu bienestar.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/KinesisSaludIntegralTrelew",
+  "instagram": "https://instagram.com/kinesissaludintegral_tw"
+}

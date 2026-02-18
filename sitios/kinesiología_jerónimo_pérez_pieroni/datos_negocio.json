@@ -1,0 +1,34 @@
+{
+  "telefono": "+54 291 431-6679",
+  "direccion": "Musters 1930, U9100 Trelew, Chubut",
+  "categoria": "General",
+  "rating": "5.0 estrellas 21 opiniones",
+  "horario": "No especificado",
+  "comentarios": [
+    {
+      "autor": "Maria Elizabet Fernandez",
+      "texto": "Excelente atención de todo el grupo desde los especialistas hasta la secretaria más que agradecida logré mi recuperación total de mi brazo genios",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Facu Iribarren",
+      "texto": "Gran profesional, me ayudó mucho con mi lesión de hombros. Súper recomendable!",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Daniela Adduci",
+      "texto": "👍✅…",
+      "rating": "5 estrellas"
+    }
+  ],
+  "imagenes": [
+    "https://lh3.googleusercontent.com/a-/ALV-UjW58Jz1udL_UeWa6WIElvtTpLq6JKz3EWLMofguBvtrsOSbtbPu=w36-h36-p-rp-mo-br100",
+    "https://lh3.googleusercontent.com/a/ACg8ocJATWGIswDL2fl_r1MNVkpAlyv14sYfLexzpPHVsznnIBn0w=w36-h36-p-rp-mo-br100",
+    "https://lh3.googleusercontent.com/a/ACg8ocL3umwmIhMhUycwvkeSiTnhqeNOAYGnYZX60EwjrW902rqWUw=w36-h36-p-rp-mo-br100"
+  ],
+  "whatsapp": "Probable",
+  "email": "No detectado",
+  "facebook": "No detectado",
+  "instagram": "https://www.instagram.com/kinesiologia_ppjtrelew",
+  "enlaces_extra": []
+}

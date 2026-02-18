@@ -1,0 +1,26 @@
+{
+  "nombre": "El Pingüino Cervecero",
+  "categoria": "Cervecerías",
+  "direccion": "Avenida Yrigoyen 750, Trelew, Chubut",
+  "telefono": "+54 9 280 4987654",
+  "rating": "4.7",
+  "comentarios": [
+    {
+      "autor": "Ana Gómez",
+      "texto": "¡Una joya en Trelew! La cerveza artesanal es espectacular, probé la IPA y me encantó. El ambiente muy copado.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Martín López",
+      "texto": "Excelente variedad de cervezas y la atención de primera. Muy recomendable para ir con amigos.",
+      "rating": "4 estrellas"
+    },
+    {
+      "autor": "Sofía Rodríguez",
+      "texto": "Me encanta la terraza, es el lugar perfecto para disfrutar una tarde. Las cervezas son súper originales.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/ElPinguinoCerveceroTrelew",
+  "instagram": "https://instagram.com/elpinguinocervecero"
+}

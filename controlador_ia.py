@@ -1,11 +1,14 @@
 import os
 import json
 import warnings
+import time
 # Silenciar advertencia de deprecación de google.generativeai
 warnings.filterwarnings("ignore", category=FutureWarning)
 
 import google.generativeai as genai
 from dotenv import load_dotenv
+from google.api_core import exceptions as google_exceptions
+from src.constants import PALETAS_COLORES
 
 # Cargar variables de entorno desde el archivo .env
 load_dotenv()
@@ -19,8 +22,7 @@ try:
 except Exception as e:
     print(f"[ERROR] Error critico al configurar la API de Gemini: {e}")
 
-# Lista de modelos a probar en orden de preferencia, tal como solicitaste.
-# Nota: Si recibes un error de "modelo no encontrado", puedes cambiarlos por "gemini-1.5-pro" o "gemini-1.5-flash".
+# Lista de modelos a probar en orden de preferencia (Restaurados a petición del usuario)
 MODELOS_A_PROBAR = [
     "gemini-2.5-flash",
     "gemini-2.5-flash-lite",
@@ -38,6 +40,36 @@ def generar_contenido_ia(nombre_negocio, data_json):
     Returns:
         dict: Un diccionario con 'titulo_hero' y 'descripcion', o None si todos los modelos fallan.
     """
+    
+    # --- LÓGICA DE AHORRO DE TOKENS ---
+    # Verificamos si la categoría ya tiene una paleta definida en constants.py.
+    # Si ya tiene paleta, NO le pedimos colores a la IA.
+    solicitar_colores = True
+    texto_busqueda = (data_json.get('categoria', '') + " " + nombre_negocio).lower()
+    
+    for datos in PALETAS_COLORES.values():
+        if any(keyword in texto_busqueda for keyword in datos["categorias"]):
+            solicitar_colores = False
+            break
+            
+    # Construcción dinámica del prompt
+    instruccion_colores = ""
+    json_colores = ""
+    
+    if solicitar_colores:
+        instruccion_colores = """
+    7. Estética Visual (Sugerencia de Colores):
+        - Basado en el rubro, sugiere 3 colores en formato HEX.
+        - `color_primario`: Color principal para botones y destacados (ej: #FF5733).
+        - `color_fondo`: Color de fondo general (ej: #FFFFFF para salud, #111111 para bares).
+        - `color_texto`: Color del texto principal (debe contrastar con el fondo)."""
+        
+        json_colores = """,
+      "sugerencia_colores": {{
+        "color_primario": "#...",
+        "color_fondo": "#...",
+        "color_texto": "#..."
+      }}"""
     
     prompt = f"""
     Actúa como un experto en Copywriting Web y SEO Local.
@@ -60,7 +92,8 @@ def generar_contenido_ia(nombre_negocio, data_json):
     6. Botón CTA (Call to Action):
         - `cta_button_text`: Texto para el botón principal (ej: "Ver Menú", "Reservar Mesa", "Explorar Cervezas", "Contactar").
         - `cta_button_link`: El enlace al que debe apuntar el botón (ej: "#menu" si es un restaurante, "#contacto" si es un servicio, o un enlace de WhatsApp).
-
+    {instruccion_colores}
+    
     OUTPUT ESPERADO (JSON RAW):
     Responde ÚNICAMENTE con un objeto JSON válido (sin bloques de código markdown) con esta estructura:
     {{
@@ -68,30 +101,36 @@ def generar_contenido_ia(nombre_negocio, data_json):
       "lema_corto": "...",
       "descripcion": "Breve bienvenida.",
       "beneficios": ["Beneficio 1", "Beneficio 2", "Beneficio 3"],
-      "cta_button_text": "...",
-      "cta_button_link": "..."
+      "cta_button_text": "Contactar",
+      "cta_button_link": "#"{json_colores}
     }}
     """
 
     for nombre_modelo in MODELOS_A_PROBAR:
-        print(f">> Intentando generar contenido con el modelo: {nombre_modelo}...")
-        try:
-            model = genai.GenerativeModel(nombre_modelo)
-            response = model.generate_content(prompt)
-            
-            texto_limpio = response.text.replace('```json', '').replace('```', '').strip()
-            textos_ai = json.loads(texto_limpio)
-            
-            if all(k in textos_ai for k in ("titulo_hero", "descripcion", "beneficios", "cta_button_text", "cta_button_link")):
-                print(f"[OK] Exito. Contenido generado por '{nombre_modelo}' para {nombre_negocio}.")
-                return textos_ai
-            else:
-                print(f"[AVISO] El modelo '{nombre_modelo}' devolvio un JSON con formato incorrecto. Reintentando con el siguiente.")
-                continue
-
-        except Exception as e:
-            print(f"[ERROR] Error con el modelo '{nombre_modelo}': {e}. Probando el siguiente modelo de respaldo...")
-            continue
+        MAX_RETRIES = 2
+        for attempt in range(MAX_RETRIES):
+            try:
+                print(f">> Intentando generar contenido con {nombre_modelo} (Intento {attempt + 1}/{MAX_RETRIES})...")
+                model = genai.GenerativeModel(nombre_modelo)
+                response = model.generate_content(prompt)
+                
+                texto_limpio = response.text.replace('```json', '').replace('```', '').strip()
+                textos_ai = json.loads(texto_limpio)
+                
+                if all(k in textos_ai for k in ("titulo_hero", "descripcion", "beneficios", "cta_button_text", "cta_button_link")):
+                    print(f"[OK] Exito. Contenido generado por '{nombre_modelo}' para {nombre_negocio}.")
+                    return textos_ai
+                else:
+                    print(f"[AVISO] El modelo '{nombre_modelo}' devolvio un JSON con formato incorrecto. Reintentando con el siguiente.")
+                    break # Ir al siguiente modelo
+            except google_exceptions.ResourceExhausted as e:
+                delay = 31
+                print(f"[AVISO] Cuota excedida para {nombre_modelo}. Reintentando en {delay} segundos...")
+                time.sleep(delay)
+                # El bucle continuará con el siguiente intento
+            except Exception as e:
+                print(f"[ERROR] Error con el modelo '{nombre_modelo}': {e}. Probando el siguiente modelo de respaldo...")
+                break # Ir al siguiente modelo
 
     print(f"[FALLO] Fallaron todos los modelos de IA para '{nombre_negocio}'. El generador usara textos por defecto.")
     return None
@@ -122,16 +161,69 @@ def limpiar_datos_ia(data_json):
     """
 
     for nombre_modelo in MODELOS_A_PROBAR:
-        try:
-            model = genai.GenerativeModel(nombre_modelo)
-            response = model.generate_content(prompt)
-            texto_limpio = response.text.replace('```json', '').replace('```', '').strip()
-            datos_limpios = json.loads(texto_limpio)
-            print(f"[LISTO] Datos limpiados con IA ({nombre_modelo})")
-            return datos_limpios
-        except Exception as e:
-            print(f"[AVISO] Fallo limpieza con {nombre_modelo}: {e}")
-            continue
+        MAX_RETRIES = 2
+        for attempt in range(MAX_RETRIES):
+            try:
+                print(f">> Intentando limpiar datos con {nombre_modelo} (Intento {attempt + 1}/{MAX_RETRIES})...")
+                model = genai.GenerativeModel(nombre_modelo)
+                response = model.generate_content(prompt)
+                texto_limpio = response.text.replace('```json', '').replace('```', '').strip()
+                datos_limpios = json.loads(texto_limpio)
+                print(f"[LISTO] Datos limpiados con IA ({nombre_modelo})")
+                return datos_limpios
+            except google_exceptions.ResourceExhausted as e:
+                delay = 31
+                print(f"[AVISO] Cuota excedida para {nombre_modelo}. Reintentando en {delay} segundos...")
+                time.sleep(delay)
+            except Exception as e:
+                print(f"[AVISO] Fallo limpieza con {nombre_modelo}: {e}")
+                break # Ir al siguiente modelo
             
     print("[ERROR] No se pudieron limpiar los datos con IA. Se usaran los originales.")
     return data_json
+
+def generar_datos_demo(categoria):
+    """
+    Genera datos ficticios para un negocio de una categoría específica para fines de demostración.
+    """
+    prompt = f"""
+    Actúa como un generador de datos sintéticos para pruebas de software.
+    Tu tarea es inventar un perfil de negocio realista para la categoría: "{categoria}".
+    Ubicación: Trelew, Chubut, Argentina.
+    
+    Genera un JSON con esta estructura exacta:
+    {{
+      "nombre": "Nombre Creativo del Negocio",
+      "categoria": "{categoria}",
+      "direccion": "Calle Nueva 123, Trelew, Chubut",
+      "telefono": "+54 9 280 4123456",
+      "rating": "4.8",
+      "comentarios": [
+        {{"autor": "Nombre 1", "texto": "Reseña positiva corta...", "rating": "5 estrellas"}},
+        {{"autor": "Nombre 2", "texto": "Reseña positiva corta...", "rating": "5 estrellas"}}
+      ],
+      "facebook": "https://facebook.com/demo",
+      "instagram": "https://instagram.com/demo"
+    }}
+    """
+
+    for nombre_modelo in MODELOS_A_PROBAR:
+        MAX_RETRIES = 2
+        for attempt in range(MAX_RETRIES):
+            try:
+                print(f">> Intentando generar demo con {nombre_modelo} (Intento {attempt + 1}/{MAX_RETRIES})...")
+                model = genai.GenerativeModel(nombre_modelo)
+                response = model.generate_content(prompt)
+                texto_limpio = response.text.replace('```json', '').replace('```', '').strip()
+                datos = json.loads(texto_limpio)
+                datos["categoria"] = categoria # Forzamos la categoría solicitada para evitar alucinaciones
+                return datos
+            except google_exceptions.ResourceExhausted as e:
+                delay = 31
+                print(f"[AVISO] Cuota excedida para {nombre_modelo}. Reintentando en {delay} segundos...")
+                time.sleep(delay)
+            except Exception as e:
+                print(f"[AVISO] Fallo generación demo con {nombre_modelo}: {e}")
+                break # Ir al siguiente modelo
+            
+    return None

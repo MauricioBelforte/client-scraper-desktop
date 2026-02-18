@@ -1,0 +1,21 @@
+{
+  "nombre": "Sonrisa Patagónica Odontología Integral",
+  "categoria": "Odontólogos",
+  "direccion": "Belgrano 450, Trelew, Chubut",
+  "telefono": "+54 9 280 4357890",
+  "rating": "4.9",
+  "comentarios": [
+    {
+      "autor": "Laura S.",
+      "texto": "Excelente atención y muy profesionales. La Dra. me explicó todo con mucha paciencia.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Marcos P.",
+      "texto": "Instalaciones modernas y el personal es muy amable. ¡Altamente recomendables en Trelew!",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/sonrisapatagonica.trelew",
+  "instagram": "https://instagram.com/sonrisapatagonica"
+}

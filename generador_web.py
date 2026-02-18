@@ -5,6 +5,7 @@ import urllib.parse
 import datetime
 import random
 import requests
+from src.constants import PALETAS_COLORES
 
 def generar_y_guardar_imagen(prompt: str, ruta_guardado: str):
     """
@@ -54,8 +55,16 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None):
         textos_ai (dict, optional): Contenido generado por IA. 
                                     Debe contener: 'titulo_hero', 'descripcion', 'lema_corto', 'beneficios'.
     """
+    categoria_raw = data_json.get('categoria', 'negocio').lower().strip()
+    # Crea un slug simple de la categoría, ej: "Centro de Estética" -> "centro"
+    # Aseguramos que siempre haya un slug válido, incluso si la categoría viene vacía
+    primera_palabra = categoria_raw.split(" ")[0] if categoria_raw else "general"
+    categoria_slug = re.sub(r'[\W_]+', '_', primera_palabra) or "general"
+
     nombre_slug = re.sub(r'[\W_]+', '_', nombre_negocio.lower())
-    ruta_web = f"sitios/{nombre_slug}"
+    
+    # Nueva ruta: sitios/{categoria_slug}/{nombre_slug}
+    ruta_web = f"sitios/{categoria_slug}/{nombre_slug}"
     os.makedirs(ruta_web, exist_ok=True)
     
     # Crear estructura para assets futuros (Punto 12)
@@ -64,50 +73,89 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None):
     with open(f"{ruta_web}/datos_negocio.json", "w", encoding="utf-8") as f:
         json.dump(data_json, f, ensure_ascii=False, indent=2)
 
-    # --- Lógica de Imágenes Dinámicas con IA (Cloudflare) ---
-    categoria_raw = data_json.get('categoria', 'negocio').lower()
-    # Simplificar categoría para el prompt (ej: "taller mecánico" -> "taller")
-    categoria_simple = categoria_raw.split(" ")[0]
+    # --- SISTEMA DE PALETAS DE COLORES ---
+    # Ahora usamos PALETAS_COLORES importado de src.constants
 
+    # Lógica de Selección
+    paleta_seleccionada = None
+    texto_busqueda = (categoria_raw + " " + nombre_negocio).lower() # Buscamos en categoría y nombre
+    
+    # 1. Buscar coincidencia en las listas definidas
+    for nombre_paleta, datos in PALETAS_COLORES.items():
+        # Verificamos si alguna keyword de la paleta está en el texto de búsqueda
+        if any(keyword in texto_busqueda for keyword in datos["categorias"]):
+            paleta_seleccionada = datos["colores"]
+            print(f"[DISEÑO] Categoría detectada: '{nombre_paleta}'. Aplicando paleta predefinida.")
+            break
+    
+    # 2. Si no hubo coincidencia, usar Default (NOCTURNA_GOURMET) y permitir sugerencia IA
+    if not paleta_seleccionada:
+        print("[DISEÑO] Categoría no reconocida. Usando Default (Nocturna) y consultando IA...")
+        paleta_seleccionada = PALETAS_COLORES["NOCTURNA_GOURMET"]["colores"].copy() # Copia para no modificar la original
+        
+        # Solo en este caso (Default) escuchamos a la IA
+        if textos_ai and "sugerencia_colores" in textos_ai:
+            sug = textos_ai["sugerencia_colores"]
+            if all(k in sug for k in ["color_primario", "color_fondo", "color_texto"]):
+                print("[DISEÑO] Aplicando sugerencia de colores de la IA.")
+                paleta_seleccionada["primario"] = sug["color_primario"]
+                paleta_seleccionada["fondo"] = sug["color_fondo"]
+                paleta_seleccionada["texto"] = sug["color_texto"]
+                # Ajuste simple de contraste para texto inverso
+                paleta_seleccionada["texto_inverso"] = "#ffffff" 
+
+    # --- Lógica de Prompts de Imagen ---
+    # Elige el conjunto de prompts correcto basado en la categoría para darle un estilo visual específico.
     prompts_por_categoria = {
-        "veterinaria": {
-            "logo": f"minimalist logo veterinary {nombre_slug}",
-            "fondo": "professional veterinary clinic interior cinematic lighting",
-            "testimonio": "happy pet dog cat hq photography"
+        "SALUD": {
+            "keywords": ["veterinaria", "odont", "medico", "médico", "kinesio", "salud", "clinic", "clínica", "farmacia", "psicolog", "nutricion", "consultorio"],
+            "prompts": {
+                "logo": f"clean modern minimalist logo for health service, {nombre_slug}",
+                "fondo": "bright modern medical office interior, clean, professional, high-key lighting, minimalist",
+                "testimonio": "happy patient talking to a professional, bright ambient, clean background"
+            }
         },
-        "restaurante": {
-            "logo": f"elegant logo for restaurant {nombre_slug}",
-            "fondo": "cozy restaurant interior with warm lighting cinematic",
-            "testimonio": "happy customer eating delicious food"
+        "ESTETICA": {
+            "keywords": ["peluqu", "estetic", "estética", "belleza", "uñas", "makeup", "spa", "moda"],
+            "prompts": {
+                "logo": f"elegant stylish logo for beauty salon, {nombre_slug}",
+                "fondo": "bright luxury beauty salon interior, elegant, clean, high-key lighting, minimalist",
+                "testimonio": "client with a beautiful hairstyle smiling, bright ambient, soft focus"
+            }
         },
-        "gimnasio": {
-            "logo": f"strong modern logo for gym {nombre_slug}",
-            "fondo": "modern gym with dramatic lighting and equipment",
-            "testimonio": "person training at the gym and smiling"
+        "NOCTURNO_GOURMET": {
+            "keywords": ["restaurante", "bar", "cerveceria", "cervecería", "pub", "disco", "hamburgueseria", "hamburguesería", "pizzeria", "pizzería", "sushi", "parrilla", "gastrono", "cafeteria", "cafetería", "evento", "hotel"],
+            "prompts": {
+                "logo": f"elegant logo for restaurant or bar, {nombre_slug}",
+                "fondo": "cozy restaurant or bar interior with warm lighting, cinematic, dramatic shadows",
+                "testimonio": "happy customers eating and drinking, warm ambient, bokeh"
+            }
         },
-        "peluquería": {
-            "logo": f"stylish logo for hair salon {nombre_slug}",
-            "fondo": "modern hair salon interior elegant cinematic",
-            "testimonio": "client with a beautiful hairstyle"
-        },
-        "taller": { # para "taller mecánico"
-            "logo": f"bold logo for car workshop {nombre_slug}",
-            "fondo": "clean car workshop with dramatic lighting",
-            "testimonio": "mechanic working on a car"
-        },
-        "cervecería": {
-            "logo": f"beer brewery hops logo badge {nombre_slug}",
-            "fondo": "craft beer bar interior rustic warm lighting",
-            "testimonio": "friends drinking craft beer happy"
+        "FUERZA_TECNICA": {
+            "keywords": ["gimnasio", "gym", "crossfit", "fitness", "taller", "mecanic", "mecánic", "ferreteria", "construc"],
+            "prompts": {
+                "logo": f"strong bold logo for gym or workshop, {nombre_slug}",
+                "fondo": "modern gym or clean workshop with dramatic lighting and equipment, shadows",
+                "testimonio": "person training hard or mechanic working on a car, focused"
+            }
         },
         "default": {
-            "logo": f"clean professional logo for {nombre_slug}",
-            "fondo": f"modern local {categoria_simple} interior cinematic",
-            "testimonio": "satisfied client in a shop"
+            "keywords": [], # no keywords, it's the fallback
+            "prompts": {
+                "logo": f"clean professional logo for {nombre_slug}",
+                "fondo": f"modern local business interior, cinematic lighting, for a {categoria_raw}",
+                "testimonio": "satisfied client in a shop"
+            }
         }
     }
     
-    prompts = prompts_por_categoria.get(categoria_simple, prompts_por_categoria["default"])
+    # Lógica de selección de prompts de imagen
+    prompts = prompts_por_categoria["default"]["prompts"] # Empezamos con el default
+    for key, data in prompts_por_categoria.items():
+        if key != "default" and any(keyword in texto_busqueda for keyword in data["keywords"]):
+            prompts = data["prompts"]
+            print(f"[IMAGEN] Categoría de imagen detectada: '{key}'. Aplicando prompts específicos.")
+            break
 
     # Generar y guardar imágenes, obteniendo sus rutas relativas
     ruta_logo_local = f"{ruta_web}/assets/img/logo.png"
@@ -253,12 +301,13 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None):
     /* --- Reset y Variables (Basado en instrucciones_sistema.md) --- */
     :root {{
         /* Colores (adaptados de los valores originales del generador) */
-        --color-primario: #efc355;       /* Color Principal (Dorado/Amarillo) */
-        --color-primario-hover: #f1d07a;
-        --color-fondo-oscuro: #111111;   /* Fondos principales */
-        --color-texto-claro: #e9e9e9;    /* Texto principal */
-        --color-texto-inverso: #181818;
-        --color-blanco: #ffffff;
+        --color-primario: {paleta_seleccionada['primario']};
+        --color-fondo-base: {paleta_seleccionada['fondo']};
+        --color-texto-base: {paleta_seleccionada['texto']};
+        --color-texto-inverso: {paleta_seleccionada['texto_inverso']};
+        --color-overlay: {paleta_seleccionada['overlay']};
+        --color-fondo-tarjeta: {paleta_seleccionada.get('fondo_tarjeta', '#ffffff')};
+        
         --color-acento-oscuro: #5a1111;
         --color-fondo-claro: #F8F6F4;
 
@@ -290,10 +339,10 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None):
     html {{ scroll-behavior: smooth; }}
     body {{ 
         font-family: var(--fuente-base); 
-        background: linear-gradient(180deg, #000000b8 42%, #00000095 84%), url('{url_fondo_css}');
+        background: linear-gradient(180deg, var(--color-overlay) 42%, var(--color-overlay) 84%), url('{url_fondo_css}');
         background-size: cover; background-attachment: fixed; 
-        color: var(--color-texto-claro);
-        background-color: var(--color-fondo-oscuro);
+        color: var(--color-texto-base);
+        background-color: var(--color-fondo-base);
         font-size: var(--font-size-xs);
         line-height: 1.6;
         overflow-x: hidden;
@@ -306,18 +355,18 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None):
     .logo img {{ width: 10.5rem; height: 10.5rem; border-radius: 50%; border: 3px solid var(--color-primario); }}
     .seccion-hero {{ text-align: center; padding: var(--espaciado-lg) var(--espaciado-md); min-height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }}
     .seccion-hero h1 {{ font-size: var(--font-size-xxl); }}
-    .lema-hero {{ text-transform: uppercase; font-weight: 700; font-size: var(--font-size-xxs); color: #f7f3f3c4; margin-top: var(--espaciado-sm);}}
+    .lema-hero {{ text-transform: uppercase; font-weight: 700; font-size: var(--font-size-xxs); opacity: 0.9; margin-top: var(--espaciado-sm);}}
     .cta-button {{ background-color: var(--color-texto-inverso); color: var(--color-primario); padding: 0.75rem 1.5rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; display: inline-block; margin-top: var(--espaciado-md); border: 1px solid var(--color-primario); transition: var(--transicion-estandar); }}
     .cta-button:hover {{ background-color: var(--color-primario); color: var(--color-texto-inverso); }}
     .contenedor-tarjetas {{ display: grid; grid-template-columns: 1fr; gap: var(--espaciado-md); }}
-    .tarjeta-producto {{ background: var(--color-primario); border-radius: var(--radio-card); padding: 1.5rem; color: var(--color-texto-inverso); transition: var(--transicion-estandar); }}
+    .tarjeta-producto {{ background: var(--color-primario); border-radius: var(--radio-card); padding: 1.5rem; color: var(--color-texto-inverso); transition: var(--transicion-estandar); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }}
     .tarjeta-producto:hover {{ transform: translateY(-5px); }}
     .tarjeta-producto img {{ width: 100%; height: 15rem; object-fit: cover; border-radius: 0.5rem; }}
-    .tarjeta-beneficio {{ background: var(--color-fondo-claro); color: var(--color-texto-inverso); text-align: center; padding: 2rem 1rem; display: flex; align-items: center; justify-content: center; }}
+    .tarjeta-beneficio {{ background: #ffffff; color: #333; text-align: center; padding: 2rem 1rem; display: flex; align-items: center; justify-content: center; border: 1px solid #eee; }}
     .tarjeta-beneficio h3 {{ font-size: var(--font-size-sm); }}
     
     /* --- Estilos Nuevos para Testimonios --- */
-    .tarjeta-testimonio {{ background: var(--color-fondo-claro); border-radius: var(--radio-card); padding: 2rem; display: flex; flex-direction: column; align-items: center; text-align: center; color: var(--color-texto-inverso); transition: var(--transicion-estandar); position: relative; }}
+    .tarjeta-testimonio {{ background: var(--color-fondo-tarjeta); border-radius: var(--radio-card); padding: 2rem; display: flex; flex-direction: column; align-items: center; text-align: center; color: #333; transition: var(--transicion-estandar); position: relative; border: 1px solid #eee; }}
     .tarjeta-testimonio:hover {{ transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }}
     .tarjeta-testimonio img {{ width: 6rem; height: 6rem; border-radius: 50%; object-fit: cover; border: 3px solid var(--color-primario); margin-bottom: 1rem; }}
     .comillas-testimonio {{ font-size: 4rem; line-height: 0.5; font-family: serif; color: var(--color-primario); display: block; margin-bottom: 1rem; margin-top: 0.5rem; opacity: 0.8; }}
@@ -378,7 +427,6 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None):
         <section class="seccion-hero">
             <div class="contenedor-hero">
                 <h1 class="el-messiri">{titulo_hero}</h1>
-                <p>{data_json.get('rating', 'Excelente atención')}</p>
                 <div class="texto-adornado">
                     <p class="lema-hero">{lema_hero}</p>
                 </div>
@@ -400,11 +448,11 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None):
             </div>
         </section>
 
-        {contacto_html}
-
         {menu_section_html}
 
         {donde_estamos_html}
+
+        {contacto_html}
 
         <a href="{wa_link}" class="posicion-fixed" aria-label="Contactar por WhatsApp">
             <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="40" height="40">

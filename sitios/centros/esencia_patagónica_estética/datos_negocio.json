@@ -1,0 +1,26 @@
+{
+  "nombre": "Esencia Patagónica Estética",
+  "categoria": "Centros de Estética",
+  "direccion": "Mitre 345, Trelew, Chubut",
+  "telefono": "+54 9 280 4567890",
+  "rating": "4.7",
+  "comentarios": [
+    {
+      "autor": "Lucía Pérez",
+      "texto": "¡Un lugar increíble! El tratamiento facial me dejó la piel radiante. ¡Muy recomendable!",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Marcos Gómez",
+      "texto": "Excelente atención y resultados a la vista. Volveré sin dudarlo.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Ana Rodríguez",
+      "texto": "Ambiente muy relajante y personal súper amable. Los masajes son espectaculares.",
+      "rating": "4 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/EsenciaPatagonicaEstetica",
+  "instagram": "https://instagram.com/esenciapatagonicaestetica"
+}

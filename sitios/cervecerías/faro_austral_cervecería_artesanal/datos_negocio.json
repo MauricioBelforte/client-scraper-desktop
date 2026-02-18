@@ -1,0 +1,21 @@
+{
+  "nombre": "Faro Austral Cervecería Artesanal",
+  "categoria": "Cervecerías",
+  "direccion": "Avenida Fontana 1150, Trelew, Chubut",
+  "telefono": "+54 9 280 4567890",
+  "rating": "4.8",
+  "comentarios": [
+    {
+      "autor": "Martín Sosa",
+      "texto": "Un ambiente excelente y cervezas con un sabor único. ¡Imperdible si estás en Trelew!",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Ana García",
+      "texto": "Las IPA son increíbles y la atención siempre es de primera. Mis felicitaciones al equipo.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/FaroAustralCerveceria",
+  "instagram": "https://instagram.com/FaroAustralCerveceria"
+}

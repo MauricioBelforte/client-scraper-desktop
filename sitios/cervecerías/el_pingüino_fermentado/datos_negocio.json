@@ -1,0 +1,26 @@
+{
+  "nombre": "El Pingüino Fermentado",
+  "categoria": "Cervecerías",
+  "direccion": "Avenida Fontana 550, Trelew, Chubut",
+  "telefono": "+54 9 280 4876543",
+  "rating": "4.7",
+  "comentarios": [
+    {
+      "autor": "Ana García",
+      "texto": "¡La mejor cerveza artesanal de la Patagonia! Increíble variedad y ambiente genial.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Martín López",
+      "texto": "Probar la 'Galesa Dorada' fue una experiencia. Súper recomendable.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Sofía Rodríguez",
+      "texto": "Buen lugar para juntarse con amigos. Las tapas acompañan perfecto las cervezas.",
+      "rating": "4 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/elpingüinofermentado",
+  "instagram": "https://instagram.com/elpingüinofermentado"
+}

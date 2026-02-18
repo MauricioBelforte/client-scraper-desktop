@@ -19,7 +19,7 @@ import src.constants as constantes
 from src.gestor_datos import GestorDatos
 from src.utilidades import abrir_whatsapp
 from src.scroll_strategies import estrategia_scroll_js_focalizado, estrategia_scroll_teclado
-from controlador_ia import generar_contenido_ia, limpiar_datos_ia
+from controlador_ia import generar_contenido_ia, limpiar_datos_ia, generar_datos_demo
 from generador_web import generar_web_profesional
 
 class TrelewLeadApp:
@@ -87,6 +87,10 @@ class TrelewLeadApp:
         
         self.btn_cargar = ttk.Button(search_frame, text=constantes.BTN_CARGAR, command=self.cargar_ficha_offline)
         self.btn_cargar.pack(side="left", padx=5)
+
+        # Botón Demo Web (Nuevo)
+        self.btn_demo = ttk.Button(search_frame, text="🎨 GENERAR DEMO WEB", command=self.lanzar_demo_web)
+        self.btn_demo.pack(side="left", padx=5)
 
         # --- Contenedor Principal (Split View: Maestro-Detalle) ---
         main_container = tk.Frame(self.root, bg=constantes.COLOR_FONDO)
@@ -236,6 +240,7 @@ class TrelewLeadApp:
         tk.Label(body, text=nombre, font=constantes.FUENTE_SUBTITULO, bg=constantes.COLOR_BLANCO, wraplength=280, justify="center").pack(pady=(0, 10))
         
         # Filas de información
+        self.create_info_row(body, "Categoría:", datos.get('categoria', 'General'))
         self.create_info_row(body, constantes.ETIQUETA_TELEFONO, datos.get('telefono', 'No disponible'))
         self.create_info_row(body, constantes.ETIQUETA_WEB, constantes.VALOR_SIN_WEB)
         self.create_info_row(body, constantes.ETIQUETA_CIUDAD, constantes.VALOR_CIUDAD)
@@ -435,6 +440,43 @@ class TrelewLeadApp:
             error_msg = str(e)
             self.log(f"❌ Error en generación: {error_msg}")
             self.root.after(0, lambda: messagebox.showerror("Error Crítico", f"No se pudo generar la web:\n{error_msg}"))
+
+    def lanzar_demo_web(self):
+        # Prioridad: 1. Archivo seleccionado (combo_fichas) | 2. Texto del buscador (entry_rubro)
+        categoria_demo = self.combo_fichas.get()
+        origen = "Ficha Guardada"
+
+        if not categoria_demo:
+            categoria_demo = self.entry_rubro.get()
+            origen = "Buscador"
+
+        if not categoria_demo:
+            messagebox.showwarning("Atención", "No se detectó ninguna categoría.\nSelecciona una ficha guardada o escribe un rubro.")
+            return
+        
+        if messagebox.askyesno("Generar Demo", f"¿Crear una web de demostración para '{categoria_demo}'?\n(Origen: {origen})"):
+            threading.Thread(target=self.ejecutar_demo_web, args=(categoria_demo,), daemon=True).start()
+
+    def ejecutar_demo_web(self, rubro):
+        self.log(f"🎲 Inventando negocio para demo de {rubro}...")
+        try:
+            datos_fake = generar_datos_demo(rubro)
+            if not datos_fake:
+                raise Exception("La IA no pudo generar los datos ficticios.")
+            
+            nombre = datos_fake.get('nombre', f"Demo {rubro}")
+            self.log(f"✨ Negocio: {nombre}. Generando contenidos...")
+            
+            textos_ai = generar_contenido_ia(nombre, datos_fake)
+            
+            self.log("🎨 Maquetando demo...")
+            resultado = generar_web_profesional(nombre, datos_fake, textos_ai)
+            
+            self.log("✅ Demo creada.")
+            self.root.after(0, lambda: messagebox.showinfo("Demo Finalizada", f"Web generada para {nombre}:\n\n{resultado}"))
+            
+        except Exception as e:
+            self.log(f"❌ Error demo: {e}")
 
     def start_scraping_thread(self, estrategia="teclado"):
         """Inicia el proceso de búsqueda en un hilo separado para evitar bloqueos de UI."""
