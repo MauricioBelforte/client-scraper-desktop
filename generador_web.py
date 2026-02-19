@@ -45,7 +45,41 @@ def generar_y_guardar_imagen(prompt: str, ruta_guardado: str):
         print(f"[ERROR] Excepción al llamar a la API de Cloudflare: {e}")
         return False
 
-def generar_web_profesional(nombre_negocio, data_json, textos_ai=None):
+def detectar_genero_nombre(nombre):
+    """
+    Intenta inferir el género de un nombre para ajustar los prompts de imagen.
+    Retorna "hombre", "mujer" o "persona" (neutral/desconocido).
+    """
+    if not nombre:
+        return "persona"
+
+    nombre_lower = nombre.lower().split(' ')[0] # Solo la primera palabra del nombre
+
+    # Nombres femeninos comunes en español
+    nombres_femeninos = [
+        'maria', 'ana', 'laura', 'sofia', 'carmen', 'lucia', 'paula', 'elena',
+        'isabel', 'teresa', 'valentina', 'camila', 'daniela', 'victoria', 'josefina',
+        'rocio', 'pilar', 'clara', 'julia', 'martina', 'emilia', 'agustina', 'andrea'
+    ]
+    # Nombres masculinos comunes en español
+    nombres_masculinos = [
+        'juan', 'pedro', 'carlos', 'miguel', 'david', 'javier', 'daniel',
+        'alejandro', 'sergio', 'pablo', 'jose', 'martin', 'facundo', 'agustin',
+        'santiago', 'franco', 'enzo', 'matias', 'lucas', 'manuel', 'andres'
+    ]
+
+    if nombre_lower in nombres_femeninos:
+        return "mujer"
+    elif nombre_lower in nombres_masculinos:
+        return "hombre"
+    elif nombre_lower.endswith('a') and nombre_lower not in ['jose', 'luca', 'matias']: # Algunas excepciones donde 'a' no es femenino
+        return "mujer"
+    elif nombre_lower.endswith('o') and nombre_lower not in ['rocio', 'consuelo']: # Algunas excepciones donde 'o' no es masculino
+        return "hombre"
+    
+    return "persona" # Por defecto, neutral
+
+def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_salida="sitios"):
     """
     Genera un sitio web completo para un negocio.
     
@@ -54,6 +88,7 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None):
         data_json (dict): Los datos crudos del scraper.
         textos_ai (dict, optional): Contenido generado por IA. 
                                     Debe contener: 'titulo_hero', 'descripcion', 'lema_corto', 'beneficios'.
+        carpeta_salida (str): Carpeta raíz donde se guardará la web (default: "sitios").
     """
     categoria_raw = data_json.get('categoria', 'negocio').lower().strip()
     # Crea un slug simple de la categoría, ej: "Centro de Estética" -> "centro"
@@ -63,8 +98,8 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None):
 
     nombre_slug = re.sub(r'[\W_]+', '_', nombre_negocio.lower())
     
-    # Nueva ruta: sitios/{categoria_slug}/{nombre_slug}
-    ruta_web = f"sitios/{categoria_slug}/{nombre_slug}"
+    # Nueva ruta dinámica: {carpeta_salida}/{categoria_slug}/{nombre_slug}
+    ruta_web = f"{carpeta_salida}/{categoria_slug}/{nombre_slug}"
     os.makedirs(ruta_web, exist_ok=True)
     
     # Crear estructura para assets futuros (Punto 12)
@@ -131,12 +166,20 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None):
                 "testimonio": "happy customers eating and drinking, warm ambient, bokeh"
             }
         },
-        "FUERZA_TECNICA": {
-            "keywords": ["gimnasio", "gym", "crossfit", "fitness", "taller", "mecanic", "mecánic", "ferreteria", "construc"],
+        "FITNESS": {
+            "keywords": ["gimnasio", "gym", "crossfit", "fitness", "entrenam", "deport", "pilates", "yoga"],
             "prompts": {
-                "logo": f"strong bold logo for gym or workshop, {nombre_slug}",
-                "fondo": "modern gym or clean workshop with dramatic lighting and equipment, shadows",
-                "testimonio": "person training hard or mechanic working on a car, focused"
+                "logo": f"strong bold modern logo for fitness gym, {nombre_slug}, vector style",
+                "fondo": "modern gym interior with equipment, dramatic lighting, high contrast, professional photography",
+                "testimonio": "person training in a gym, happy, sweating, fitness lifestyle"
+            }
+        },
+        "OFICIOS_TALLER": {
+            "keywords": ["taller", "mecanic", "mecánic", "ferreteria", "construc", "reparacion", "repuestos", "automotor", "chapa", "pintura", "obra", "electricista", "plomero"],
+            "prompts": {
+                "logo": f"professional emblem logo for mechanic workshop or hardware store, {nombre_slug}, industrial style",
+                "fondo": "clean organized mechanic workshop interior with cars and tools, professional lighting",
+                "testimonio": "mechanic professional talking to a client, friendly, workshop background"
             }
         },
         "default": {
@@ -216,8 +259,34 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None):
 
     comentarios_html = ""
     for i, c in enumerate(comentarios_finales):
+        # Detectar género del autor
+        genero = detectar_genero_nombre(c.get('autor', ''))
+        
+        # Obtener el prompt base para testimonios de la categoría actual
+        base_testimonio_prompt = prompts["testimonio"]
+        
+        # Ajustar el prompt según el género detectado
+        prompt_testimonio_ajustado = base_testimonio_prompt
+        if genero == "hombre":
+            # Reemplazos específicos para hacer el prompt más masculino
+            prompt_testimonio_ajustado = prompt_testimonio_ajustado.replace("patient", "male patient").replace("client", "male client").replace("person", "man").replace("professional", "male professional")
+            # Para "customers" (plural), podemos ser más directos
+            if "customers" in prompt_testimonio_ajustado:
+                prompt_testimonio_ajustado = "happy male customers eating and drinking, warm ambient, bokeh"
+            elif not any(term in prompt_testimonio_ajustado for term in ["male patient", "male client", "man", "male professional", "male customers"]):
+                 prompt_testimonio_ajustado = "happy man " + base_testimonio_prompt
+        elif genero == "mujer":
+            # Reemplazos específicos para hacer el prompt más femenino
+            prompt_testimonio_ajustado = prompt_testimonio_ajustado.replace("patient", "female patient").replace("client", "female client").replace("person", "woman").replace("professional", "female professional")
+            # Para "customers" (plural)
+            if "customers" in prompt_testimonio_ajustado:
+                prompt_testimonio_ajustado = "happy female customers eating and drinking, warm ambient, bokeh"
+            elif not any(term in prompt_testimonio_ajustado for term in ["female patient", "female client", "woman", "female professional", "female customers"]):
+                prompt_testimonio_ajustado = "happy woman " + base_testimonio_prompt
+        # Si genero es "persona" (neutral), se usa el prompt base sin modificar.
+
         ruta_testimonio_local = f"{ruta_web}/assets/img/testimonio_{i}.jpg"
-        if generar_y_guardar_imagen(prompts["testimonio"], ruta_testimonio_local):
+        if generar_y_guardar_imagen(prompt_testimonio_ajustado, ruta_testimonio_local):
             url_testimonio = f"assets/img/testimonio_{i}.jpg"
         else:
             url_testimonio = "https://via.placeholder.com/150" # Fallback
@@ -327,7 +396,7 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None):
         /* Espaciados (de las instrucciones) */
         --espaciado-sm: 1rem;
         --espaciado-md: 1.5rem;
-        --espaciado-lg: 3rem;
+        --espaciado-lg: 2rem;
         --espaciado-xl: 4rem;
 
         /* Utilidades */
@@ -426,7 +495,8 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None):
 
         <section class="seccion-hero">
             <div class="contenedor-hero">
-                <h1 class="el-messiri">{titulo_hero}</h1>
+                <h1 class="el-messiri" style="text-transform: capitalize;">{nombre_negocio}</h1>
+                <p style="font-size: 1.5rem; margin-top: 0.5rem; font-weight: 300;">{titulo_hero}</p>
                 <div class="texto-adornado">
                     <p class="lema-hero">{lema_hero}</p>
                 </div>

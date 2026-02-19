@@ -1,0 +1,21 @@
+{
+  "nombre": "Mecánica Ruta 3",
+  "categoria": "Talleres Mecánicos",
+  "direccion": "Avenida Fontana 875, Trelew, Chubut",
+  "telefono": "+54 9 280 4567890",
+  "rating": "4.8",
+  "comentarios": [
+    {
+      "autor": "Marcos Pérez",
+      "texto": "Excelente servicio, honestidad y rapidez. Mi auto quedó perfecto.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Sofía Gómez",
+      "texto": "Siempre confío en ellos para el mantenimiento. Muy profesionales y atentos.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/demo",
+  "instagram": "https://instagram.com/demo"
+}

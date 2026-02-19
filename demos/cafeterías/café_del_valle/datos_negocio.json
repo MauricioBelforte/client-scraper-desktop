@@ -1,0 +1,21 @@
+{
+  "nombre": "Café del Valle",
+  "categoria": "Cafeterías",
+  "direccion": "Rivadavia 321, Trelew, Chubut",
+  "telefono": "+54 9 280 4567890",
+  "rating": "4.8",
+  "comentarios": [
+    {
+      "autor": "Ana Torres",
+      "texto": "Excelente café y pastelería casera. El ambiente es muy acogedor, ideal para trabajar o relajarse en Trelew.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Martín Gómez",
+      "texto": "Siempre vuelvo por los sándwiches y la atención. Uno de los mejores lugares para un buen desayuno o merienda.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/cafedelvalletrelew",
+  "instagram": "https://instagram.com/cafedelvalletrelew"
+}

@@ -3,13 +3,14 @@
 
 RUBROS_SUGERIDOS = [
     "Gimnasios", "Restaurantes", "Talleres Mecánicos", "Peluquerías",
-    "Odontólogos", "Abogados", "Inmobiliarias", "Cervecerías",
-    "Veterinarias", "Pizzerías", "Farmacias", "Escuelas de danza",
-    "Estudios Contables", "Ferreterías", "Centros de Estética",
-    "Barberías", "Psicólogos", "Nutricionistas", "Kinesiólogos",
-    "Arquitectos", "Constructoras", "Salones de Eventos",
-    "Servicios de Catering", "Escuelas de Idiomas", "Pet Shops",
-    "Mueblerías", "Casas de Repuestos", "Heladerías", "Cafeterías"
+    "Odontólogos", "Abogados", "Inmobiliarias", "Cervecerías", "Veterinarias",
+    "Pizzerías", "Farmacias", "Escuelas de danza", "Estudios Contables",
+    "Ferreterías", "Centros de Estética", "Barberías", "Psicólogos",
+    "Nutricionistas", "Kinesiólogos", "Arquitectos", "Constructoras",
+    "Salones de Eventos", "Servicios de Catering", "Escuelas de Idiomas",
+    "Pet Shops", "Mueblerías", "Casas de Repuestos", "Heladerías",
+    "Cafeterías", "Pastelerías", "Panaderías", "Kioscos", "Carnicerías",
+    "Pollerías", "Verdulerías"
 ]
 
 # Nombres de las carpetas del sistema.
@@ -104,8 +105,21 @@ PALETAS_COLORES = {
         "categorias": [
             "restaurante", "bar", "cerveceria", "cervecería", "pub", "disco", 
             "hamburgueseria", "hamburguesería", "pizzeria", "pizzería", "sushi", 
-            "parrilla", "gastrono", "cafeteria", "cafetería", "heladeria", 
-            "evento", "catering", "hotel", "bodega", "vinoteca"
+            "parrilla", "gastrono", "cafeteria", "cafetería", "evento",
+            "catering", "hotel", "bodega", "vinoteca"
+        ]
+    },
+    "DULCE_PASTEL": {
+        "colores": {
+            "primario": "#29b6f6",       # Celeste
+            "fondo": "#fffde7",          # Amarillo Pastel muy claro
+            "texto": "#4e342e",          # Marrón Oscuro (Chocolate)
+            "texto_inverso": "#000000",  # Negro sobre celeste para legibilidad
+            "overlay": "#0000004f",      # Overlay estándar
+            "fondo_tarjeta": "#fce4ec"   # Rosa Pastel
+        },
+        "categorias": [
+            "heladeria", "pasteleria", "panaderia", "panadería"
         ]
     },
     "SALUD_PROFESIONAL": {
@@ -148,8 +162,9 @@ PALETAS_COLORES = {
         },
         "categorias": [
             "taller", "mecanic", "mecánic", "gimnasio", "gym", "crossfit", "fitness", 
-            "ferreteria", "construc", "obra", "repuestos", "muebleria", "pet shop", 
-            "computacion", "tecnic", "reparacion"
+            "ferreteria", "construc", "obra", "repuestos", "muebleria", "pet shop",
+            "computacion", "tecnic", "reparacion", "kiosco", "carniceria",
+            "polleria", "verduleria"
         ]
     }
 }

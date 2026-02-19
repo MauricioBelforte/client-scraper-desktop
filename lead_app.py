@@ -470,7 +470,8 @@ class TrelewLeadApp:
             textos_ai = generar_contenido_ia(nombre, datos_fake)
             
             self.log("🎨 Maquetando demo...")
-            resultado = generar_web_profesional(nombre, datos_fake, textos_ai)
+            # Guardamos en carpeta 'demos' para que se pueda subir a GitHub
+            resultado = generar_web_profesional(nombre, datos_fake, textos_ai, carpeta_salida="demos")
             
             self.log("✅ Demo creada.")
             self.root.after(0, lambda: messagebox.showinfo("Demo Finalizada", f"Web generada para {nombre}:\n\n{resultado}"))
