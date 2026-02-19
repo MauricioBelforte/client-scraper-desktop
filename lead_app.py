@@ -19,6 +19,7 @@ import src.constants as constantes
 from src.gestor_datos import GestorDatos
 from src.utilidades import abrir_whatsapp
 from src.estrategia_fotos import extraer_fotos_galeria
+from src.estrategia_fotos_reviews import extraer_fotos_de_resena
 from src.scroll_strategies import estrategia_scroll_js_focalizado, estrategia_scroll_teclado
 from controlador_ia import generar_contenido_ia, limpiar_datos_ia, generar_datos_demo
 from generador_web import generar_web_profesional
@@ -440,6 +441,18 @@ class TrelewLeadApp:
     def ejecutar_generacion_web_thread(self, nombre, datos):
         self.log(f"🚀 Iniciando motor de IA para {nombre}...")
         try:
+            # --- Filtrado de testimonios duplicados ---
+            # Aseguramos que no haya textos repetidos antes de seleccionar los mejores para la web
+            if datos.get("comentarios"):
+                comentarios_unicos = []
+                textos_vistos = set()
+                for c in datos["comentarios"]:
+                    texto = c.get("texto", "").strip()
+                    if texto and texto not in textos_vistos:
+                        textos_vistos.add(texto)
+                        comentarios_unicos.append(c)
+                datos["comentarios"] = comentarios_unicos
+
             # 1. Limpieza de datos
             self.log("🧹 Fase 1: Normalizando datos con IA...")
             datos_limpios = limpiar_datos_ia(datos)
@@ -1048,13 +1061,8 @@ class TrelewLeadApp:
                                     # --- NUEVO: Captura de imágenes subidas por el usuario ---
                                     comentario['imagenes'] = []
                                     try:
-                                        # Google Maps suele poner las fotos de reseñas como background-image en botones
-                                        fotos_review = rev.find_elements(By.CSS_SELECTOR, "button[style*='background-image']")
-                                        for btn in fotos_review:
-                                            style = btn.get_attribute("style")
-                                            match = re.search(r'url\("?(.+?)"?\)', style)
-                                            if match:
-                                                comentario['imagenes'].append(match.group(1))
+                                        # Usamos el módulo modularizado para probar múltiples estrategias
+                                        comentario['imagenes'] = extraer_fotos_de_resena(rev, self.log)
                                     except: pass
 
                                     if comentario['texto'] and comentario['texto'] != "Sin texto":
