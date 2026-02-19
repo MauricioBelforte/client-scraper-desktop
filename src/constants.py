@@ -151,6 +151,19 @@ PALETAS_COLORES = {
             "moda", "ropa", "indumentaria", "zapateria", "lenceria", "danza", "spa"
         ]
     },
+    "ESTILO_MADERA": {
+        "colores": {
+            "primario": "#A0522D",       # Marrón Sienna (Madera)
+            "fondo": "#F8F8F8",          # Blanco humo / Gris muy claro
+            "texto": "#ffffff",          # Blanco
+            "texto_inverso": "#ffffff",  # Blanco
+            "overlay": "#00000047",      # Oscuro semitransparente
+            "fondo_tarjeta": "#ffffff"   # Blanco
+        },
+        "categorias": [
+            "muebleria", "mueblería", "muebles", "decoracion", "decoración", "interiorismo", "sofa", "colchon"
+        ]
+    },
     "FUERZA_TECNICA": {
         "colores": {
             "primario": "#ff4500",       # Naranja Rojizo (OrangeRed)
@@ -161,8 +174,8 @@ PALETAS_COLORES = {
             "fondo_tarjeta": "#ffffff"   # Fondo tarjeta
         },
         "categorias": [
-            "taller", "mecanic", "mecánic", "gimnasio", "gym", "crossfit", "fitness", 
-            "ferreteria", "construc", "obra", "repuestos", "muebleria", "pet shop",
+            "taller", "mecanic", "mecánic", "gimnasio", "gym", "crossfit", "fitness",
+            "ferreteria", "construc", "obra", "repuestos", "pet shop",
             "computacion", "tecnic", "reparacion", "kiosco", "carniceria",
             "polleria", "verduleria"
         ]

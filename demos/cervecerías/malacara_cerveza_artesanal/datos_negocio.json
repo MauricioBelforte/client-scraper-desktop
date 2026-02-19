@@ -1,0 +1,21 @@
+{
+  "nombre": "Malacara Cerveza Artesanal",
+  "categoria": "Cervecerías",
+  "direccion": "Av. Fontana 1234, Trelew, Chubut",
+  "telefono": "+54 9 280 4789012",
+  "rating": "4.7",
+  "comentarios": [
+    {
+      "autor": "Sofía Giménez",
+      "texto": "¡Increíble variedad de cervezas y un ambiente súper acogedor! La stout es espectacular.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Lucas Pérez",
+      "texto": "Un clásico de Trelew para los amantes de la buena cerveza artesanal. Siempre con novedades.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/malacaracerveza",
+  "instagram": "https://instagram.com/malacaracerveza"
+}

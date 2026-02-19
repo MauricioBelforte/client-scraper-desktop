@@ -147,7 +147,7 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
             "prompts": {
                 "logo": f"clean modern minimalist logo for health service, {nombre_slug}",
                 "fondo": "bright modern medical office interior, clean, professional, high-key lighting, minimalist",
-                "testimonio": "happy patient talking to a professional, bright ambient, clean background"
+                "testimonio": "happy patient talking to a professional, bright ambient, clean background, photorealistic, real person, 8k, photography style"
             }
         },
         "ESTETICA": {
@@ -155,7 +155,7 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
             "prompts": {
                 "logo": f"elegant stylish logo for beauty salon, {nombre_slug}",
                 "fondo": "bright luxury beauty salon interior, elegant, clean, high-key lighting, minimalist",
-                "testimonio": "client with a beautiful hairstyle smiling, bright ambient, soft focus"
+                "testimonio": "client with a beautiful hairstyle smiling, bright ambient, soft focus, photorealistic, real person, 8k, photography style"
             }
         },
         "NOCTURNO_GOURMET": {
@@ -163,7 +163,7 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
             "prompts": {
                 "logo": f"elegant logo for restaurant or bar, {nombre_slug}",
                 "fondo": "cozy restaurant or bar interior with warm lighting, cinematic, dramatic shadows",
-                "testimonio": "happy customers eating and drinking, warm ambient, bokeh"
+                "testimonio": "happy customers eating and drinking, warm ambient, bokeh, photorealistic, real people, 8k, photography style"
             }
         },
         "FITNESS": {
@@ -171,7 +171,7 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
             "prompts": {
                 "logo": f"strong bold modern logo for fitness gym, {nombre_slug}, vector style",
                 "fondo": "modern gym interior with equipment, dramatic lighting, high contrast, professional photography",
-                "testimonio": "person training in a gym, happy, sweating, fitness lifestyle"
+                "testimonio": "person training in a gym, happy, sweating, fitness lifestyle, photorealistic, real person, 8k, photography style"
             }
         },
         "OFICIOS_TALLER": {
@@ -179,7 +179,15 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
             "prompts": {
                 "logo": f"professional emblem logo for mechanic workshop or hardware store, {nombre_slug}, industrial style",
                 "fondo": "clean organized mechanic workshop interior with cars and tools, professional lighting",
-                "testimonio": "mechanic professional talking to a client, friendly, workshop background"
+                "testimonio": "mechanic professional talking to a client, friendly, workshop background, photorealistic, real people, 8k, photography style"
+            }
+        },
+        "MUEBLERIA": {
+            "keywords": ["muebleria", "mueblería", "muebles", "decoracion", "decoración", "interiorismo", "sofa", "colchon"],
+            "prompts": {
+                "logo": f"elegant modern furniture store logo, minimalist, {nombre_slug}, wood texture elements",
+                "fondo": "modern living room interior with stylish furniture, warm lighting, professional photography, high resolution, cozy atmosphere",
+                "testimonio": "happy family sitting on a comfortable sofa, smiling, bright living room background, photorealistic, real people, 8k, photography style"
             }
         },
         "default": {
@@ -187,7 +195,7 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
             "prompts": {
                 "logo": f"clean professional logo for {nombre_slug}",
                 "fondo": f"modern local business interior, cinematic lighting, for a {categoria_raw}",
-                "testimonio": "satisfied client in a shop"
+                "testimonio": "satisfied client in a shop, photorealistic, real person, 8k, photography style"
             }
         }
     }
@@ -272,7 +280,7 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
             prompt_testimonio_ajustado = prompt_testimonio_ajustado.replace("patient", "male patient").replace("client", "male client").replace("person", "man").replace("professional", "male professional")
             # Para "customers" (plural), podemos ser más directos
             if "customers" in prompt_testimonio_ajustado:
-                prompt_testimonio_ajustado = "happy male customers eating and drinking, warm ambient, bokeh"
+                prompt_testimonio_ajustado = "happy male customers eating and drinking, warm ambient, bokeh, photorealistic, real people, 8k, photography style"
             elif not any(term in prompt_testimonio_ajustado for term in ["male patient", "male client", "man", "male professional", "male customers"]):
                  prompt_testimonio_ajustado = "happy man " + base_testimonio_prompt
         elif genero == "mujer":
@@ -280,7 +288,7 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
             prompt_testimonio_ajustado = prompt_testimonio_ajustado.replace("patient", "female patient").replace("client", "female client").replace("person", "woman").replace("professional", "female professional")
             # Para "customers" (plural)
             if "customers" in prompt_testimonio_ajustado:
-                prompt_testimonio_ajustado = "happy female customers eating and drinking, warm ambient, bokeh"
+                prompt_testimonio_ajustado = "happy female customers eating and drinking, warm ambient, bokeh, photorealistic, real people, 8k, photography style"
             elif not any(term in prompt_testimonio_ajustado for term in ["female patient", "female client", "woman", "female professional", "female customers"]):
                 prompt_testimonio_ajustado = "happy woman " + base_testimonio_prompt
         # Si genero es "persona" (neutral), se usa el prompt base sin modificar.

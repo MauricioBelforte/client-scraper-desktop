@@ -18,6 +18,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import src.constants as constantes
 from src.gestor_datos import GestorDatos
 from src.utilidades import abrir_whatsapp
+from src.estrategia_fotos import extraer_fotos_galeria
 from src.scroll_strategies import estrategia_scroll_js_focalizado, estrategia_scroll_teclado
 from controlador_ia import generar_contenido_ia, limpiar_datos_ia, generar_datos_demo
 from generador_web import generar_web_profesional
@@ -289,7 +290,7 @@ class TrelewLeadApp:
         # 3. Botón "Contactar por todos" (Gris/Rojo)
         has_any = has_wa or has_fb or has_ig or has_email
         c_all = constantes.COLOR_BTN_OSCURO if has_any else constantes.COLOR_PELIGRO
-        tk.Button(body, text=constantes.BTN_CONTACTAR_TODOS, bg=c_all, fg=constantes.COLOR_BLANCO, font=constantes.FUENTE_PEQUENA_NEGRITA, relief="flat", cursor="hand2" if has_any else "arrow", command=self.contactar_todos_placeholder).pack(fill="x", pady=(5, 5))
+        tk.Button(body, text=constantes.BTN_CONTACTAR_TODOS, bg=c_all, fg=constantes.COLOR_BLANCO, font=constantes.FUENTE_PEQUENA_NEGRITA, relief="flat", cursor="hand2" if has_any else "arrow", command=lambda n=nombre, d=datos: self.contactar_todos(n, d) if has_any else None).pack(fill="x", pady=(5, 5))
 
         # Botón de información detallada (Ficha Técnica)
         btn_info = tk.Button(body, text=constantes.BTN_VER_FICHA, bg=constantes.COLOR_BTN_INFO, fg=constantes.COLOR_BLANCO, 
@@ -308,8 +309,26 @@ class TrelewLeadApp:
                            command=lambda: self.lanzar_generacion_web(nombre, datos))
         btn_web.pack(fill="x", pady=(10, 5))
 
-    def contactar_todos_placeholder(self):
-        pass
+    def contactar_todos(self, nombre, datos):
+        """Abre todos los canales de contacto disponibles para un negocio en pestañas separadas."""
+        tel = datos.get('telefono')
+        if tel and "Sin" not in str(tel) and "No" not in str(tel):
+            abrir_whatsapp(nombre, tel)
+            time.sleep(0.5) # Pausa para que el sistema operativo procese la apertura
+
+        fb = datos.get('facebook')
+        if fb and "No detectado" not in fb:
+            webbrowser.open(fb)
+            time.sleep(0.5)
+
+        ig = datos.get('instagram')
+        if ig and "No detectado" not in ig:
+            webbrowser.open(ig)
+            time.sleep(0.5)
+
+        email = datos.get('email')
+        if email and "No detectado" not in email:
+            webbrowser.open(f"mailto:{email}")
 
     def mostrar_info_detallada(self, nombre, datos):
         """Muestra una ventana flotante con toda la información pública recolectada."""
@@ -1026,6 +1045,18 @@ class TrelewLeadApp:
                                     # Rating (estrellas)
                                     comentario['rating'] = rev.find_element(By.CSS_SELECTOR, "span[role='img']").get_attribute("aria-label")
                                     
+                                    # --- NUEVO: Captura de imágenes subidas por el usuario ---
+                                    comentario['imagenes'] = []
+                                    try:
+                                        # Google Maps suele poner las fotos de reseñas como background-image en botones
+                                        fotos_review = rev.find_elements(By.CSS_SELECTOR, "button[style*='background-image']")
+                                        for btn in fotos_review:
+                                            style = btn.get_attribute("style")
+                                            match = re.search(r'url\("?(.+?)"?\)', style)
+                                            if match:
+                                                comentario['imagenes'].append(match.group(1))
+                                    except: pass
+
                                     if comentario['texto'] and comentario['texto'] != "Sin texto":
                                         datos_extra["comentarios"].append(comentario)
                                 except: continue
@@ -1163,11 +1194,17 @@ class TrelewLeadApp:
                                 except: pass
 
                             # 5. Recolectar Imágenes (URLs) para futura web
-                            imgs = driver.find_elements(By.CSS_SELECTOR, "div[role='main'] img")
-                            for img in imgs:
-                                src = img.get_attribute("src")
-                                if src and "http" in src and "googleusercontent" in src and len(datos_extra["imagenes"]) < 3:
-                                    datos_extra["imagenes"].append(src)
+                            # --- NUEVA ESTRATEGIA MODULARIZADA (Galería) ---
+                            # SE COMENTA TEMPORALMENTE POR INESTABILIDAD EN EL CIERRE DE GALERÍA
+                            # try:
+                            #     fotos_galeria = extraer_fotos_galeria(driver, self.log)
+                            #     if fotos_galeria:
+                            #         # Agregamos las fotos de mejor calidad encontradas
+                            #         for f in fotos_galeria:
+                            #             if f not in datos_extra["imagenes"]:
+                            #                 datos_extra["imagenes"].append(f)
+                            # except Exception as e:
+                            #     self.log(f"Error invocando módulo fotos: {e}")
                             
                             # 6. Recolectar "Resultados web" (Enlaces extra al final del panel)
                             # Capturamos hasta 3 enlaces externos que no sean de Google ni redes ya detectadas.
