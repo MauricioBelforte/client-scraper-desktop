@@ -18,7 +18,6 @@ from webdriver_manager.chrome import ChromeDriverManager
 import src.constants as constantes
 from src.gestor_datos import GestorDatos
 from src.utilidades import abrir_whatsapp
-from src.estrategia_fotos import extraer_fotos_galeria
 from src.estrategia_fotos_reviews import extraer_fotos_de_resena
 from src.scroll_strategies import estrategia_scroll_js_focalizado, estrategia_scroll_teclado
 from controlador_ia import generar_contenido_ia, limpiar_datos_ia, generar_datos_demo
@@ -449,14 +448,16 @@ class TrelewLeadApp:
                 for c in datos["comentarios"]:
                     texto = c.get("texto", "").strip()
                     if texto and texto not in textos_vistos:
+
                         textos_vistos.add(texto)
                         comentarios_unicos.append(c)
                 datos["comentarios"] = comentarios_unicos
-
+            
             # 1. Limpieza de datos
             self.log("🧹 Fase 1: Normalizando datos con IA...")
             datos_limpios = limpiar_datos_ia(datos)
             
+
             # 2. Generación de contenido
             self.log("🧠 Fase 2: Redactando textos persuasivos...")
             textos_ai = generar_contenido_ia(nombre, datos_limpios)
@@ -465,6 +466,7 @@ class TrelewLeadApp:
             self.log("🎨 Fase 3: Maquetando sitio web...")
             resultado = generar_web_profesional(nombre, datos_limpios, textos_ai)
             
+
             self.log("✅ ¡Sitio web creado con éxito!")
             self.root.after(0, lambda: messagebox.showinfo("Proceso Finalizado", f"Web generada correctamente.\n\n{resultado}"))
             
@@ -1063,6 +1065,7 @@ class TrelewLeadApp:
                                     try:
                                         # Usamos el módulo modularizado para probar múltiples estrategias
                                         comentario['imagenes'] = extraer_fotos_de_resena(rev, self.log)
+
                                     except: pass
 
                                     if comentario['texto'] and comentario['texto'] != "Sin texto":

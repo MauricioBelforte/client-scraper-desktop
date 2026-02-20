@@ -18,6 +18,14 @@ def limpiar_url_imagen(url):
     
     return url
 
+def obtener_url_baja_res(url):
+    """Genera una URL de baja resolución para análisis rápido (ahorro de ancho de banda)."""
+    if not url: return None
+    if "googleusercontent" in url:
+        # Reemplazamos cualquier parámetro de tamaño por =s300 (300px ancho)
+        return re.sub(r'(=s\d+.*|=w\d+.*|=h\d+.*|\?sz=\d+)', '=s300', url)
+    return url
+
 def extraer_fotos_de_resena(review_element, logger=None):
     """
     Intenta extraer URLs de imágenes adjuntas a una reseña específica.

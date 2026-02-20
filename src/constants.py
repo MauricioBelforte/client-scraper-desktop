@@ -164,6 +164,20 @@ PALETAS_COLORES = {
             "muebleria", "mueblería", "muebles", "decoracion", "decoración", "interiorismo", "sofa", "colchon"
         ]
     },
+    "NATURALEZA_FRESCA": {
+        "colores": {
+            "primario": "#28a745",       # Verde éxito (Bootstrap Success Green)
+            "fondo": "#f0fff0",          # Honeydew (Verde muy pálido)
+            "texto": "#eceaea",          
+            "texto_inverso": "#ffffff",  # Blanco
+            "overlay": "#00000066",      # Overlay oscuro para contraste
+            "fondo_tarjeta": "#ffffff"   # Fondo tarjeta blanco
+        },
+        "categorias": [
+            "verduleria", "botanica", "jardineria", "jardinero", "vivero", 
+            "floreria", "organico", "dietetica", "fruteria"
+        ]
+    },
     "FUERZA_TECNICA": {
         "colores": {
             "primario": "#ff4500",       # Naranja Rojizo (OrangeRed)
@@ -177,7 +191,7 @@ PALETAS_COLORES = {
             "taller", "mecanic", "mecánic", "gimnasio", "gym", "crossfit", "fitness",
             "ferreteria", "construc", "obra", "repuestos", "pet shop",
             "computacion", "tecnic", "reparacion", "kiosco", "carniceria",
-            "polleria", "verduleria"
+            "polleria"
         ]
     }
 }

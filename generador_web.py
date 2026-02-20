@@ -30,7 +30,12 @@ def generar_y_guardar_imagen(prompt: str, ruta_guardado: str):
         url = f"https://api.cloudflare.com/client/v4/accounts/{account_id}/ai/run/{model}"
         
         headers = {"Authorization": f"Bearer {api_token}"}
-        payload = {"prompt": prompt}
+        payload = {
+            "prompt": prompt,
+            "num_steps": 20,
+            "guidance": 7.5,
+            "negative_prompt": "blurry, low quality, distorted, ugly, text, watermark, bad anatomy, nsfw, nude, darkness, black image"
+        }
 
         response = requests.post(url, headers=headers, json=payload)
 
@@ -79,6 +84,60 @@ def detectar_genero_nombre(nombre):
     
     return "persona" # Por defecto, neutral
 
+def descargar_imagen_real(url: str, ruta_guardado: str) -> bool:
+    """
+    Descarga una imagen desde una URL y la guarda localmente.
+    Añade un User-Agent para simular un navegador y evitar bloqueos (ej. 403 Forbidden).
+    """
+    try:
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
+        response = requests.get(url, timeout=15, headers=headers)
+        
+        # --- RETRY LOGIC: Fallback para imágenes de Google que fallan con =s0 ---
+        if response.status_code in [400, 403, 404] and "googleusercontent" in url and "=s0" in url:
+            print(f"[AVATAR] Falló descarga con tamaño original (=s0). Reintentando con tamaño fijo (=s800)...")
+            url_fallback = url.replace("=s0", "=s800")
+            response = requests.get(url_fallback, timeout=15, headers=headers)
+            
+        if response.status_code == 200:
+            with open(ruta_guardado, 'wb') as f:
+                f.write(response.content)
+            return True
+        else:
+            print(f"[AVATAR] Error al descargar imagen real ({response.status_code}) desde: {url}")
+            return False
+    except Exception as e:
+        print(f"[AVATAR] Excepción al descargar imagen real: {e}")
+        return False
+
+def generar_avatar_sintetico(autor: str, prompts: dict, ruta_guardado: str) -> bool:
+    """
+    Genera un avatar sintético con IA basado en el género del autor.
+    Encapsula la lógica de construcción del prompt y la llamada a la API.
+    """
+    genero = detectar_genero_nombre(autor)
+    base_testimonio_prompt = prompts["testimonio"]
+    
+    prompt_testimonio_ajustado = base_testimonio_prompt
+    if genero == "hombre":
+        # Reemplazos específicos para hacer el prompt más masculino
+        prompt_testimonio_ajustado = prompt_testimonio_ajustado.replace("patient", "male patient").replace("client", "male client").replace("person", "man").replace("professional", "male professional")
+        # Para "customers" (plural), podemos ser más directos
+        if "customers" in prompt_testimonio_ajustado:
+            prompt_testimonio_ajustado = "happy male customers eating and drinking, warm ambient, bokeh, photorealistic, real people, 8k, photography style"
+        elif not any(term in prompt_testimonio_ajustado for term in ["male patient", "male client", "man", "male professional", "male customers"]):
+                prompt_testimonio_ajustado = "happy man " + base_testimonio_prompt
+    elif genero == "mujer":
+        # Reemplazos específicos para hacer el prompt más femenino
+        prompt_testimonio_ajustado = prompt_testimonio_ajustado.replace("patient", "female patient").replace("client", "female client").replace("person", "woman").replace("professional", "female professional")
+        # Para "customers" (plural)
+        if "customers" in prompt_testimonio_ajustado:
+            prompt_testimonio_ajustado = "happy female customers eating and drinking, warm ambient, bokeh, photorealistic, real people, 8k, photography style"
+        elif not any(term in prompt_testimonio_ajustado for term in ["female patient", "female client", "woman", "female professional", "female customers"]):
+            prompt_testimonio_ajustado = "happy woman " + base_testimonio_prompt
+    
+    return generar_y_guardar_imagen(prompt_testimonio_ajustado, ruta_guardado)
+
 def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_salida="sitios"):
     """
     Genera un sitio web completo para un negocio.
@@ -116,12 +175,14 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
     texto_busqueda = (categoria_raw + " " + nombre_negocio).lower() # Buscamos en categoría y nombre
     
     # 1. Buscar coincidencia en las listas definidas
+    print(f"[PRUEBA_NO_ITERABLE] Iniciando iteracion PALETAS_COLORES (Tipo: {type(PALETAS_COLORES)})")
     for nombre_paleta, datos in PALETAS_COLORES.items():
         # Verificamos si alguna keyword de la paleta está en el texto de búsqueda
         if any(keyword in texto_busqueda for keyword in datos["categorias"]):
             paleta_seleccionada = datos["colores"]
             print(f"[DISEÑO] Categoría detectada: '{nombre_paleta}'. Aplicando paleta predefinida.")
             break
+    print("[PRUEBA_NO_ITERABLE] Cerrando iteracion PALETAS_COLORES")
     
     # 2. Si no hubo coincidencia, usar Default (NOCTURNA_GOURMET) y permitir sugerencia IA
     if not paleta_seleccionada:
@@ -145,7 +206,7 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
         "SALUD": {
             "keywords": ["veterinaria", "odont", "medico", "médico", "kinesio", "salud", "clinic", "clínica", "farmacia", "psicolog", "nutricion", "consultorio"],
             "prompts": {
-                "logo": f"clean modern minimalist logo for health service, {nombre_slug}",
+                "logo": f"clean modern minimalist logo for health service, {nombre_negocio}",
                 "fondo": "bright modern medical office interior, clean, professional, high-key lighting, minimalist",
                 "testimonio": "happy patient talking to a professional, bright ambient, clean background, photorealistic, real person, 8k, photography style"
             }
@@ -153,7 +214,7 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
         "ESTETICA": {
             "keywords": ["peluqu", "estetic", "estética", "belleza", "uñas", "makeup", "spa", "moda"],
             "prompts": {
-                "logo": f"elegant stylish logo for beauty salon, {nombre_slug}",
+                "logo": f"elegant stylish logo for beauty salon, {nombre_negocio}",
                 "fondo": "bright luxury beauty salon interior, elegant, clean, high-key lighting, minimalist",
                 "testimonio": "client with a beautiful hairstyle smiling, bright ambient, soft focus, photorealistic, real person, 8k, photography style"
             }
@@ -161,7 +222,7 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
         "NOCTURNO_GOURMET": {
             "keywords": ["restaurante", "bar", "cerveceria", "cervecería", "pub", "disco", "hamburgueseria", "hamburguesería", "pizzeria", "pizzería", "sushi", "parrilla", "gastrono", "cafeteria", "cafetería", "evento", "hotel"],
             "prompts": {
-                "logo": f"elegant logo for restaurant or bar, {nombre_slug}",
+                "logo": f"elegant logo for restaurant or bar, {nombre_negocio}",
                 "fondo": "cozy restaurant or bar interior with warm lighting, cinematic, dramatic shadows",
                 "testimonio": "happy customers eating and drinking, warm ambient, bokeh, photorealistic, real people, 8k, photography style"
             }
@@ -169,7 +230,7 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
         "FITNESS": {
             "keywords": ["gimnasio", "gym", "crossfit", "fitness", "entrenam", "deport", "pilates", "yoga"],
             "prompts": {
-                "logo": f"strong bold modern logo for fitness gym, {nombre_slug}, vector style",
+                "logo": f"strong bold modern logo for fitness gym, {nombre_negocio}, vector style",
                 "fondo": "modern gym interior with equipment, dramatic lighting, high contrast, professional photography",
                 "testimonio": "person training in a gym, happy, sweating, fitness lifestyle, photorealistic, real person, 8k, photography style"
             }
@@ -177,7 +238,7 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
         "OFICIOS_TALLER": {
             "keywords": ["taller", "mecanic", "mecánic", "ferreteria", "construc", "reparacion", "repuestos", "automotor", "chapa", "pintura", "obra", "electricista", "plomero"],
             "prompts": {
-                "logo": f"professional emblem logo for mechanic workshop or hardware store, {nombre_slug}, industrial style",
+                "logo": f"professional emblem logo for mechanic workshop or hardware store, {nombre_negocio}, industrial style",
                 "fondo": "clean organized mechanic workshop interior with cars and tools, professional lighting",
                 "testimonio": "mechanic professional talking to a client, friendly, workshop background, photorealistic, real people, 8k, photography style"
             }
@@ -185,15 +246,23 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
         "MUEBLERIA": {
             "keywords": ["muebleria", "mueblería", "muebles", "decoracion", "decoración", "interiorismo", "sofa", "colchon"],
             "prompts": {
-                "logo": f"elegant modern furniture store logo, minimalist, {nombre_slug}, wood texture elements",
+                "logo": f"elegant modern furniture store logo, minimalist, {nombre_negocio}, wood texture elements",
                 "fondo": "modern living room interior with stylish furniture, warm lighting, professional photography, high resolution, cozy atmosphere",
                 "testimonio": "happy family sitting on a comfortable sofa, smiling, bright living room background, photorealistic, real people, 8k, photography style"
+            }
+        },
+        "NATURALEZA": {
+            "keywords": ["verduleria", "botanica", "jardineria", "jardinero", "vivero", "floreria", "organico", "dietetica", "fruteria"],
+            "prompts": {
+                "logo": f"clean modern minimalist logo for a fresh market or garden store, {nombre_negocio}, green leaf icon",
+                "fondo": "bright modern grocery store interior with fresh vegetables and fruits, clean, natural light, professional photography",
+                "testimonio": "happy customer holding a basket of fresh vegetables, smiling, bright natural background, photorealistic, real person, 8k, photography style"
             }
         },
         "default": {
             "keywords": [], # no keywords, it's the fallback
             "prompts": {
-                "logo": f"clean professional logo for {nombre_slug}",
+                "logo": f"clean professional logo for {nombre_negocio}",
                 "fondo": f"modern local business interior, cinematic lighting, for a {categoria_raw}",
                 "testimonio": "satisfied client in a shop, photorealistic, real person, 8k, photography style"
             }
@@ -202,11 +271,13 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
     
     # Lógica de selección de prompts de imagen
     prompts = prompts_por_categoria["default"]["prompts"] # Empezamos con el default
+    print(f"[PRUEBA_NO_ITERABLE] Iniciando iteracion prompts_por_categoria (Tipo: {type(prompts_por_categoria)})")
     for key, data in prompts_por_categoria.items():
         if key != "default" and any(keyword in texto_busqueda for keyword in data["keywords"]):
             prompts = data["prompts"]
             print(f"[IMAGEN] Categoría de imagen detectada: '{key}'. Aplicando prompts específicos.")
             break
+    print("[PRUEBA_NO_ITERABLE] Cerrando iteracion prompts_por_categoria")
 
     # Generar y guardar imágenes, obteniendo sus rutas relativas
     ruta_logo_local = f"{ruta_web}/assets/img/logo.png"
@@ -223,7 +294,8 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
 
 
     # --- Link de WhatsApp (definido antes para usarlo como fallback) ---
-    tel = "".join(filter(str.isdigit, data_json.get('telefono', '')))
+    # Corrección: Convertir a string explícitamente para evitar error si el valor es None
+    tel = "".join(filter(str.isdigit, str(data_json.get('telefono') or '')))
     wa_link = f"https://wa.me/549{tel}" if tel else "#"
 
     # --- Adaptación a IA (Punto 10) ---
@@ -236,14 +308,17 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
     lema_hero = textos_ai.get('lema_corto', f"Calidad y confianza en cada detalle.")
 
     # Procesar Reseñas
-    comentarios_reales = data_json.get('comentarios', [])
+    # Hacemos la carga más robusta. Si la IA devuelve 'null' para comentarios, lo convertimos en lista vacía.
+    comentarios_reales = data_json.get('comentarios') or []
     comentarios_filtrados = []
     
     # 1. Filtrar solo reseñas buenas (4 o 5 estrellas/puntos)
+    print(f"[PRUEBA_NO_ITERABLE] Iniciando iteracion comentarios_reales (Tipo: {type(comentarios_reales)})")
     for c in comentarios_reales:
         rating_raw = str(c.get('rating', '')).lower()
         if '4' in rating_raw or '5' in rating_raw:
             comentarios_filtrados.append(c)
+    print("[PRUEBA_NO_ITERABLE] Cerrando iteracion comentarios_reales")
             
     # 2. Seleccionar top 3 o rellenar con ficticios
     comentarios_finales = comentarios_filtrados[:3]
@@ -266,38 +341,32 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
         })
 
     comentarios_html = ""
+    print(f"[PRUEBA_NO_ITERABLE] Iniciando iteracion comentarios_finales (Tipo: {type(comentarios_finales)})")
     for i, c in enumerate(comentarios_finales):
-        # Detectar género del autor
-        genero = detectar_genero_nombre(c.get('autor', ''))
-        
-        # Obtener el prompt base para testimonios de la categoría actual
-        base_testimonio_prompt = prompts["testimonio"]
-        
-        # Ajustar el prompt según el género detectado
-        prompt_testimonio_ajustado = base_testimonio_prompt
-        if genero == "hombre":
-            # Reemplazos específicos para hacer el prompt más masculino
-            prompt_testimonio_ajustado = prompt_testimonio_ajustado.replace("patient", "male patient").replace("client", "male client").replace("person", "man").replace("professional", "male professional")
-            # Para "customers" (plural), podemos ser más directos
-            if "customers" in prompt_testimonio_ajustado:
-                prompt_testimonio_ajustado = "happy male customers eating and drinking, warm ambient, bokeh, photorealistic, real people, 8k, photography style"
-            elif not any(term in prompt_testimonio_ajustado for term in ["male patient", "male client", "man", "male professional", "male customers"]):
-                 prompt_testimonio_ajustado = "happy man " + base_testimonio_prompt
-        elif genero == "mujer":
-            # Reemplazos específicos para hacer el prompt más femenino
-            prompt_testimonio_ajustado = prompt_testimonio_ajustado.replace("patient", "female patient").replace("client", "female client").replace("person", "woman").replace("professional", "female professional")
-            # Para "customers" (plural)
-            if "customers" in prompt_testimonio_ajustado:
-                prompt_testimonio_ajustado = "happy female customers eating and drinking, warm ambient, bokeh, photorealistic, real people, 8k, photography style"
-            elif not any(term in prompt_testimonio_ajustado for term in ["female patient", "female client", "woman", "female professional", "female customers"]):
-                prompt_testimonio_ajustado = "happy woman " + base_testimonio_prompt
-        # Si genero es "persona" (neutral), se usa el prompt base sin modificar.
+        url_testimonio = "https://via.placeholder.com/150" # Fallback por defecto
 
-        ruta_testimonio_local = f"{ruta_web}/assets/img/testimonio_{i}.jpg"
-        if generar_y_guardar_imagen(prompt_testimonio_ajustado, ruta_testimonio_local):
-            url_testimonio = f"assets/img/testimonio_{i}.jpg"
+        # --- NUEVA ESTRATEGIA DE AVATARES ---
+        # Criterio de elección: la primera imagen de la reseña. Es simple y efectivo.
+        if c.get("imagenes"):
+            url_real = c["imagenes"][0]
+            ruta_local_real = f"{ruta_web}/assets/img/testimonio_real_{i}.jpg"
+            print(f"[AVATAR] Testimonio {i} tiene imagen real. Intentando descargar...")
+            
+            if descargar_imagen_real(url_real, ruta_local_real):
+                url_testimonio = f"assets/img/testimonio_real_{i}.jpg"
+                print(f"  -> Éxito. Usando imagen real.")
+            else:
+                print(f"  -> Falló descarga. Se usará placeholder.")
         else:
-            url_testimonio = "https://via.placeholder.com/150" # Fallback
+            # Si no hay imagen real, generamos una con IA
+            print(f"[AVATAR] Testimonio {i} no tiene imagen. Generando con IA...")
+            ruta_sintetica_local = f"{ruta_web}/assets/img/testimonio_sintetico_{i}.jpg"
+            if generar_avatar_sintetico(c.get('autor', ''), prompts, ruta_sintetica_local):
+                url_testimonio = f"assets/img/testimonio_sintetico_{i}.jpg"
+                print(f"  -> Éxito. Usando imagen sintética.")
+            else:
+                print(f"  -> Falló generación. Se usará placeholder.")
+
         comentarios_html += f'''
         <article class="tarjeta-testimonio">
             <img src="{url_testimonio}" alt="Foto de {c.get('autor')}">
@@ -307,10 +376,13 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
             <h3 class="autor-testimonio">{c.get('autor')}</h3>
         </article>
         '''
+    print("[PRUEBA_NO_ITERABLE] Cerrando iteracion comentarios_finales")
 
     # Generar HTML para los beneficios extraídos por la IA
     beneficios_html = ""
-    beneficios = textos_ai.get('beneficios', [])
+    # Hacemos la carga más robusta. Si la IA devuelve 'null' para beneficios, lo convertimos en lista vacía.
+    beneficios = textos_ai.get('beneficios') or []
+    print(f"[PRUEBA_NO_ITERABLE] Iniciando iteracion beneficios (Tipo: {type(beneficios)})")
     if beneficios:
         beneficios_html = '<section class="seccion-beneficios"><h2 class="el-messiri">Por qué elegirnos</h2><div class="contenedor-tarjetas">'
         for beneficio in beneficios:
@@ -320,6 +392,7 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
             </article>
             '''
         beneficios_html += '</div></section>'
+    print("[PRUEBA_NO_ITERABLE] Cerrando iteracion beneficios")
 
     # --- NUEVO: Sección de Contacto / Redes Sociales ---
     facebook_url = data_json.get('facebook', 'No detectado')
@@ -439,11 +512,11 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
     .tarjeta-producto {{ background: var(--color-primario); border-radius: var(--radio-card); padding: 1.5rem; color: var(--color-texto-inverso); transition: var(--transicion-estandar); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }}
     .tarjeta-producto:hover {{ transform: translateY(-5px); }}
     .tarjeta-producto img {{ width: 100%; height: 15rem; object-fit: cover; border-radius: 0.5rem; }}
-    .tarjeta-beneficio {{ background: #ffffff; color: #333; text-align: center; padding: 2rem 1rem; display: flex; align-items: center; justify-content: center; border: 1px solid #eee; }}
+    .tarjeta-beneficio {{ background: #ffffff; color: var(--color-texto-base); text-align: center; padding: 2rem 1rem; display: flex; align-items: center; justify-content: center; border: 1px solid #eee; }}
     .tarjeta-beneficio h3 {{ font-size: var(--font-size-sm); }}
     
     /* --- Estilos Nuevos para Testimonios --- */
-    .tarjeta-testimonio {{ background: var(--color-fondo-tarjeta); border-radius: var(--radio-card); padding: 2rem; display: flex; flex-direction: column; align-items: center; text-align: center; color: #333; transition: var(--transicion-estandar); position: relative; border: 1px solid #eee; }}
+    .tarjeta-testimonio {{ background: var(--color-fondo-tarjeta); border-radius: var(--radio-card); padding: 2rem; display: flex; flex-direction: column; align-items: center; text-align: center; color: var(--color-texto-base); transition: var(--transicion-estandar); position: relative; border: 1px solid #eee; }}
     .tarjeta-testimonio:hover {{ transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }}
     .tarjeta-testimonio img {{ width: 6rem; height: 6rem; border-radius: 50%; object-fit: cover; border: 3px solid var(--color-primario); margin-bottom: 1rem; }}
     .comillas-testimonio {{ font-size: 4rem; line-height: 0.5; font-family: serif; color: var(--color-primario); display: block; margin-bottom: 1rem; margin-top: 0.5rem; opacity: 0.8; }}

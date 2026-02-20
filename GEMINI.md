@@ -22,6 +22,7 @@ El formato obligatorio para los mensajes de commit es:
 ## 2. Flujo de Trabajo
 - **Documentación:** Mantener siempre actualizados los archivos `.md` de planificación.
 - **Modularidad:** Preferir funciones pequeñas y archivos separados por responsabilidad.
+- **Exportar Lógica:** Encapsular funcionalidades en funciones o clases bien definidas para que el código sea más entendible, reutilizable y fácil de desacoplar.
 
 ## 3. Convenciones de Nombres (Naming) 🏷️
 - **Idioma General:** Español.
