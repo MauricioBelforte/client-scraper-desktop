@@ -1,11 +1,12 @@
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, simpledialog
 import threading
 import random
 import time
 import os
 import webbrowser
 import re
+import urllib.parse
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -17,11 +18,45 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import src.constants as constantes
 from src.gestor_datos import GestorDatos
-from src.utilidades import abrir_whatsapp
 from src.estrategia_fotos_reviews import extraer_fotos_de_resena
 from src.scroll_strategies import estrategia_scroll_js_focalizado, estrategia_scroll_teclado
 from controlador_ia import generar_contenido_ia, limpiar_datos_ia, generar_datos_demo
 from generador_web import generar_web_profesional
+
+def abrir_whatsapp(nombre, telefono):
+    """Abre WhatsApp Web con un mensaje personalizado."""
+    tel_limpio = "".join(filter(str.isdigit, str(telefono)))
+    
+    # --- CORRECCIÓN DE FORMATO ARGENTINA ---
+    # 1. Si empieza con 0 (ej: 0280...), quitamos el 0 inicial
+    if tel_limpio.startswith("0"):
+        tel_limpio = tel_limpio[1:]
+    
+    # 2. Si no tiene el prefijo de país 54, lo agregamos con el 9 de móvil (549)
+    if not tel_limpio.startswith("54"):
+        tel_limpio = "549" + tel_limpio
+        
+    # 3. Si tiene el 549 pero le sigue un 0 (ej: 5490280...), quitamos ese 0
+    if tel_limpio.startswith("5490"):
+        tel_limpio = "549" + tel_limpio[4:]
+
+    mensaje = f"""Hola, {nombre}. Mi nombre es Mauricio Belforte, me dedico al desarrollo de páginas web. 
+Soy de Trelew.
+
+Estoy ofreciendo mis servicios a distintos negocios y profesionales locales.
+
+Si gustan pueden pasar a ver estos 2 modelos de plantillas que estoy trabajando. Se pueden adaptar y modificar rapidamente.
+Modelo 1: https://capable-liger-02b6bd.netlify.app/
+Modelo 2: https://inquisitive-cendol-ec0b27.netlify.app/
+
+Sino tambien podemos trabajar en una página con un diseño mas elaborado y funcionalidades más especificas pero a un costo mayor.
+
+Pueden ver más de mis trabajos en mi portfolio: https://mauriciobelforte.github.io/mi-portfolio/.
+
+Si les sirve, no duden en contactarme. Saludos!"""
+    
+    url = f"https://wa.me/{tel_limpio}?text={urllib.parse.quote(mensaje)}"
+    webbrowser.open(url)
 
 class TrelewLeadApp:
     """
@@ -46,6 +81,7 @@ class TrelewLeadApp:
         self.style.configure("Action.TButton", font=constantes.FUENTE_NEGRITA, padding=10)
         
         self.prospectos_datos = {} # Memoria temporal de datos recolectados
+        self.archivo_activo = None # Archivo JSON sobre el que se está trabajando
         self.setup_ui()
 
     def setup_ui(self):
@@ -89,9 +125,13 @@ class TrelewLeadApp:
         self.btn_cargar = ttk.Button(search_frame, text=constantes.BTN_CARGAR, command=self.cargar_ficha_offline)
         self.btn_cargar.pack(side="left", padx=5)
 
-        # Botón Demo Web (Nuevo)
-        self.btn_demo = ttk.Button(search_frame, text="🎨 GENERAR DEMO WEB", command=self.lanzar_demo_web)
-        self.btn_demo.pack(side="left", padx=5)
+        # Botón Demo Web V1
+        self.btn_demo_v1 = ttk.Button(search_frame, text="🎨 DEMO WEB V1", command=lambda: self.lanzar_demo_web("v1"))
+        self.btn_demo_v1.pack(side="left", padx=5)
+
+        # Botón Demo Web V2
+        self.btn_demo_v2 = ttk.Button(search_frame, text="🎨 DEMO WEB V2", command=lambda: self.lanzar_demo_web("v2"))
+        self.btn_demo_v2.pack(side="left", padx=5)
 
         # --- Contenedor Principal (Split View: Maestro-Detalle) ---
         main_container = tk.Frame(self.root, bg=constantes.COLOR_FONDO)
@@ -103,12 +143,16 @@ class TrelewLeadApp:
 
         tk.Label(left_panel, text=constantes.ETIQUETA_RESULTADOS, font=constantes.FUENTE_NEGRITA, bg=constantes.COLOR_BLANCO, pady=5).pack()
 
-        columns = ("nombre", "estado")
+        columns = ("nombre", "estado", "propuesta", "web")
         self.tree = ttk.Treeview(left_panel, columns=columns, show="headings")
         self.tree.heading("nombre", text=constantes.COLUMNA_NOMBRE)
         self.tree.heading("estado", text=constantes.COLUMNA_ESTADO)
+        self.tree.heading("propuesta", text="Propuesta")
+        self.tree.heading("web", text="Web")
         self.tree.column("nombre", width=250)
         self.tree.column("estado", width=100)
+        self.tree.column("propuesta", width=100, anchor="center")
+        self.tree.column("web", width=80, anchor="center")
         
         scrollbar = ttk.Scrollbar(left_panel, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscroll=scrollbar.set)
@@ -140,6 +184,14 @@ class TrelewLeadApp:
         """Actualiza la barra de estado inferior."""
         self.status_label.config(text=f"⚙️ {mensaje}")
         self.root.update_idletasks()
+
+    def _get_propuesta_status_text(self, datos):
+        """Helper para obtener el texto visual del estado de la propuesta."""
+        return "✅ Enviada" if datos.get("propuesta_enviada") else "❌ Pendiente"
+
+    def _get_web_status_text(self, datos):
+        """Helper para obtener el texto visual si tiene web."""
+        return "🌐 Sí" if datos.get("website") else "-"
 
     def limpiar_nombre(self, nombre):
         """Elimina sufijos de estado de navegación del nombre del negocio."""
@@ -201,10 +253,15 @@ class TrelewLeadApp:
             # Limpiar UI y memoria
             self.tree.delete(*self.tree.get_children())
             self.prospectos_datos = datos_cargados
+            self.archivo_activo = seleccion # Recordar qué archivo estamos editando
             
             # Rellenar Treeview
             for nombre in self.prospectos_datos:
-                self.tree.insert("", "end", values=(nombre, "GUARDADO 💾"))
+                datos = self.prospectos_datos[nombre]
+                prop_status = self._get_propuesta_status_text(datos)
+                web_status = self._get_web_status_text(datos)
+                # IMPORTANTE: Asignar iid=nombre para poder actualizar la fila después
+                self.tree.insert("", "end", iid=nombre, values=(nombre, "GUARDADO 💾", prop_status, web_status))
             
             self.log(f"Ficha '{seleccion}' cargada exitosamente. ({len(datos_cargados)} registros)")
             
@@ -243,7 +300,7 @@ class TrelewLeadApp:
         # Filas de información
         self.create_info_row(body, "Categoría:", datos.get('categoria', 'General'))
         self.create_info_row(body, constantes.ETIQUETA_TELEFONO, datos.get('telefono', 'No disponible'))
-        self.create_info_row(body, constantes.ETIQUETA_WEB, constantes.VALOR_SIN_WEB)
+        self.create_info_row(body, constantes.ETIQUETA_WEB, datos.get('website', constantes.VALOR_SIN_WEB))
         self.create_info_row(body, constantes.ETIQUETA_CIUDAD, constantes.VALOR_CIUDAD)
 
         # Separador visual
@@ -297,17 +354,74 @@ class TrelewLeadApp:
                            font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2",
                            command=lambda: self.mostrar_info_detallada(nombre, datos))
         btn_info.pack(fill="x", pady=5)
+
+        # Frame para acciones de Google (Búsqueda automática y manual)
+        google_frame = tk.Frame(body, bg=constantes.COLOR_BLANCO)
+        google_frame.pack(fill="x", pady=5)
+        google_frame.columnconfigure(0, weight=1)
+        google_frame.columnconfigure(1, weight=1)
         
-        btn_enrich = tk.Button(body, text=constantes.BTN_BUSCAR_GOOGLE, bg=constantes.COLOR_BTN_BUSCAR, fg=constantes.COLOR_BLANCO, 
+        btn_enrich = tk.Button(google_frame, text="🌍 BUSCAR DATOS", bg=constantes.COLOR_BTN_BUSCAR, fg=constantes.COLOR_BLANCO, 
                            font=constantes.FUENTE_PEQUENA_NEGRITA, relief="flat", cursor="hand2",
                            command=lambda: self.lanzar_busqueda_externa(nombre))
-        btn_enrich.pack(fill="x", pady=5)
+        btn_enrich.grid(row=0, column=0, padx=2, sticky="ew")
+
+        btn_manual_google = tk.Button(google_frame, text="👁️ VER EN GOOGLE", bg="#5f3dc4", fg=constantes.COLOR_BLANCO, 
+                           font=constantes.FUENTE_PEQUENA_NEGRITA, relief="flat", cursor="hand2",
+                           command=lambda: self.abrir_busqueda_manual(nombre, datos.get('categoria') or ''))
+        btn_manual_google.grid(row=0, column=1, padx=2, sticky="ew")
         
-        # Botón Generar Web (IA) - Punto 16
-        btn_web = tk.Button(body, text="✨ GENERAR WEB (IA)", bg="#efc355", fg="#111111", 
+        # Botones Generar Web (IA) V1 y V2
+        btn_web_frame = tk.Frame(body, bg=constantes.COLOR_BLANCO)
+        btn_web_frame.pack(fill="x", pady=(10, 5))
+        btn_web_frame.columnconfigure(0, weight=1)
+        btn_web_frame.columnconfigure(1, weight=1)
+
+        # --- BOTÓN MAQUETA 1 ---
+        # Llama a lanzar_generacion_web pasando "v1" como argumento
+        btn_web_v1 = tk.Button(btn_web_frame, text="✨ WEB V1 (IA)", bg="#efc355", fg="#111111", 
                            font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2",
-                           command=lambda: self.lanzar_generacion_web(nombre, datos))
-        btn_web.pack(fill="x", pady=(10, 5))
+                           command=lambda: self.lanzar_generacion_web(nombre, datos, "v1"))
+        btn_web_v1.grid(row=0, column=0, padx=2, sticky="ew")
+
+        # --- BOTÓN MAQUETA 2 ---
+        # Llama a lanzar_generacion_web pasando "v2" como argumento
+        btn_web_v2 = tk.Button(btn_web_frame, text="✨ WEB V2 (IA)", bg="#efc355", fg="#111111", 
+                           font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2",
+                           command=lambda: self.lanzar_generacion_web(nombre, datos, "v2"))
+        btn_web_v2.grid(row=0, column=1, padx=2, sticky="ew")
+
+        # --- SECCIÓN WEB MANUAL ---
+        web_frame = tk.Frame(body, bg=constantes.COLOR_BLANCO)
+        web_frame.pack(fill="x", pady=(5, 5))
+        
+        tiene_web = datos.get("website")
+        if tiene_web:
+            btn_web_text = "✏️ Editar Web Existente"
+            btn_web_bg = "#ced4da" # Gris
+        else:
+            btn_web_text = "🌐 Marcar CON WEB"
+            btn_web_bg = "#17a2b8" # Cyan/Info
+            
+        tk.Button(web_frame, text=btn_web_text, bg=btn_web_bg, fg="white",
+                  font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2",
+                  command=lambda: self.gestionar_web_manual(nombre)).pack(fill="x")
+
+        # --- SECCIÓN ESTADO DE PROPUESTA ---
+        propuesta_frame = tk.Frame(body, bg=constantes.COLOR_BLANCO)
+        propuesta_frame.pack(fill="x", pady=(15, 5))
+        
+        estado_propuesta = datos.get("propuesta_enviada", False)
+        if estado_propuesta:
+            btn_prop_text = "↩️ Desmarcar Propuesta"
+            btn_prop_bg = "#ff8787" # Rojo claro para cancelar
+        else:
+            btn_prop_text = "✅ Marcar Propuesta ENVIADA"
+            btn_prop_bg = "#69db7c" # Verde claro para confirmar
+            
+        tk.Button(propuesta_frame, text=btn_prop_text, bg=btn_prop_bg, fg="white",
+                  font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2",
+                  command=lambda: self.toggle_propuesta(nombre)).pack(fill="x")
 
     def contactar_todos(self, nombre, datos):
         """Abre todos los canales de contacto disponibles para un negocio en pestañas separadas."""
@@ -329,6 +443,173 @@ class TrelewLeadApp:
         email = datos.get('email')
         if email and "No detectado" not in email:
             webbrowser.open(f"mailto:{email}")
+
+    def toggle_propuesta(self, nombre):
+        """Cambia el estado de 'propuesta_enviada' y actualiza la UI y el archivo."""
+        if nombre in self.prospectos_datos:
+            datos = self.prospectos_datos[nombre]
+            # Invertir estado
+            datos["propuesta_enviada"] = not datos.get("propuesta_enviada", False)
+            self.prospectos_datos[nombre] = datos
+            
+            # Guardar cambios en el archivo correspondiente
+            # Usamos el archivo activo si existe, sino intentamos deducirlo
+            if self.archivo_activo:
+                 self.gestor_datos.guardar_datos(self.archivo_activo, self.prospectos_datos)
+            else:
+                 rubro = self.entry_rubro.get()
+                 if rubro:
+                     self.gestor_datos.guardar_datos(f"{rubro}.json", self.prospectos_datos)
+
+            # Actualizar fila en Treeview sin perder el estado de scraping
+            if self.tree.exists(nombre):
+                vals = self.tree.item(nombre)['values']
+                estado_scraping = vals[1] # Mantener "NUEVO", "GUARDADO", etc.
+                prop_status = self._get_propuesta_status_text(datos)
+                web_status = self._get_web_status_text(datos)
+                self.tree.item(nombre, values=(nombre, estado_scraping, prop_status, web_status))
+            
+            # Refrescar panel lateral para actualizar el botón
+            self.mostrar_detalle(None)
+
+    def gestionar_web_manual(self, nombre):
+        """Permite al usuario ingresar manualmente una URL para el negocio."""
+        if nombre in self.prospectos_datos:
+            datos = self.prospectos_datos[nombre]
+            current_web = datos.get("website", "")
+            
+            new_web = simpledialog.askstring("Gestión Web", f"Ingresa la URL del sitio web para:\n{nombre}", initialvalue=current_web, parent=self.root)
+            
+            if new_web is not None: # Si no canceló
+                if new_web.strip():
+                    datos["website"] = new_web.strip()
+                else:
+                    # Si lo dejó vacío, eliminamos la clave (asumimos que borró la web)
+                    if "website" in datos:
+                        del datos["website"]
+                
+                self.prospectos_datos[nombre] = datos
+                
+                # Guardar
+                if self.archivo_activo:
+                     self.gestor_datos.guardar_datos(self.archivo_activo, self.prospectos_datos)
+                else:
+                     rubro = self.entry_rubro.get()
+                     if rubro:
+                         self.gestor_datos.guardar_datos(f"{rubro}.json", self.prospectos_datos)
+
+                # Actualizar UI
+                if self.tree.exists(nombre):
+                    vals = self.tree.item(nombre)['values']
+                    estado = vals[1]
+                    propuesta = vals[2]
+                    web_status = self._get_web_status_text(datos)
+                    self.tree.item(nombre, values=(nombre, estado, propuesta, web_status))
+                
+                self.mostrar_detalle(None)
+
+    def abrir_busqueda_manual(self, nombre, categoria):
+        """Abre una búsqueda de Google en el navegador predeterminado para inspección manual."""
+        query = f"{nombre} {categoria} Trelew"
+        url = f"https://www.google.com/search?q={urllib.parse.quote(query)}"
+        webbrowser.open(url)
+
+    def abrir_edicion_ficha(self, parent, nombre, datos):
+        """Abre una ventana de edición para los datos del lead."""
+        edit_win = tk.Toplevel(self.root)
+        edit_win.title(f"Editar: {nombre}")
+        edit_win.geometry("500x600")
+        edit_win.configure(bg=constantes.COLOR_BLANCO)
+        edit_win.transient(parent) # Hacerla modal respecto a la ficha
+        edit_win.grab_set()
+
+        tk.Label(edit_win, text="Editar Información", font=constantes.FUENTE_SUBTITULO, bg=constantes.COLOR_BLANCO, fg=constantes.COLOR_PRIMARIO, pady=15).pack()
+
+        form_frame = tk.Frame(edit_win, bg=constantes.COLOR_BLANCO, padx=20)
+        form_frame.pack(fill="both", expand=True)
+
+        entries = {}
+
+        def crear_campo(label, key, valor_inicial):
+            f = tk.Frame(form_frame, bg=constantes.COLOR_BLANCO, pady=5)
+            f.pack(fill="x")
+            tk.Label(f, text=label, font=constantes.FUENTE_NEGRITA, bg=constantes.COLOR_BLANCO, anchor="w", fg=constantes.COLOR_TEXTO_OSCURO).pack(fill="x")
+            e = tk.Entry(f, font=constantes.FUENTE_NORMAL, bg="#f8f9fa", relief="flat", highlightthickness=1, highlightbackground=constantes.COLOR_BORDE)
+            # Limpiamos valores por defecto para facilitar la edición
+            val = str(valor_inicial) if valor_inicial and valor_inicial not in ["No detectado", "Sin teléfono", "No disponible"] else ""
+            e.insert(0, val)
+            e.pack(fill="x", ipady=5)
+            entries[key] = e
+
+        # Campos editables
+        crear_campo("Nombre del Negocio:", "nombre", nombre)
+        crear_campo("Rubro / Categoría:", "categoria", datos.get("categoria", ""))
+        crear_campo("Teléfono:", "telefono", datos.get("telefono", ""))
+        crear_campo("Sitio Web:", "website", datos.get("website", ""))
+        crear_campo("Facebook:", "facebook", datos.get("facebook", ""))
+        crear_campo("Instagram:", "instagram", datos.get("instagram", ""))
+
+        def guardar():
+            nuevo_nombre = entries["nombre"].get().strip()
+            if not nuevo_nombre:
+                messagebox.showwarning("Error", "El nombre es obligatorio.", parent=edit_win)
+                return
+
+            # Actualizar datos en el diccionario
+            datos["categoria"] = entries["categoria"].get().strip()
+            datos["telefono"] = entries["telefono"].get().strip() or "Sin teléfono"
+            
+            web = entries["website"].get().strip()
+            if web: datos["website"] = web
+            elif "website" in datos: del datos["website"] # Si borra la web, la quitamos
+            
+            fb = entries["facebook"].get().strip()
+            datos["facebook"] = fb if fb else "No detectado"
+            
+            ig = entries["instagram"].get().strip()
+            datos["instagram"] = ig if ig else "No detectado"
+
+            # Manejo de cambio de nombre (clave del diccionario)
+            nombre_final = nombre
+            if nuevo_nombre != nombre:
+                self.prospectos_datos[nuevo_nombre] = datos
+                if nombre in self.prospectos_datos:
+                    del self.prospectos_datos[nombre]
+                nombre_final = nuevo_nombre
+
+            # Guardar en archivo
+            if self.archivo_activo:
+                 self.gestor_datos.guardar_datos(self.archivo_activo, self.prospectos_datos)
+            else:
+                 rubro = self.entry_rubro.get()
+                 if rubro:
+                     self.gestor_datos.guardar_datos(f"{rubro}.json", self.prospectos_datos)
+
+            # Actualizar UI Principal (Treeview)
+            if self.tree.exists(nombre):
+                vals = self.tree.item(nombre)['values']
+                estado = vals[1]
+                propuesta = self._get_propuesta_status_text(datos)
+                web_status = self._get_web_status_text(datos)
+                
+                if nuevo_nombre != nombre:
+                    self.tree.delete(nombre)
+                    self.tree.insert("", "end", iid=nuevo_nombre, values=(nuevo_nombre, estado, propuesta, web_status))
+                    self.tree.selection_set(nuevo_nombre)
+                else:
+                    self.tree.item(nombre, values=(nombre, estado, propuesta, web_status))
+
+            # Actualizar Card Lateral
+            self.mostrar_detalle(None)
+
+            # Cerrar ventana de edición y refrescar la ficha técnica
+            edit_win.destroy()
+            parent.destroy() # Cerramos la ficha vieja
+            self.mostrar_info_detallada(nombre_final, datos) # Abrimos la nueva actualizada
+
+        btn_guardar = tk.Button(edit_win, text="💾 GUARDAR CAMBIOS", bg=constantes.COLOR_BTN_INFO, fg="white",
+                                font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2", command=guardar)
+        btn_guardar.pack(pady=20, fill="x", padx=20)
 
     def mostrar_info_detallada(self, nombre, datos):
         """Muestra una ventana flotante con toda la información pública recolectada."""
@@ -369,7 +650,15 @@ class TrelewLeadApp:
             top.destroy()
         top.protocol("WM_DELETE_WINDOW", on_close)
 
-        tk.Label(info_frame, text=constantes.ENCABEZADO_FICHA, font=constantes.FUENTE_SUBTITULO, bg=constantes.COLOR_BLANCO, fg=constantes.COLOR_PRIMARIO, pady=15).pack()
+        # Header con botón de edición
+        header_frame = tk.Frame(info_frame, bg=constantes.COLOR_BLANCO)
+        header_frame.pack(fill="x", pady=15)
+        
+        tk.Label(header_frame, text=constantes.ENCABEZADO_FICHA, font=constantes.FUENTE_SUBTITULO, bg=constantes.COLOR_BLANCO, fg=constantes.COLOR_PRIMARIO).pack(side="left")
+        
+        tk.Button(header_frame, text="✏️ Editar", bg=constantes.COLOR_BTN_INFO, fg="white", 
+                  font=constantes.FUENTE_PEQUENA_NEGRITA, relief="flat", cursor="hand2",
+                  command=lambda: self.abrir_edicion_ficha(top, nombre, datos)).pack(side="right")
 
         # Función auxiliar para filas de datos
         def add_row(label, value):
@@ -399,6 +688,7 @@ class TrelewLeadApp:
             add_row("Email:", datos["email"])
         if datos.get("facebook"): add_row("Facebook:", datos["facebook"])
         if datos.get("instagram"): add_row("Instagram:", datos["instagram"])
+        if datos.get("website"): add_row("Sitio Web:", datos["website"])
         
         # Mostrar enlaces extra encontrados en la web
         enlaces = datos.get("enlaces_extra", [])
@@ -432,13 +722,13 @@ class TrelewLeadApp:
         tk.Label(row, text=label, font=constantes.FUENTE_PEQUENA_NEGRITA, bg=constantes.COLOR_BLANCO, fg=constantes.COLOR_TEXTO_ETIQUETA).pack(side="left")
         tk.Label(row, text=value, font=constantes.FUENTE_PEQUENA, bg=constantes.COLOR_BLANCO, fg=constantes.COLOR_TEXTO_OSCURO).pack(side="left", padx=5)
 
-    def lanzar_generacion_web(self, nombre, datos):
+    def lanzar_generacion_web(self, nombre, datos, version="v1"):
         """Inicia el proceso de generación web en un hilo aparte."""
-        if messagebox.askyesno("Generar Web", f"¿Deseas generar automáticamente el sitio web para:\n{nombre}?"):
-            threading.Thread(target=self.ejecutar_generacion_web_thread, args=(nombre, datos), daemon=True).start()
+        if messagebox.askyesno(f"Generar Web {version.upper()}", f"¿Deseas generar automáticamente el sitio web ({version.upper()}) para:\n{nombre}?"):
+            threading.Thread(target=self.ejecutar_generacion_web_thread, args=(nombre, datos, version), daemon=True).start()
 
-    def ejecutar_generacion_web_thread(self, nombre, datos):
-        self.log(f"🚀 Iniciando motor de IA para {nombre}...")
+    def ejecutar_generacion_web_thread(self, nombre, datos, version="v1"):
+        self.log(f"🚀 Iniciando motor de IA ({version.upper()}) para {nombre}...")
         try:
             # --- Filtrado de testimonios duplicados ---
             # Aseguramos que no haya textos repetidos antes de seleccionar los mejores para la web
@@ -463,8 +753,8 @@ class TrelewLeadApp:
             textos_ai = generar_contenido_ia(nombre, datos_limpios)
             
             # 3. Construcción de la web
-            self.log("🎨 Fase 3: Maquetando sitio web...")
-            resultado = generar_web_profesional(nombre, datos_limpios, textos_ai)
+            self.log(f"🎨 Fase 3: Maquetando sitio web ({version.upper()})...")
+            resultado = generar_web_profesional(nombre, datos_limpios, textos_ai, version=version)
             
 
             self.log("✅ ¡Sitio web creado con éxito!")
@@ -475,7 +765,7 @@ class TrelewLeadApp:
             self.log(f"❌ Error en generación: {error_msg}")
             self.root.after(0, lambda: messagebox.showerror("Error Crítico", f"No se pudo generar la web:\n{error_msg}"))
 
-    def lanzar_demo_web(self):
+    def lanzar_demo_web(self, version="v1"):
         # Prioridad: 1. Archivo seleccionado (combo_fichas) | 2. Texto del buscador (entry_rubro)
         categoria_demo = self.combo_fichas.get()
         origen = "Ficha Guardada"
@@ -488,11 +778,11 @@ class TrelewLeadApp:
             messagebox.showwarning("Atención", "No se detectó ninguna categoría.\nSelecciona una ficha guardada o escribe un rubro.")
             return
         
-        if messagebox.askyesno("Generar Demo", f"¿Crear una web de demostración para '{categoria_demo}'?\n(Origen: {origen})"):
-            threading.Thread(target=self.ejecutar_demo_web, args=(categoria_demo,), daemon=True).start()
+        if messagebox.askyesno(f"Generar Demo {version.upper()}", f"¿Crear una web de demostración ({version.upper()}) para '{categoria_demo}'?\n(Origen: {origen})"):
+            threading.Thread(target=self.ejecutar_demo_web, args=(categoria_demo, version), daemon=True).start()
 
-    def ejecutar_demo_web(self, rubro):
-        self.log(f"🎲 Inventando negocio para demo de {rubro}...")
+    def ejecutar_demo_web(self, rubro, version="v1"):
+        self.log(f"🎲 Inventando negocio para demo ({version.upper()}) de {rubro}...")
         try:
             datos_fake = generar_datos_demo(rubro)
             if not datos_fake:
@@ -503,9 +793,9 @@ class TrelewLeadApp:
             
             textos_ai = generar_contenido_ia(nombre, datos_fake)
             
-            self.log("🎨 Maquetando demo...")
+            self.log(f"🎨 Maquetando demo ({version.upper()})...")
             # Guardamos en carpeta 'demos' para que se pueda subir a GitHub
-            resultado = generar_web_profesional(nombre, datos_fake, textos_ai, carpeta_salida="demos")
+            resultado = generar_web_profesional(nombre, datos_fake, textos_ai, carpeta_salida="demos", version=version)
             
             self.log("✅ Demo creada.")
             self.root.after(0, lambda: messagebox.showinfo("Demo Finalizada", f"Web generada para {nombre}:\n\n{resultado}"))
@@ -520,6 +810,7 @@ class TrelewLeadApp:
             messagebox.showwarning("Atención", constantes.MSJ_ADVERTENCIA_RUBRO)
             return
         
+        self.archivo_activo = f"{rubro}.json" # Establecer archivo activo para guardados futuros
         self.btn_rapido.config(state="disabled")
         self.btn_humano.config(state="disabled")
         self.tree.delete(*self.tree.get_children())
@@ -532,7 +823,10 @@ class TrelewLeadApp:
         
         if self.prospectos_datos:
             for nombre in self.prospectos_datos:
-                self.tree.insert("", "end", iid=nombre, values=(nombre, "HISTÓRICO 📁"))
+                datos = self.prospectos_datos[nombre]
+                prop_status = self._get_propuesta_status_text(datos)
+                web_status = self._get_web_status_text(datos)
+                self.tree.insert("", "end", iid=nombre, values=(nombre, "HISTÓRICO 📁", prop_status, web_status))
             self.log(f"Se cargaron {len(self.prospectos_datos)} registros previos. Buscando actualizaciones...")
         
         threading.Thread(target=self.ejecutar_scraping, args=(rubro, estrategia), daemon=True).start()
@@ -596,7 +890,10 @@ class TrelewLeadApp:
             # Refrescar UI
             self.root.after(0, lambda: self.tree.delete(*self.tree.get_children()))
             for nombre in self.prospectos_datos:
-                self.root.after(0, lambda n=nombre: self.tree.insert("", "end", iid=n, values=(n, "OPTIMIZADO ⚡")))
+                datos = self.prospectos_datos[nombre]
+                prop_status = self._get_propuesta_status_text(datos)
+                web_status = self._get_web_status_text(datos)
+                self.root.after(0, lambda n=nombre, p=prop_status, w=web_status: self.tree.insert("", "end", iid=n, values=(n, "OPTIMIZADO ⚡", p, w)))
 
             driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
             driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
@@ -627,7 +924,9 @@ class TrelewLeadApp:
                     
                     if actualizado:
                         self.prospectos_datos[nombre] = datos
-                        self.root.after(0, lambda n=nombre: self.tree.item(n, values=(n, "ENRIQUECIDO 🌟")) if self.tree.exists(n) else None)
+                        prop_status = self._get_propuesta_status_text(datos)
+                        web_status = self._get_web_status_text(datos)
+                        self.root.after(0, lambda n=nombre, p=prop_status, w=web_status: self.tree.item(n, values=(n, "ENRIQUECIDO 🌟", p, w)) if self.tree.exists(n) else None)
                 
                 time.sleep(random.uniform(2, 4))
 
@@ -886,8 +1185,8 @@ class TrelewLeadApp:
                         self.log(f"Oportunidad hallada: {nombre}")
                         
                         # --- FEEDBACK INMEDIATO: Listar antes de procesar ---
-                        # Insertamos el item en la lista visualmente para que sepas que el robot lo encontró
-                        self.root.after(0, lambda n=nombre: self.tree.insert("", "end", iid=n, values=(n, "⏳ PROCESANDO...")) if not self.tree.exists(n) else None)
+                        # Insertamos el item en la lista visualmente (con propuesta pendiente por defecto)
+                        self.root.after(0, lambda n=nombre: self.tree.insert("", "end", iid=n, values=(n, "⏳ PROCESANDO...", "❌ Pendiente", "-")) if not self.tree.exists(n) else None)
                         # ----------------------------------------------------
 
                         driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", local) # Asegurar visibilidad
@@ -897,7 +1196,7 @@ class TrelewLeadApp:
                         except Exception as e:
                             self.log(f"⚠️ Error al hacer clic en {nombre}: {e}")
                             # Si falla el clic, marcamos error en la lista para que no quede "Procesando" eternamente
-                            self.root.after(0, lambda n=nombre: self.tree.item(n, values=(n, "❌ ERROR CLIC")) if self.tree.exists(n) else None)
+                            self.root.after(0, lambda n=nombre: self.tree.item(n, values=(n, "❌ ERROR CLIC", "❌ Pendiente", "-")) if self.tree.exists(n) else None)
                             continue
                         
                         # --- ESPERA INTELIGENTE PARA DETALLES ---
@@ -1264,10 +1563,12 @@ class TrelewLeadApp:
                         
                         # Actualizar UI de forma inteligente (sin duplicar filas)
                         def actualizar_ui(n):
+                            prop_status = self._get_propuesta_status_text(datos_fusionados)
+                            web_status = self._get_web_status_text(datos_fusionados)
                             if self.tree.exists(n):
-                                self.tree.item(n, values=(n, "ACTUALIZADO ✨" if estado_lead == "SIN WEB 🎯" else estado_lead))
+                                self.tree.item(n, values=(n, "ACTUALIZADO ✨" if estado_lead == "SIN WEB 🎯" else estado_lead, prop_status, web_status))
                             else:
-                                self.tree.insert("", "end", iid=n, values=(n, estado_lead))
+                                self.tree.insert("", "end", iid=n, values=(n, estado_lead, prop_status, web_status))
                         
                         self.root.after(0, lambda n=nombre: actualizar_ui(n))
                     

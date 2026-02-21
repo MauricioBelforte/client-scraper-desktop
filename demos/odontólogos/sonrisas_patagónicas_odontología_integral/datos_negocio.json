@@ -1,0 +1,21 @@
+{
+  "nombre": "Sonrisas Patagónicas - Odontología Integral",
+  "categoria": "Odontólogos",
+  "direccion": "Rivadavia 456, Trelew, Chubut",
+  "telefono": "+54 9 280 4578901",
+  "rating": "4.8",
+  "comentarios": [
+    {
+      "autor": "Ana Gómez",
+      "texto": "¡Excelente atención y profesionales muy amables! Mi sonrisa está perfecta y el lugar es muy cómodo.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Pablo Torres",
+      "texto": "Instalaciones modernas y un trato inmejorable. Muy recomendable para toda la familia en Trelew.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/sonrisaspatagonicastw",
+  "instagram": "https://instagram.com/sonrisaspatagonicas"
+}

@@ -103,10 +103,14 @@ PALETAS_COLORES = {
             "fondo_tarjeta": "#ffffff"   # Fondo tarjeta
         },
         "categorias": [
-            "restaurante", "bar", "cerveceria", "cervecería", "pub", "disco", 
-            "hamburgueseria", "hamburguesería", "pizzeria", "pizzería", "sushi", 
-            "parrilla", "gastrono", "cafeteria", "cafetería", "evento",
-            "catering", "hotel", "bodega", "vinoteca"
+            "restaurante", "restaurantes", "bar", "bares", "cerveceria", "cervecería", 
+            "cervecerias", "cervecerías", "pub", "pubs", "disco", "discos", "discoteca", 
+            "discotecas", "hamburgueseria", "hamburguesería", "hamburgueserias", 
+            "hamburgueserías", "pizzeria", "pizzería", "pizzerias", "pizzerías", 
+            "sushi", "sushis", "parrilla", "parrillas", "gastrono", "gastronó", 
+            "gastronomia", "gastronomía", "cafeteria", "cafetería", "cafeterias", 
+            "cafeterías", "evento", "eventos", "catering", "caterings", "hotel", 
+            "hoteles", "bodega", "bodegas", "vinoteca", "vinotecas"
         ]
     },
     "DULCE_PASTEL": {
@@ -119,22 +123,35 @@ PALETAS_COLORES = {
             "fondo_tarjeta": "#fce4ec"   # Rosa Pastel
         },
         "categorias": [
-            "heladeria", "pasteleria", "panaderia", "panadería"
+            "heladeria", "heladería", "heladerias", "heladerías", "pasteleria", 
+            "pastelería", "pastelerias", "pastelerías", "panaderia", "panadería", 
+            "panaderias", "panaderías", "confiteria", "confitería", "confiterias", 
+            "confiterías", "reposteria", "repostería", "reposterias", "reposterías",
+            "chocolate", "chocolates", "chocolateria", "chocolatería"
         ]
     },
     "SALUD_PROFESIONAL": {
         "colores": {
             "primario": "#0d6efd",       # Azul Profesional
-            "fondo": "#ffffff",          # Blanco
+            "fondo": "#dbdce2",          
             "texto": "#212529",          # Gris oscuro
             "texto_inverso": "#ffffff",  # Blanco sobre azul
             "overlay": "#ffffff00",      # Aclarar fondo (Overlay blanco)
             "fondo_tarjeta": "#ffffff"   # Fondo tarjeta
         },
         "categorias": [
-            "medico", "médico", "odont", "kinesio", "salud", "clinic", "clínica",
-            "farmacia", "abogado", "contab", "estudio", "inmobiliaria", 
-            "arquitecto", "veterinaria", "psicolog", "nutricion", "consultorio"
+            "medico", "médico", "medicos", "médicos", "odont", "odontologo", 
+            "odontólogo", "odontologos", "odontólogos", "odontologia", "odontología", 
+            "kinesio", "kinesiologo", "kinesiólogo", "kinesiologos", "kinesiólogos", 
+            "kinesiologia", "kinesiología", "salud", "clinic", "clínic", "clinica", 
+            "clínica", "clinicas", "clínicas", "farmacia", "farmacias", "abogado", 
+            "abogados", "abogacia", "abogacía", "contab", "contador", "contadores", 
+            "contable", "contables", "estudio", "estudios", "inmobiliaria", 
+            "inmobiliarias", "arquitecto", "arquitectos", "arquitectura", 
+            "veterinaria", "veterinarias", "veterinario", "veterinarios", "psicolog", 
+            "psicologo", "psicólogo", "psicologos", "psicólogos", "psicologia", 
+            "psicología", "nutricion", "nutrición", "nutricionista", "nutricionistas", 
+            "consultorio", "consultorios"
         ]
     },
     "ESTETICA_BELLEZA": {
@@ -147,8 +164,15 @@ PALETAS_COLORES = {
             "fondo_tarjeta": "#ffe5fa"   # Fondo tarjeta (Rosa claro solicitado)
         },
         "categorias": [
-            "peluqu", "estetic", "estética", "belleza", "uñas", "makeup", 
-            "moda", "ropa", "indumentaria", "zapateria", "lenceria", "danza", "spa"
+            "peluqu", "peluqueria", "peluquería", "peluquerias", "peluquerías", 
+            "peluquero", "peluqueros", "estetic", "estétic", "estetica", "estética", 
+            "esteticas", "estéticas", "belleza", "uñas", "uña", "makeup", "maquillaje", 
+            "moda", "modas", "ropa", "ropas", "indumentaria", "zapateria", "zapatería", 
+            "zapaterias", "zapaterías", "lenceria", "lencería", "lencerias", 
+            "lencerías", "danza", "danzas", "spa", "spas", "masaje", "masajes", 
+            "masajista", "masajistas", "depilacion", "depilación", "manicura", 
+            "manicuria", "manicuría", "pedicura", "pedicuria", "pedicuría", 
+            "barberia", "barbería", "barberias", "barberías"
         ]
     },
     "ESTILO_MADERA": {
@@ -161,7 +185,10 @@ PALETAS_COLORES = {
             "fondo_tarjeta": "#ffffff"   # Blanco
         },
         "categorias": [
-            "muebleria", "mueblería", "muebles", "decoracion", "decoración", "interiorismo", "sofa", "colchon"
+            "muebleria", "mueblería", "mueblerias", "mueblerías", "muebles", "mueble", 
+            "decoracion", "decoración", "decoraciones", "interiorismo", "sofa", "sofá", 
+            "sofas", "sofás", "colchon", "colchón", "colchones", "colchonería", 
+            "colchonerias", "carpinteria", "carpintería", "carpinterias", "carpinterías"
         ]
     },
     "NATURALEZA_FRESCA": {
@@ -174,8 +201,13 @@ PALETAS_COLORES = {
             "fondo_tarjeta": "#ffffff"   # Fondo tarjeta blanco
         },
         "categorias": [
-            "verduleria", "botanica", "jardineria", "jardinero", "vivero", 
-            "floreria", "organico", "dietetica", "fruteria"
+            "verduleria", "verdulería", "verdulerias", "verdulerías", "botanica", 
+            "botánica", "botanicas", "botánicas", "jardineria", "jardinería", 
+            "jardinerias", "jardinerías", "jardinero", "jardineros", "vivero", 
+            "viveros", "floreria", "florería", "florerias", "florerías", "organico", 
+            "orgánico", "organicos", "orgánicos", "dietetica", "dietética", 
+            "dieteticas", "dietéticas", "fruteria", "frutería", "fruterias", 
+            "fruterías", "paisajismo", "paisajista"
         ]
     },
     "FUERZA_TECNICA": {
@@ -188,10 +220,19 @@ PALETAS_COLORES = {
             "fondo_tarjeta": "#ffffff"   # Fondo tarjeta
         },
         "categorias": [
-            "taller", "mecanic", "mecánic", "gimnasio", "gym", "crossfit", "fitness",
-            "ferreteria", "construc", "obra", "repuestos", "pet shop",
-            "computacion", "tecnic", "reparacion", "kiosco", "carniceria",
-            "polleria"
+            "taller", "talleres", "mecanic", "mecánic", "mecanico", "mecánico", 
+            "mecanicos", "mecánicos", "mecanica", "mecánica", "gimnasio", "gimnasios", 
+            "gym", "crossfit", "fitness", "ferreteria", "ferretería", "ferreterias", 
+            "ferreterías", "construc", "construccion", "construcción", "constructora", 
+            "constructoras", "obra", "obras", "repuestos", "repuesto", "pet shop", 
+            "pet shops", "petshop", "petshops", "computacion", "computación", "tecnic", 
+            "técnic", "tecnico", "técnico", "tecnicos", "técnicos", "tecnica", 
+            "técnica", "reparacion", "reparación", "reparaciones", "kiosco", "kioscos", 
+            "quiosco", "quioscos", "carniceria", "carnicería", "carnicerias", 
+            "carnicerías", "polleria", "pollería", "pollerias", "pollerías", 
+            "electricista", "electricistas", "electricidad", "plomero", "plomeros", 
+            "plomeria", "plomería", "pintureria", "pinturería", "pinturerias", 
+            "pinturerías"
         ]
     }
 }
