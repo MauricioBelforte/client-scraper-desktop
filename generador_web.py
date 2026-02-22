@@ -235,8 +235,24 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
                 "testimonio": "client with a beautiful hairstyle smiling, bright ambient, soft focus, photorealistic, real person, 8k, photography style"
             }
         },
+        "BARBERIA": {
+            "keywords": ["barberia", "barber", "barbería"],
+            "prompts": {
+                "logo": f"vintage masculine logo for a barber shop, {nombre_negocio}, emblem style",
+                "fondo": "classic barber shop interior, leather chairs, vintage mirrors, warm moody lighting, cinematic",
+                "testimonio": "man with a fresh haircut and beard trim looking confident, barbershop background, photorealistic, real person, 8k, photography style"
+            }
+        },
+        "TATTOO": {
+            "keywords": ["tattoo", "tatuajes", "tatoo", "tatuador"],
+            "prompts": {
+                "logo": f"bold logo for a tattoo studio, {nombre_negocio}, traditional tattoo art style",
+                "fondo": "artistic tattoo studio interior, dark walls, art prints, moody lighting, creative atmosphere",
+                "testimonio": "happy client showing a new tattoo, artistic, detailed, photorealistic, real person, 8k, photography style"
+            }
+        },
         "NOCTURNO_GOURMET": {
-            "keywords": ["restaurante", "bar", "cerveceria", "cervecería", "pub", "disco", "hamburgueseria", "hamburguesería", "pizzeria", "pizzería", "sushi", "parrilla", "gastrono", "cafeteria", "cafetería", "evento", "hotel"],
+            "keywords": ["restaurante", "bar", "bares", "cerveceria", "cervecería", "pub", "disco", "hamburgueseria", "hamburguesería", "pizzeria", "pizzería", "sushi", "parrilla", "gastrono", "cafeteria", "cafetería", "evento", "hotel"],
             "prompts": {
                 "logo": f"elegant logo for restaurant or bar, {nombre_negocio}",
                 "fondo": "cozy restaurant or bar interior with warm lighting, cinematic, dramatic shadows",
@@ -319,6 +335,20 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
     # Corrección: Convertir a string explícitamente para evitar error si el valor es None
     tel = "".join(filter(str.isdigit, str(data_json.get('telefono') or '')))
     wa_link = f"https://wa.me/549{tel}" if tel else "#"
+    tel_raw = str(data_json.get('telefono') or '')
+    tel = "".join(filter(str.isdigit, tel_raw))
+    
+    if tel:
+        # --- CORRECCIÓN DE FORMATO ARGENTINA ---
+        if tel.startswith("0"):
+            tel = tel[1:]
+        if not tel.startswith("54"):
+            tel = "549" + tel
+        if tel.startswith("5490"):
+            tel = "549" + tel[4:]
+        wa_link = f"https://wa.me/{tel}"
+    else:
+        wa_link = "#"
 
     # --- Adaptación a IA (Punto 10) ---
     # Si la IA no proveyó textos o falla, usamos genéricos robustos.

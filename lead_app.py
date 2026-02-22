@@ -8,6 +8,7 @@ import webbrowser
 import re
 import urllib.parse
 from selenium import webdriver
+import shutil
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -20,8 +21,10 @@ import src.constants as constantes
 from src.gestor_datos import GestorDatos
 from src.estrategia_fotos_reviews import extraer_fotos_de_resena
 from src.scroll_strategies import estrategia_scroll_js_focalizado, estrategia_scroll_teclado
+from src.utils import calcular_calidad_lead
 from controlador_ia import generar_contenido_ia, limpiar_datos_ia, generar_datos_demo
 from generador_web import generar_web_profesional
+from src.enriquecedor import buscar_datos_externos, ejecutar_enriquecimiento_global
 
 def abrir_whatsapp(nombre, telefono):
     """Abre WhatsApp Web con un mensaje personalizado."""
@@ -168,6 +171,13 @@ class TrelewLeadApp:
         self.right_panel.pack(side="right", fill="both")
         self.right_panel.pack_propagate(False)
 
+        # --- BOTÓN GLOBAL (Siempre visible abajo) ---
+        self.btn_global_enrich = tk.Button(self.right_panel, text="🌍 ENRIQUECEDOR MASIVO (TODO)", 
+                                           bg=constantes.COLOR_PELIGRO, fg="white",
+                                           font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2",
+                                           command=self.lanzar_enriquecimiento_global)
+        self.btn_global_enrich.pack(side="bottom", fill="x", pady=(10, 20))
+
         # Mensaje de ayuda inicial
         self.card_placeholder = tk.Label(self.right_panel, text=constantes.TEXTO_PLACEHOLDER_CARD, 
                                          font=constantes.FUENTE_ITALICA, fg=constantes.COLOR_TEXTO_TENUE, bg=constantes.COLOR_FONDO, pady=100)
@@ -221,6 +231,8 @@ class TrelewLeadApp:
                 if k in ["imagenes", "enlaces_extra"]:
                     # Unir y quitar duplicados
                     resultado[k] = list(set(val_prio + v))
+                elif k == "horarios_detallados":
+                    if not val_prio and v: resultado[k] = v
                 elif not val_prio and v:
                     resultado[k] = v
         return resultado
@@ -255,9 +267,11 @@ class TrelewLeadApp:
             self.prospectos_datos = datos_cargados
             self.archivo_activo = seleccion # Recordar qué archivo estamos editando
             
-            # Rellenar Treeview
-            for nombre in self.prospectos_datos:
-                datos = self.prospectos_datos[nombre]
+            # Rellenar Treeview ORDENADO POR PRIORIDAD
+            # Convertimos a lista de tuplas y ordenamos usando la función de utilidad
+            items_ordenados = sorted(self.prospectos_datos.items(), key=lambda x: calcular_calidad_lead(x[1]), reverse=True)
+            
+            for nombre, datos in items_ordenados:
                 prop_status = self._get_propuesta_status_text(datos)
                 web_status = self._get_web_status_text(datos)
                 # IMPORTANTE: Asignar iid=nombre para poder actualizar la fila después
@@ -422,6 +436,7 @@ class TrelewLeadApp:
         tk.Button(propuesta_frame, text=btn_prop_text, bg=btn_prop_bg, fg="white",
                   font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2",
                   command=lambda: self.toggle_propuesta(nombre)).pack(fill="x")
+
 
     def contactar_todos(self, nombre, datos):
         """Abre todos los canales de contacto disponibles para un negocio en pestañas separadas."""
@@ -680,6 +695,14 @@ class TrelewLeadApp:
         add_row("Rubro/Categoría:", datos.get("categoria", "No especificado"))
         add_row("Dirección:", datos.get("direccion", "No disponible"))
         add_row("Horarios:", datos.get("horario", "No disponible"))
+        
+        # --- NUEVO: Mostrar Horarios Detallados ---
+        horarios_det = datos.get("horarios_detallados", [])
+        if horarios_det:
+            tk.Label(info_frame, text="Cronograma Semanal:", font=constantes.FUENTE_NEGRITA, bg=constantes.COLOR_BLANCO, width=15, anchor="w", fg=constantes.COLOR_TEXTO_ETIQUETA).pack(fill="x", pady=(5, 0))
+            for h in horarios_det:
+                tk.Label(info_frame, text=f"• {h}", font=constantes.FUENTE_PEQUENA, bg=constantes.COLOR_BLANCO, anchor="w", padx=20).pack(fill="x")
+        
         add_row("Valoración:", datos.get("rating", "Sin reseñas"))
         add_row("Teléfono:", datos.get("telefono", "Sin teléfono"))
         if datos.get("whatsapp", "No") == "Probable":
@@ -688,7 +711,7 @@ class TrelewLeadApp:
             add_row("Email:", datos["email"])
         if datos.get("facebook"): add_row("Facebook:", datos["facebook"])
         if datos.get("instagram"): add_row("Instagram:", datos["instagram"])
-        if datos.get("website"): add_row("Sitio Web:", datos["website"])
+        add_row("Sitio Web:", datos.get("website", "No tiene"))
         
         # Mostrar enlaces extra encontrados en la web
         enlaces = datos.get("enlaces_extra", [])
@@ -822,8 +845,10 @@ class TrelewLeadApp:
         self.prospectos_datos = self.gestor_datos.cargar_datos(f"{rubro}.json")
         
         if self.prospectos_datos:
-            for nombre in self.prospectos_datos:
-                datos = self.prospectos_datos[nombre]
+            # Ordenar históricos por prioridad también
+            items_ordenados = sorted(self.prospectos_datos.items(), key=lambda x: calcular_calidad_lead(x[1]), reverse=True)
+            
+            for nombre, datos in items_ordenados:
                 prop_status = self._get_propuesta_status_text(datos)
                 web_status = self._get_web_status_text(datos)
                 self.tree.insert("", "end", iid=nombre, values=(nombre, "HISTÓRICO 📁", prop_status, web_status))
@@ -832,6 +857,7 @@ class TrelewLeadApp:
         threading.Thread(target=self.ejecutar_scraping, args=(rubro, estrategia), daemon=True).start()
 
     def lanzar_enriquecimiento_masivo(self):
+        """Enriquecimiento local (solo la lista actual)."""
         if not self.prospectos_datos:
             messagebox.showwarning("Atención", constantes.MSJ_ADVERTENCIA_SIN_LISTA)
             return
@@ -841,6 +867,24 @@ class TrelewLeadApp:
         if confirm:
             self.log("Iniciando enriquecimiento masivo...")
             threading.Thread(target=self.ejecutar_enriquecimiento_masivo, args=(rubro,), daemon=True).start()
+
+    def lanzar_enriquecimiento_global(self):
+        """
+        Inicia el proceso de enriquecimiento para TODAS las fichas JSON existentes.
+        Usa un sistema de estado para reanudar desde donde dejó.
+        """
+        mensaje = (
+            "⚠️ ADVERTENCIA DE PROCESO LARGO ⚠️\n\n"
+            "Esto buscará datos en Google para TODOS los archivos de leads guardados.\n"
+            "• Se omitirán los que ya tienen propuesta enviada.\n"
+            "• Se guardará el progreso automáticamente.\n"
+            "• Puedes detener el proceso cerrando la app (se reanudará la próxima vez).\n\n"
+            "¿Estás seguro de iniciar?"
+        )
+        if not messagebox.askyesno("Confirmar Enriquecimiento Global", mensaje, icon='warning'):
+            return
+
+        threading.Thread(target=ejecutar_enriquecimiento_global, args=(self.gestor_datos, self.log), daemon=True).start()
 
     def ejecutar_enriquecimiento_masivo(self, rubro):
         self.btn_enrich_all.config(state="disabled")
@@ -913,7 +957,7 @@ class TrelewLeadApp:
 
                 self.log(f"Enriqueciendo {count}/{total}: {nombre}...")
                 categoria = datos.get("categoria", "")
-                nuevos_datos = self.buscar_datos_externos(driver, nombre, categoria)
+                nuevos_datos = buscar_datos_externos(driver, nombre, categoria, self.log)
                 
                 if nuevos_datos:
                     actualizado = False
@@ -970,7 +1014,7 @@ class TrelewLeadApp:
             
             datos = self.prospectos_datos.get(nombre, {})
             categoria = datos.get("categoria", "")
-            nuevos_datos = self.buscar_datos_externos(driver, nombre, categoria)
+            nuevos_datos = buscar_datos_externos(driver, nombre, categoria, self.log)
             
             if nuevos_datos:
                 actualizado = False
@@ -998,63 +1042,6 @@ class TrelewLeadApp:
         finally:
             if driver:
                 driver.quit()
-
-    def buscar_datos_externos(self, driver, nombre, categoria=""):
-        """
-        Método de respaldo: Busca en Google Search si faltan datos clave.
-        Abre una nueva pestaña, busca y extrae emails o redes sociales de los resultados.
-        """
-        self.log(f"🔍 Buscando en Google: {nombre} ({categoria})...")
-        nuevos_datos = {}
-        try:
-            original_window = driver.current_window_handle
-            driver.switch_to.new_window('tab')
-            
-            # Búsqueda OSINT: Combinamos nombre, ciudad y palabras clave para maximizar la probabilidad de encontrar datos de contacto.
-            query = f"{nombre} {categoria} Trelew contacto email instagram facebook"
-            driver.get(f"https://www.google.com/search?q={query.replace(' ', '+')}")
-            time.sleep(random.uniform(2.5, 4)) # Espera humana
-            
-            # 1. Buscar Emails SOLO en los resultados (evitando header/scripts con datos de sesión)
-            try:
-                # Buscamos dentro del contenedor principal de resultados (id="search" o "rso") para evitar capturar emails de la UI de Google.
-                contenedor = driver.find_element(By.ID, "search")
-                texto_analisis = contenedor.get_attribute("innerHTML")
-            except:
-                texto_analisis = driver.find_element(By.TAG_NAME, "body").text
-
-            # Regex para emails
-            emails = re.findall(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}", texto_analisis)
-            # Filtrar basura técnica: Excluimos dominios comunes de Google o ejemplos para obtener emails reales.
-            emails_validos = [e for e in emails if not any(x in e for x in ['google.com', 'w3.org', 'rating', 'example', 'sentry', 'png', 'jpg', 'noreply'])]
-            if emails_validos:
-                nuevos_datos['email'] = emails_validos[0] # Tomamos el primero que suele ser el más relevante
-
-            # 2. Buscar Redes Sociales (Búsqueda Global en la página de resultados)
-            # Buscamos cualquier enlace que contenga facebook o instagram, no solo en los títulos
-            social_links = driver.find_elements(By.XPATH, "//a[contains(@href, 'facebook.com') or contains(@href, 'instagram.com')]")
-            for link in social_links:
-                url = link.get_attribute("href")
-                if not url: continue
-                # Filtrar enlaces de compartir o login que no son el perfil del negocio
-                if "sharer" in url or "login" in url or "google.com" in url: continue
-                
-                if "instagram.com" in url and "instagram" not in nuevos_datos:
-                    nuevos_datos['instagram'] = url
-                elif "facebook.com" in url and "facebook" not in nuevos_datos:
-                    nuevos_datos['facebook'] = url
-            
-            driver.close()
-            driver.switch_to.window(original_window)
-        except Exception as e:
-            self.log(f"⚠️ Falló búsqueda externa: {e}")
-            try:
-                if len(driver.window_handles) > 1:
-                    driver.close()
-                    driver.switch_to.window(driver.window_handles[0])
-            except: pass
-        
-        return nuevos_datos
 
     def ejecutar_scraping(self, rubro, estrategia="teclado"):
         """Lógica de scraping con Selenium y detección de sitios web."""
@@ -1167,19 +1154,22 @@ class TrelewLeadApp:
                     # Verificación lógica de presencia web
                     botones_web = [b for b in local.find_elements(By.TAG_NAME, "a") if "Sitio web" in str(b.get_attribute("aria-label"))]
                     
-                    es_lead = False
+                    es_lead = True # Aceptamos todos para revisión manual
                     estado_lead = "SIN WEB 🎯"
                     social_url = ""
+                    website_url = ""
 
                     if not botones_web:
-                        es_lead = True # No tiene botón web
+                        pass
                     else:
                         # Si tiene botón, verificamos si es una red social (Facebook/Instagram)
                         url_destino = botones_web[0].get_attribute("href")
+                        website_url = url_destino
                         if "facebook.com" in url_destino or "instagram.com" in url_destino:
-                            es_lead = True
                             estado_lead = "SOLO REDES 📱"
                             social_url = url_destino
+                        else:
+                            estado_lead = "CON WEB 🌐"
 
                     if es_lead:
                         self.log(f"Oportunidad hallada: {nombre}")
@@ -1230,6 +1220,7 @@ class TrelewLeadApp:
                             "categoria": "General",
                             "rating": "N/A",
                             "horario": "No especificado",
+                            "horarios_detallados": [],
                             "comentarios": [],
                             "imagenes": [],
                             "whatsapp": "No",
@@ -1238,6 +1229,9 @@ class TrelewLeadApp:
                             "instagram": social_url if "instagram.com" in social_url else "No detectado",
                             "enlaces_extra": []
                         }
+                        
+                        if website_url:
+                            datos_extra["website"] = website_url
 
                         try:
                             tel_element = driver.find_element(By.XPATH, "//button[contains(@aria-label, 'Teléfono:')]")
@@ -1265,9 +1259,64 @@ class TrelewLeadApp:
                             datos_extra["rating"] = driver.find_element(By.CSS_SELECTOR, "span[role='img'][aria-label*='estrellas']").get_attribute("aria-label")
                         except: pass
 
+                        btn_horario_general = None
+                        # Lista de selectores posibles para el botón de horarios (CSS y XPath)
+                        selectores_horario = [
+                            (By.CSS_SELECTOR, "[aria-label*='Mostrar el horario']"),
+                            (By.CSS_SELECTOR, "button[aria-label*='Horario']"),
+                            (By.CSS_SELECTOR, "button[aria-label*='Abierto']"),
+                            (By.CSS_SELECTOR, "button[aria-label*='Cerrado']"),
+                            (By.CSS_SELECTOR, "button[aria-label*='Abre']"),
+                            (By.CSS_SELECTOR, "button[aria-label*='Cierra']"),
+                            (By.CSS_SELECTOR, "div[role='button'][aria-label*='Horario']"),
+                            (By.CSS_SELECTOR, "div[role='button'][aria-label*='Abierto']"),
+                            (By.CSS_SELECTOR, "div[role='button'][aria-label*='Cerrado']"),
+                            # XPath como último recurso buscando por texto visible
+                            (By.XPATH, "//button[contains(@aria-label, 'lunes') or contains(@aria-label, 'martes')]") 
+                        ]
+
+                        for by_method, selector in selectores_horario:
+                            try:
+                                elementos = driver.find_elements(by_method, selector)
+                                for el in elementos:
+                                    if el.is_displayed():
+                                        btn_horario_general = el
+                                        break
+                                if btn_horario_general: break
+                            except:
+                                continue
+
                         try:
-                            datos_extra["horario"] = driver.find_element(By.CSS_SELECTOR, "button[aria-label*='Horario:']").get_attribute("aria-label").replace("Horario: ", "")
-                        except: pass
+                            if btn_horario_general:
+                                raw_label = btn_horario_general.get_attribute("aria-label") or btn_horario_general.text
+                                datos_extra["horario"] = raw_label.replace("Horario: ", "")
+                                
+                                # --- NUEVO: Extracción de Horarios Detallados (Semana Completa) ---
+                                try:
+                                    driver.execute_script("arguments[0].click();", btn_horario_general)
+                                    time.sleep(1.5) # Esperar animación
+                                    
+                                    # Selector específico basado en el HTML proporcionado
+                                    filas_horario = driver.find_elements(By.CSS_SELECTOR, "table.eK4R0e tr")
+                                    
+                                    for fila in filas_horario:
+                                        try:
+                                            # Extraer día (primer td)
+                                            dia_element = fila.find_element(By.CSS_SELECTOR, "td.ylH6lf div")
+                                            dia = dia_element.text.strip()
+                                            
+                                            # Extraer horario (segundo td, preferiblemente del aria-label o del li)
+                                            horario_element = fila.find_element(By.CSS_SELECTOR, "td.mxowUb")
+                                            horario = horario_element.get_attribute("aria-label") or horario_element.text
+                                            
+                                            if dia and horario:
+                                                texto_final = f"{dia}: {horario}"
+                                                datos_extra["horarios_detallados"].append(texto_final)
+                                        except:
+                                            continue
+                                except: pass 
+                        except: 
+                            pass
 
                         # --- EXTRACCIÓN DE COMENTARIOS (NUEVO) ---
                         try:

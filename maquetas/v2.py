@@ -70,7 +70,7 @@ def generar_maqueta_v2(datos):
         --color-overlay: {paleta['overlay']};
         --color-fondo-tarjeta: {paleta.get('fondo_tarjeta', '#ffffff')};
         
-        --color-acento-oscuro: #5a1111;
+        --color-acento-oscuro: #4f4d4d;
         --color-fondo-claro: #F8F6F4;
 
         /* Fuentes (de las instrucciones) */
@@ -121,8 +121,8 @@ def generar_maqueta_v2(datos):
     .nav-links {{ list-style: none; display: flex; gap: 2rem; }}
     .nav-links a {{ color: var(--color-texto-base); text-decoration: none; font-weight: 500; font-size: 1.2rem; transition: color 0.3s; padding: 10px; }}
     .nav-links a:hover {{ color: var(--color-primario); }}
-    .btn button {{ background-color: var(--color-texto-inverso); color: var(--color-primario); border: none; padding: 0.75rem 1.5rem; border-radius: 5px; cursor: pointer; font-weight: bold; transition: background-color 0.3s; }}
-    .btn button:hover {{ background-color: var(--color-primario); color: var(--color-texto-inverso); }}
+    .btn button {{ background-color: var(--color-primario); color: var(--color-texto-inverso); border: none; padding: 0.75rem 1.5rem; border-radius: 5px; cursor: pointer; font-weight: bold; transition: background-color 0.3s; }}
+    .btn button:hover {{ background-color: var(--color-acento-oscuro); color: var(--color-texto-inverso); }}
     .menu-hamburguesa {{ display: none; }}
     .overlay {{ height: 100%; width: 0; position: fixed; z-index: 1001; top: 0; left: 0; background-color: rgba(0,0,0, 0.95); overflow-x: hidden; transition: 0.5s; }}
     .overlay-content {{ position: relative; top: 25%; width: 100%; text-align: center; margin-top: 30px; }}
@@ -148,18 +148,19 @@ def generar_maqueta_v2(datos):
     .seccion-hero h1 {{ font-size: 3.5rem; }}
     .seccion-presentacion, .seccion-beneficios, .seccion-productos {{ padding: 4rem 2rem; text-align: center; }}
     .seccion-presentacion h2, .seccion-beneficios h2, .seccion-productos h2 {{ margin-bottom: 2rem; font-size: 2.5rem; }}
-    .cta-button {{ background-color: var(--color-texto-inverso); color: var(--color-primario); padding: 0.75rem 1.5rem; border-radius: 5px; text-decoration: none; font-weight: 600; display: inline-block; margin-top: 1.5rem; transition: all 0.3s; }}
-    .cta-button:hover {{ background-color: var(--color-primario); color: var(--color-texto-inverso); transform: scale(1.05); }}
+    .cta-button {{ background-color: var(--color-primario); color: var(--color-texto-inverso); padding: 0.75rem 1.5rem; border-radius: 5px; text-decoration: none; font-weight: 600; display: inline-block; margin-top: 1.5rem; transition: all 0.3s; }}
+    .cta-button:hover {{ background-color: var(--color-acento-oscuro); color: var(--color-texto-inverso); transform: scale(1.05); }}
 
     /* Testimonios y Tarjetas (Reutilizados de V1 con estilo oscuro) */
     .contenedor-tarjetas {{ display: grid; grid-template-columns: 1fr; gap: 1.5rem; max-width: 1200px; margin: 0 auto; }}
-    .tarjeta-testimonio {{ background: var(--color-fondo-tarjeta); border-radius: 0.75rem; padding: 2rem; display: flex; flex-direction: column; align-items: center; text-align: center; color: var(--color-texto-base); border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }}
+    .tarjeta-testimonio {{ background: var(--color-fondo-tarjeta); border-radius: 0.75rem; padding: 2rem; display: flex; flex-direction: column; align-items: center; text-align: center; color: var(--color-texto-base); border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.3s ease; }}
+    .tarjeta-testimonio:hover {{ transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }}
     .tarjeta-testimonio img {{ width: 6rem; height: 6rem; border-radius: 50%; object-fit: cover; border: 3px solid var(--color-primario); margin-bottom: 1rem; }}
     .comillas-testimonio {{ font-size: 4rem; line-height: 0.5; font-family: serif; color: var(--color-primario); opacity: 0.8; }}
     .texto-testimonio {{ font-style: italic; margin-bottom: 1rem; font-size: 1.1rem; }}
     .estrellas-testimonio {{ color: #FFD700; margin-bottom: 0.5rem; }}
     .autor-testimonio {{ font-weight: bold; font-size: 1rem; text-transform: uppercase; }}
-    .tarjeta-beneficio {{ background: var(--color-fondo-tarjeta); color: var(--color-texto-base); text-align: center; padding: 2rem 1rem; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.3s ease; }}
+    .tarjeta-beneficio {{ background: var(--color-fondo-tarjeta); color: var(--color-texto-base); text-align: center; padding: 2rem 1rem; border-radius: var(--radio-card); border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.3s ease; }}
     .tarjeta-beneficio:hover {{ transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }}
 
     /* --- Footer y Redes --- */

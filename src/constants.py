@@ -8,7 +8,9 @@ RUBROS_SUGERIDOS = [
     "Ferreterías", "Centros de Estética", "Barberías", "Psicólogos",
     "Nutricionistas", "Kinesiólogos", "Arquitectos", "Constructoras",
     "Salones de Eventos", "Servicios de Catering", "Escuelas de Idiomas",
-    "Pet Shops", "Mueblerías", "Casas de Repuestos", "Heladerías",
+    "Pet Shops", "Mueblerías", "Casas de Repuestos", "Heladerías", "Barbería",   # <-- Añadir
+    "Tattoo",     # <-- Añadir
+    "Bares",      # <-- Añadir
     "Cafeterías", "Pastelerías", "Panaderías", "Kioscos", "Carnicerías",
     "Pollerías", "Verdulerías"
 ]
@@ -179,7 +181,7 @@ PALETAS_COLORES = {
         "colores": {
             "primario": "#A0522D",       # Marrón Sienna (Madera)
             "fondo": "#F8F8F8",          # Blanco humo / Gris muy claro
-            "texto": "#ffffff",          # Blanco
+            "texto": "#514a4a",          # Blanco
             "texto_inverso": "#ffffff",  # Blanco
             "overlay": "#00000047",      # Oscuro semitransparente
             "fondo_tarjeta": "#ffffff"   # Blanco
@@ -209,6 +211,24 @@ PALETAS_COLORES = {
             "dieteticas", "dietéticas", "fruteria", "frutería", "fruterias", 
             "fruterías", "paisajismo", "paisajista"
         ]
+    },   
+    "BARBERIA_VINTAGE": {
+        "categorias": ["barberia", "barber", "barbería"],
+        "colores": {
+            "primario": "#c89f68",      # Un dorado/bronce vintage
+            "fondo": "#1a1a1a",         # Fondo oscuro
+            "texto": "#f0f0f0",         # Texto claro
+            "texto_inverso": "#111111"
+        }
+    },
+    "TATTOO_INK": {
+        "categorias": ["tattoo", "tatuajes", "tatoo", "tatuador"],
+        "colores": {
+            "primario": "#e53935",      # Un rojo intenso como acento
+            "fondo": "#121212",         # Fondo muy oscuro, casi negro
+            "texto": "#ffffff",         # Texto blanco puro
+            "texto_inverso": "#000000"
+        }
     },
     "FUERZA_TECNICA": {
         "colores": {

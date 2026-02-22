@@ -1,0 +1,21 @@
+{
+  "nombre": "Hogar Austral Mueblería",
+  "categoria": "Mueblerías",
+  "direccion": "Avenida Fontana 550, Trelew, Chubut",
+  "telefono": "+54 9 280 4357890",
+  "rating": "4.8",
+  "comentarios": [
+    {
+      "autor": "Ana Torres",
+      "texto": "Excelente atención y muebles de calidad, ¡muy contenta con mi compra para el living!",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Martín Sosa",
+      "texto": "Precios justos y diseños modernos. Recomiendo totalmente para amueblar tu hogar en Trelew.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/hogaraustralmuebleria",
+  "instagram": "https://instagram.com/hogaraustral_muebles"
+}
