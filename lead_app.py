@@ -7,6 +7,7 @@ import os
 import webbrowser
 import re
 import urllib.parse
+import unicodedata
 from selenium import webdriver
 import shutil
 from selenium.webdriver.chrome.service import Service
@@ -25,6 +26,7 @@ from src.utils import calcular_calidad_lead
 from controlador_ia import generar_contenido_ia, limpiar_datos_ia, generar_datos_demo
 from generador_web import generar_web_profesional
 from src.enriquecedor import buscar_datos_externos, ejecutar_enriquecimiento_global
+from src.ui_search import BuscadorVisual
 
 def abrir_whatsapp(nombre, telefono):
     """Abre WhatsApp Web con un mensaje personalizado."""
@@ -157,6 +159,12 @@ class TrelewLeadApp:
         self.tree.column("propuesta", width=100, anchor="center")
         self.tree.column("web", width=80, anchor="center")
         
+        # --- BUSCADOR / FILTRO (NUEVO) ---
+        # Instanciamos el buscador pasándole el panel y el treeview.
+        # Se empaqueta automáticamente dentro de left_panel.
+        self.buscador = BuscadorVisual(left_panel, self.tree)
+        
+        # Empaquetamos el treeview DESPUÉS del buscador para que quede abajo
         scrollbar = ttk.Scrollbar(left_panel, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscroll=scrollbar.set)
         
@@ -203,12 +211,43 @@ class TrelewLeadApp:
         """Helper para obtener el texto visual si tiene web."""
         return "🌐 Sí" if datos.get("website") else "-"
 
+    def normalizar_texto(self, texto):
+        """Normaliza texto para comparación: minúsculas, sin acentos, sin caracteres especiales."""
+        if not texto: return ""
+        try:
+            # Descomponer caracteres (ej: á -> a + ´)
+            texto = unicodedata.normalize('NFD', str(texto))
+            # Filtrar solo caracteres ASCII (elimina los acentos separados)
+            texto = texto.encode('ascii', 'ignore').decode("utf-8").lower()
+            # Eliminar todo lo que no sea letra, número o espacio
+            texto = re.sub(r'[^a-z0-9\s]', '', texto)
+            # Colapsar espacios múltiples
+            return " ".join(texto.split())
+        except:
+            return str(texto).lower().strip()
+
     def limpiar_nombre(self, nombre):
         """Elimina sufijos de estado de navegación del nombre del negocio."""
         if not nombre: return ""
+        
+        # --- NUEVO: Limpieza de prefijos de anuncios ---
+        # Detecta "Patrocinado", "Anuncio", "Sponsored" al inicio que causan ERROR SYNC
+        patron_ad = r"(?i)^(Patrocinado|Anuncio|Sponsored|Ad)\s*[-·•.]?\s*"
+        nombre = re.sub(patron_ad, "", nombre)
+
         # Regex robusto: detecta guiones, puntos medios (·) y variaciones de "Vínculo visitado"
         patron = r"(?i)(\s*[-·]?\s*(Vínculo visitado|Visited link|Enlace visitado))"
         nombre_limpio = re.sub(patron, "", nombre)
+        
+        # --- CORRECCIÓN ERROR SYNC ---
+        # Google ahora agrega la categoría y rating en el aria-label separados por "·"
+        if "·" in nombre_limpio:
+            nombre_limpio = nombre_limpio.split("·")[0]
+        # Google ahora agrega la categoría y rating en el aria-label separados por "·" o "•"
+        for sep in ["·", "•"]:
+            if sep in nombre_limpio:
+                nombre_limpio = nombre_limpio.split(sep)[0]
+            
         return nombre_limpio.strip()
 
     def fusionar_datos(self, datos_prioritarios, datos_secundarios):
@@ -276,6 +315,9 @@ class TrelewLeadApp:
                 web_status = self._get_web_status_text(datos)
                 # IMPORTANTE: Asignar iid=nombre para poder actualizar la fila después
                 self.tree.insert("", "end", iid=nombre, values=(nombre, "GUARDADO 💾", prop_status, web_status))
+            
+            # Actualizar el cache del buscador con los nuevos datos cargados
+            self.buscador.actualizar_cache()
             
             self.log(f"Ficha '{seleccion}' cargada exitosamente. ({len(datos_cargados)} registros)")
             
@@ -852,6 +894,9 @@ class TrelewLeadApp:
                 prop_status = self._get_propuesta_status_text(datos)
                 web_status = self._get_web_status_text(datos)
                 self.tree.insert("", "end", iid=nombre, values=(nombre, "HISTÓRICO 📁", prop_status, web_status))
+            
+            # Actualizar cache del buscador con históricos
+            self.buscador.actualizar_cache()
             self.log(f"Se cargaron {len(self.prospectos_datos)} registros previos. Buscando actualizaciones...")
         
         threading.Thread(target=self.ejecutar_scraping, args=(rubro, estrategia), daemon=True).start()
@@ -978,6 +1023,9 @@ class TrelewLeadApp:
             if rubro:
                 self.gestor_datos.guardar_datos(f"{rubro}.json", self.prospectos_datos)
 
+            # Actualizar cache del buscador al finalizar enriquecimiento
+            self.root.after(0, self.buscador.actualizar_cache)
+            
             self.log("Enriquecimiento masivo completado.")
             self.root.after(0, self.actualizar_lista_fichas)
 
@@ -1144,8 +1192,10 @@ class TrelewLeadApp:
             for local in locales[:50]: # Aumentamos el límite de análisis
                 try:
                     # Intentar obtener el nombre desde el enlace principal (más estable que clases aleatorias)
+                    link_principal = None
                     try:
-                        nombre_raw = local.find_element(By.CSS_SELECTOR, "a[href*='/maps/place/']").get_attribute("aria-label")
+                        link_principal = local.find_element(By.CSS_SELECTOR, "a[href*='/maps/place/']")
+                        nombre_raw = link_principal.get_attribute("aria-label")
                     except:
                         nombre_raw = local.text.split("\n")[0] # Fallback si falla el selector
                     
@@ -1181,14 +1231,72 @@ class TrelewLeadApp:
 
                         driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", local) # Asegurar visibilidad
                         time.sleep(1)
-                        try:
-                            local.click() # Clic para cargar detalles en panel lateral de Maps
-                        except Exception as e:
-                            self.log(f"⚠️ Error al hacer clic en {nombre}: {e}")
-                            # Si falla el clic, marcamos error en la lista para que no quede "Procesando" eternamente
+                        
+                        # --- CLIC ROBUSTO (Mejorado) ---
+                        # Intentamos clic en el enlace específico si existe, sino en la tarjeta
+                        click_hecho = False
+                        for _ in range(2): # 2 intentos de clic inicial
+                            try:
+                                if link_principal:
+                                    driver.execute_script("arguments[0].click();", link_principal)
+                                else:
+                                    local.click()
+                                click_hecho = True
+                                break
+                            except:
+                                time.sleep(1)
+                        
+                        if not click_hecho:
+                            self.log(f"⚠️ No se pudo hacer clic en {nombre}")
                             self.root.after(0, lambda n=nombre: self.tree.item(n, values=(n, "❌ ERROR CLIC", "❌ Pendiente", "-")) if self.tree.exists(n) else None)
                             continue
-                        
+
+                        # --- VALIDACIÓN DE CARGA (Anti-Datos Pegados) ---
+                        # Verificamos que el título del panel coincida con el negocio clicado
+                        validacion_exitosa = False
+                        titulo_panel = ""
+                        try:
+                            for intento in range(3): # 3 intentos de validación con espera
+                                wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "div[role='main'] h1")))
+                                titulo_panel = driver.find_element(By.CSS_SELECTOR, "div[role='main'] h1").text.strip()
+                                
+                                # Comparación ROBUSTA (Normalizada)
+                                n_lista = self.normalizar_texto(nombre)
+                                n_panel = self.normalizar_texto(titulo_panel)
+
+                                # 1. Contención directa
+                                if n_lista in n_panel or n_panel in n_lista:
+                                    validacion_exitosa = True
+                                    break
+                                
+                                # 2. Coincidencia parcial de palabras (ej: "Bar X" vs "X Bar")
+                                if set(n_lista.split()) & set(n_panel.split()):
+                                    validacion_exitosa = True
+                                    break
+                                
+                                # Si falla, esperamos y reintentamos clic en el segundo intento
+                                time.sleep(1.5)
+                                if intento == 1:
+                                    self.log(f"⚠️ Reintentando clic para sincronizar {nombre}...")
+                                    if link_principal:
+                                        try:
+                                            driver.execute_script("arguments[0].click();", link_principal)
+                                        except:
+                                            driver.execute_script("arguments[0].click();", local)
+                                    else:
+                                        driver.execute_script("arguments[0].click();", local)
+                                    time.sleep(2)
+
+                            if not validacion_exitosa:
+                                # CAMBIO CRÍTICO: Si falla la validación, NO detenemos el proceso.
+                                # Solo advertimos y seguimos. A veces Google cambia los títulos ligeramente.
+                                self.log(f"⚠️ Advertencia Sync: Panel '{titulo_panel}' vs Lista '{nombre}'. Extrayendo igual...")
+                                self.root.after(0, lambda n=nombre: self.tree.item(n, values=(n, "⚠️ SYNC?", "⏳...", "-")) if self.tree.exists(n) else None)
+                                # continue  <-- ELIMINADO PARA QUE NO SE TRABE
+
+                        except Exception:
+                            pass # Si falla la validación (ej. no hay H1), seguimos con riesgo pero sin bloquear
+
                         # --- ESPERA INTELIGENTE PARA DETALLES ---
                         try:
                             # Esperar a que el panel de detalles cargue, buscando un elemento clave como la dirección.
@@ -1639,6 +1747,9 @@ class TrelewLeadApp:
                 self.root.after(0, self.actualizar_lista_fichas) # Actualizar lista desplegable
             else:
                 self.log("⚠️ Finalizado sin nuevos datos guardados.")
+            
+            # Actualizar cache del buscador al finalizar scraping
+            self.root.after(0, self.buscador.actualizar_cache)
 
             driver.quit()
             self.log("Proceso completado con éxito.")
