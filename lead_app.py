@@ -163,6 +163,12 @@ class TrelewLeadApp:
         # Instanciamos el buscador pasándole el panel y el treeview.
         # Se empaqueta automáticamente dentro de left_panel.
         self.buscador = BuscadorVisual(left_panel, self.tree)
+
+        # Botón para AGREGAR MANUALMENTE (Debajo del buscador)
+        self.btn_agregar = tk.Button(left_panel, text="➕ Agregar Emprendimiento", bg="#6c757d", fg="white",
+                                     font=constantes.FUENTE_PEQUENA_NEGRITA, relief="flat", cursor="hand2", state="disabled",
+                                     command=self.abrir_alta_manual)
+        self.btn_agregar.pack(fill="x", padx=5, pady=(0, 5))
         
         # Empaquetamos el treeview DESPUÉS del buscador para que quede abajo
         scrollbar = ttk.Scrollbar(left_panel, orient="vertical", command=self.tree.yview)
@@ -349,6 +355,7 @@ class TrelewLeadApp:
             self.buscador.actualizar_cache()
             
             self.log(f"Ficha '{seleccion}' cargada exitosamente. ({len(datos_cargados)} registros)")
+            self.btn_agregar.config(state="normal") # Habilitar botón de agregar
             
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo cargar la ficha: {e}")
@@ -693,6 +700,105 @@ class TrelewLeadApp:
             parent.destroy() # Cerramos la ficha vieja
             self.mostrar_info_detallada(nombre_final, datos) # Abrimos la nueva actualizada
 
+    def abrir_alta_manual(self):
+        """Abre un formulario completo para dar de alta un nuevo emprendimiento manualmente."""
+        alta_win = tk.Toplevel(self.root)
+        alta_win.title("Nuevo Emprendimiento")
+        alta_win.geometry("550x750")
+        alta_win.configure(bg=constantes.COLOR_BLANCO)
+        alta_win.transient(self.root)
+        alta_win.grab_set()
+
+        # Header
+        tk.Label(alta_win, text="Agregar Nuevo Lead", font=constantes.FUENTE_TITULO, bg=constantes.COLOR_BLANCO, fg=constantes.COLOR_PRIMARIO, pady=15).pack()
+        tk.Label(alta_win, text="Completa los datos que tengas. Los vacíos se guardarán como 'No detectado'.", font=constantes.FUENTE_PEQUENA, bg=constantes.COLOR_BLANCO, fg=constantes.COLOR_TEXTO_TENUE).pack(pady=(0, 10))
+
+        # Contenedor con Scroll para el formulario
+        canvas = tk.Canvas(alta_win, bg=constantes.COLOR_BLANCO, highlightthickness=0)
+        scrollbar = ttk.Scrollbar(alta_win, orient="vertical", command=canvas.yview)
+        form_frame = tk.Frame(canvas, bg=constantes.COLOR_BLANCO, padx=20, pady=10)
+
+        form_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+        canvas.create_window((0, 0), window=form_frame, anchor="nw", width=500)
+        canvas.configure(yscrollcommand=scrollbar.set)
+
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+
+        entries = {}
+
+        def crear_campo(label, key, placeholder=""):
+            f = tk.Frame(form_frame, bg=constantes.COLOR_BLANCO, pady=5)
+            f.pack(fill="x")
+            tk.Label(f, text=label, font=constantes.FUENTE_NEGRITA, bg=constantes.COLOR_BLANCO, anchor="w", fg=constantes.COLOR_TEXTO_OSCURO).pack(fill="x")
+            e = tk.Entry(f, font=constantes.FUENTE_NORMAL, bg="#f8f9fa", relief="flat", highlightthickness=1, highlightbackground=constantes.COLOR_BORDE)
+            if placeholder:
+                e.insert(0, placeholder) # Valor por defecto sugerido
+            e.pack(fill="x", ipady=5)
+            entries[key] = e
+
+        # --- CAMPOS DEL FORMULARIO ---
+        crear_campo("Nombre del Negocio (*):", "nombre")
+        
+        # Categoría por defecto: Usar el archivo activo (JSON cargado) en lugar del buscador
+        cat_default = self.archivo_activo.replace(".json", "") if self.archivo_activo else self.entry_rubro.get()
+        
+        crear_campo("Rubro / Categoría:", "categoria", cat_default)
+        crear_campo("Dirección:", "direccion")
+        crear_campo("Teléfono (con cód. área):", "telefono")
+        crear_campo("Horarios (Texto libre):", "horario")
+        crear_campo("Sitio Web:", "website")
+        crear_campo("Email:", "email")
+        crear_campo("Facebook (URL):", "facebook")
+        crear_campo("Instagram (URL):", "instagram")
+        crear_campo("Rating (1.0 - 5.0):", "rating", "5.0")
+
+        def guardar_nuevo():
+            nombre = entries["nombre"].get().strip()
+            if not nombre:
+                messagebox.showwarning("Faltan datos", "El nombre del negocio es obligatorio.", parent=alta_win)
+                return
+            
+            if nombre in self.prospectos_datos:
+                messagebox.showerror("Duplicado", f"El negocio '{nombre}' ya existe en la lista.", parent=alta_win)
+                return
+
+            # Construir diccionario de datos
+            nuevo_lead = {
+                "categoria": entries["categoria"].get().strip() or "General",
+                "direccion": entries["direccion"].get().strip() or "No disponible",
+                "telefono": entries["telefono"].get().strip() or "Sin teléfono",
+                "horario": entries["horario"].get().strip() or "No especificado",
+                "website": entries["website"].get().strip() or None, # None para que no salga "No tiene" si está vacío
+                "email": entries["email"].get().strip() or "No detectado",
+                "facebook": entries["facebook"].get().strip() or "No detectado",
+                "instagram": entries["instagram"].get().strip() or "No detectado",
+                "rating": f"{entries['rating'].get().strip()} estrellas" if entries["rating"].get().strip() else "N/A",
+                "comentarios": [], # Lista vacía inicial
+                "imagenes": [],
+                "horarios_detallados": [],
+                "propuesta_enviada": False
+            }
+
+            # Guardar en memoria y disco
+            self.prospectos_datos[nombre] = nuevo_lead
+            archivo_destino = self.archivo_activo if self.archivo_activo else f"{self.entry_rubro.get()}.json"
+            self.gestor_datos.guardar_datos(archivo_destino, self.prospectos_datos)
+
+            # Actualizar UI
+            web_status = self._get_web_status_text(nuevo_lead)
+            self.tree.insert("", 0, iid=nombre, values=(nombre, "MANUAL ✍️", "❌ Pendiente", web_status)) # Insertar al principio
+            self.tree.selection_set(nombre) # Seleccionar el nuevo
+            self.mostrar_detalle(None) # Mostrar ficha
+            self.buscador.actualizar_cache() # Actualizar buscador
+            
+            alta_win.destroy()
+            messagebox.showinfo("Éxito", f"Se agregó '{nombre}' a la lista.")
+
+        btn_guardar = tk.Button(form_frame, text="💾 AGREGAR A LA LISTA", bg=constantes.COLOR_BTN_INFO, fg="white",
+                                font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2", command=guardar_nuevo)
+        btn_guardar.pack(pady=20, fill="x")
+
         btn_guardar = tk.Button(edit_win, text="💾 GUARDAR CAMBIOS", bg=constantes.COLOR_BTN_INFO, fg="white",
                                 font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2", command=guardar)
         btn_guardar.pack(pady=20, fill="x", padx=20)
@@ -926,6 +1032,7 @@ class TrelewLeadApp:
             
             # Actualizar cache del buscador con históricos
             self.buscador.actualizar_cache()
+            self.btn_agregar.config(state="normal") # Habilitar botón agregar
             self.log(f"Se cargaron {len(self.prospectos_datos)} registros previos. Buscando actualizaciones...")
         
         threading.Thread(target=self.ejecutar_scraping, args=(rubro, estrategia), daemon=True).start()
