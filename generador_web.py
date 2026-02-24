@@ -47,12 +47,25 @@ def generar_y_guardar_imagen(prompt: str, ruta_guardado: str):
                 response = requests.post(url, headers=headers, json=payload, timeout=45)
 
                 if response.status_code == 200:
-                    with open(ruta_guardado, 'wb') as f:
-                        f.write(response.content)
-                    return True
+                    # NUEVA VERIFICACIÓN: Asegurarse de que la imagen no esté vacía o sea inválida.
+                    # Una imagen negra o un error a veces resulta en una respuesta muy pequeña.
+                    # Establecemos un umbral mínimo de 1KB.
+                    if len(response.content) > 1024:
+                        with open(ruta_guardado, 'wb') as f:
+                            f.write(response.content)
+                        return True
+                    print(f"[AVISO] La imagen generada es demasiado pequeña ({len(response.content)} bytes). Posiblemente es una imagen negra o corrupta. Omitiendo.")
+                    return False
                 
-                print(f"[AVISO] Error Cloudflare ({response.status_code}) - Intento {attempt+1}/{max_retries}: {response.text}")
-                if response.status_code >= 500 or response.status_code == 429:
+                response_text = response.text
+                print(f"[AVISO] Error Cloudflare ({response.status_code}) - Intento {attempt+1}/{max_retries}: {response_text}")
+
+                # --- NUEVO: Manejo de error de capacidad temporal ---
+                if "temporarily at capacity" in response_text.lower():
+                    print("[AVISO] API de Cloudflare en capacidad temporal. Esperando 11 segundos como se solicitó...")
+                    time.sleep(11)
+                    continue # Reintentar
+                elif response.status_code >= 500 or response.status_code == 429:
                     time.sleep(3)
                     continue
                 return False
@@ -313,9 +326,12 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
 
     # Generar y guardar imágenes, obteniendo sus rutas relativas
     ruta_logo_local = f"{ruta_web}/assets/img/logo.png"
+    print(f"[LOGO] Generando logotipo para '{nombre_negocio}'...")
     if generar_y_guardar_imagen(prompts["logo"], ruta_logo_local):
         url_logo = "assets/img/logo.png"
+        print(f"  -> Éxito. Logo generado con IA.")
     else:
+        print(f"  -> Falló generación. Usando placeholder.")
         url_logo = "https://via.placeholder.com/300" # Fallback
 
     # Para el fondo, lo guardamos pero lo referenciamos en el CSS
