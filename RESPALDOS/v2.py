@@ -35,7 +35,7 @@ def generar_maqueta_v2(datos):
         beneficios_html += '</div></section>'
 
     facebook_svg = '<svg fill="currentColor" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Facebook</title><path d="M22.675 0h-21.35C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.732 0 1.323-.593 1.323-1.325V1.325C24 .593 23.407 0 22.675 0z"/></svg>'
-    instagram_svg = '<svg fill="currentColor" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd"><title>Instagram</title><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.936 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.314.936 20.644.523 19.854.218 19.095-.08 18.225-.282 16.947-.341 15.667-.398 15.26-.413 12-.413h0zm0 2.163c3.204 0 3.584.012 4.85.07 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.055 1.17-.249 1.805-.413 2.227-.217.562-.477.96-.896 1.382-.42.419-.819.679-1.381.896-.422.164-1.057.36-2.227.413-1.266.057-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.055-1.805-.249-2.227-.413-.562-.217-.96-.477-1.382-.896-.419-.42-.679-.819-.896-1.381-.164-.422-.36-1.057-.413-2.227-.057-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.055-1.17.249-1.805.413-2.227.217-.562.477.96.896-1.382.42-.419.819.679 1.381-.896.422-.164 1.057.36 2.227-.413 1.266-.057 1.646-.07 4.85.07zM12 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.88 1.44 1.44 0 000-2.88z"/></svg>'              
+    instagram_svg = '<svg fill="currentColor" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Instagram</title><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.936 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.314.936 20.644.523 19.854.218 19.095-.08 18.225-.282 16.947-.341 15.667-.398 15.26-.413 12-.413h0zm0 2.163c3.204 0 3.584.012 4.85.07 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.055 1.17-.249 1.805-.413 2.227-.217.562-.477.96-.896 1.382-.42.419-.819.679-1.381.896-.422.164-1.057.36-2.227.413-1.266.057-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.055-1.805-.249-2.227-.413-.562-.217-.96-.477-1.382-.896-.419-.42-.679-.819-.896-1.381-.164-.422-.36-1.057-.413-2.227-.057-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.055-1.17.249-1.805.413-2.227.217-.562.477.96.896-1.382.42-.419.819.679 1.381-.896.422-.164 1.057.36 2.227-.413 1.266-.057 1.646-.07 4.85.07zM12 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.88 1.44 1.44 0 000-2.88z"/></svg>'              
     
     donde_estamos_html = ""
     if direccion:
@@ -65,29 +65,16 @@ def generar_maqueta_v2(datos):
 
     CSS_V2 = f"""
     :root {{
-        /* --- SISTEMA DE COLORES SEMÁNTICO (Reestructuración V2) --- */
+         /* Colores (adaptados de los valores originales del generador) */
+        --color-primario: {paleta['primario']};
+        --color-fondo-base: {paleta['fondo']};
+        --color-texto-base: {paleta['texto']};
+        --color-texto-inverso: {paleta['texto_inverso']};
+        --color-overlay: {paleta['overlay']};
+        --color-fondo-tarjeta: {paleta.get('fondo_tarjeta', '#ffffff')};
         
-        /* Botones (CTA y Navegación) */
-        --color-fondo-botones: {paleta.get('fondo_botones', paleta['primario'])};
-        --color-fondo-botones-hover: {paleta.get('fondo_botones_hover', paleta.get('acento', '#4f4d4d'))};
-        --color-texto-botones: {paleta.get('texto_botones', paleta['texto_inverso'])};
-        --color-texto-botones-hover: {paleta.get('texto_botones_hover', paleta['texto_inverso'])};
-
-        /* Textos Generales */
-        --color-texto-general: {paleta.get('texto_general', paleta['texto'])};
-        --color-texto-hero: {paleta.get('texto_hero', '#ffffff')}; /* El hero siempre tiene fondo oscuro/imagen */
-        --color-texto-cards: {paleta.get('texto_cards', paleta['texto_inverso'])}; /* Solicitado explícitamente */
-        
-        /* Títulos */
-        --color-titulos: {paleta.get('titulos', paleta['primario'])}; /* Para detalles, iconos o subtítulos destacados */
-        --color-titulo-h1: {paleta.get('titulo_h1', '#ffffff')}; /* Título principal en Hero */
-        --color-titulo-h2: {paleta.get('titulo_h2', paleta['texto'])}; /* Títulos de secciones */
-
-        /* Fondos y Estructura */
-        --color-fondo-general: {paleta.get('fondo_general', paleta['fondo'])};
-        --color-fondo-cards: {paleta.get('fondo_cards', paleta.get('fondo_tarjeta', '#ffffff'))};
-        --color-overlay-hero: {paleta.get('overlay_hero', paleta['overlay'])};
-        --color-borde-sutil: {paleta.get('borde_sutil', 'rgba(0,0,0,0.1)')};
+        --color-acento-oscuro: {paleta.get('acento', '#4f4d4d')};
+        --color-fondo-claro: #F8F6F4;
 
         /* Fuentes (de las instrucciones) */
         --fuente-base: 'El Messiri', 'Georgia', sans-serif;
@@ -114,7 +101,7 @@ def generar_maqueta_v2(datos):
     }}
     * {{ box-sizing: border-box; margin: 0; padding: 0; }}
     html {{ scroll-behavior: smooth; }}
-    body {{ font-family: var(--fuente-base); background-color: var(--color-fondo-general); color: var(--color-texto-general); line-height: 1.6; }}
+    body {{ font-family: var(--fuente-base); background-color: var(--color-fondo-base); color: var(--color-texto-base); line-height: 1.6; }}
     img {{ max-width: 100%; height: auto; display: block; }}
     h1, h2, h3 {{ font-family: var(--fuente-secundaria); }}
     
@@ -128,60 +115,61 @@ def generar_maqueta_v2(datos):
         align-items: center; 
         padding: 15px 2%; 
         transition: top 0.5s ease-in-out, background-color 0.3s; 
-        background-color: var(--color-fondo-general); 
+        background-color: var(--color-fondo-base); 
         box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
         height: 85px;
         z-index: 1000;
     }}
-    .logo {{ transition: transform 0.5s ease; }}
     .logo img {{ height: 60px; width: auto; transition: transform 0.3s; display: block; }}
     .nav-links {{ list-style: none; display: flex; gap: 2rem; }}
-    .nav-links a {{ color: var(--color-texto-general); text-decoration: none; font-weight: 500; font-size: 1.2rem; transition: color 0.3s; padding: 10px; }}
-    .nav-links a:hover {{ color: var(--color-titulos); }}
-    .btn button {{ background-color: var(--color-fondo-botones); color: var(--color-texto-botones); border: none; padding: 0.75rem 1.5rem; border-radius: 5px; cursor: pointer; font-weight: bold; transition: background-color 0.3s; }}
-    .btn button:hover {{ background-color: var(--color-fondo-botones-hover); color: var(--color-texto-botones-hover); }}
+    .nav-links a {{ color: var(--color-texto-base); text-decoration: none; font-weight: 500; font-size: 1.2rem; transition: color 0.3s; padding: 10px; }}
+    .nav-links a:hover {{ color: var(--color-primario); }}
+    .btn button {{ background-color: var(--color-primario); color: var(--color-texto-inverso); border: none; padding: 0.75rem 1.5rem; border-radius: 5px; cursor: pointer; font-weight: bold; transition: background-color 0.3s; }}
+    .btn button:hover {{ background-color: var(--color-acento-oscuro); color: var(--color-texto-inverso); }}
     .menu-hamburguesa {{ display: none; }}
     .overlay {{ height: 100%; width: 0; position: fixed; z-index: 1001; top: 0; left: 0; background-color: rgba(0,0,0, 0.95); overflow-x: hidden; transition: 0.5s; }}
     .overlay-content {{ position: relative; top: 25%; width: 100%; text-align: center; margin-top: 30px; }}
     .overlay a {{ padding: 8px; text-decoration: none; font-size: 36px; color: #818181; display: block; transition: 0.3s; }}
-    .overlay a:hover, .overlay a:focus {{ color: var(--color-titulos); }}
+    .overlay a:hover, .overlay a:focus {{ color: var(--color-primario); }}
     .overlay .close {{ position: absolute; top: 20px; right: 45px; font-size: 60px; }}
 
     /* --- Secciones Principales --- */
     main {{ }} /* El padding se quita para que el hero ocupe todo el top */
     .seccion-hero {{ 
-        position: relative;
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
         text-align: center; 
-        padding: 8rem 2rem 4rem; 
-        min-height: 80vh; 
+        padding: 4rem 2rem; 
+        height: 80vh; 
         display: flex; 
         flex-direction: column; 
         justify-content: center; 
         align-items: center; 
-        background: linear-gradient(var(--color-overlay-hero), var(--color-overlay-hero)), url('{url_fondo_css}');
+        background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('{url_fondo_css}');
         background-size: cover;
         background-position: center;
-        color: var(--color-texto-hero);
+        color: #ffffff; /* Texto blanco siempre sobre la imagen oscura */
     }}
-    .seccion-hero h1 {{ font-size: 3.5rem; color: var(--color-titulo-h1); }}
-    .seccion-presentacion {{ padding: 4rem 2rem; text-align: center; }}
+    .seccion-hero h1 {{ font-size: 3.5rem; }}
+    .seccion-presentacion {{ padding: 4rem 2rem; text-align: center; margin-top: 80vh; }} /* Margin-top para empujar el contenido debajo del hero */
     .seccion-beneficios, .seccion-productos {{ padding: 4rem 2rem; text-align: center; }}
     .seccion-ubicacion {{ padding: 4rem 2rem; text-align: center; }}
-    .seccion-presentacion h2, .seccion-beneficios h2, .seccion-productos h2, .seccion-ubicacion h2 {{ margin-bottom: 2rem; font-size: 2.5rem; color: var(--color-titulo-h2); }}
-    .cta-button {{ background-color: var(--color-fondo-botones); color: var(--color-texto-botones); padding: 0.75rem 1.5rem; border-radius: 5px; text-decoration: none; font-weight: 600; display: inline-block; margin-top: 1.5rem; transition: all 0.3s; }}
-    .cta-button:hover {{ background-color: var(--color-fondo-botones-hover); color: var(--color-texto-botones-hover); transform: scale(1.05); }}
+    .seccion-presentacion h2, .seccion-beneficios h2, .seccion-productos h2, .seccion-ubicacion h2 {{ margin-bottom: 2rem; font-size: 2.5rem; }}
+    .cta-button {{ background-color: var(--color-primario); color: var(--color-texto-inverso); padding: 0.75rem 1.5rem; border-radius: 5px; text-decoration: none; font-weight: 600; display: inline-block; margin-top: 1.5rem; transition: all 0.3s; }}
+    .cta-button:hover {{ background-color: var(--color-acento-oscuro); color: var(--color-texto-inverso); transform: scale(1.05); }}
 
     /* Testimonios y Tarjetas (Reutilizados de V1 con estilo oscuro) */
     .contenedor-tarjetas {{ display: grid; grid-template-columns: 1fr; gap: 1.5rem; max-width: 1200px; margin: 0 auto; }}
-    .tarjeta-testimonio {{ background: var(--color-fondo-cards); border-radius: 0.75rem; padding: 2rem; display: flex; flex-direction: column; align-items: center; text-align: center; color: var(--color-texto-cards); border: 1px solid var(--color-borde-sutil); box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.3s ease; position: relative; }}
+    .tarjeta-testimonio {{ background: var(--color-fondo-tarjeta); border-radius: 0.75rem; padding: 2rem; display: flex; flex-direction: column; align-items: center; text-align: center; color: var(--color-texto-inverso); border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.3s ease; position: relative; }}
     .tarjeta-testimonio:hover {{ transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }}
-    .tarjeta-testimonio img {{ width: 6rem; height: 6rem; border-radius: 50%; object-fit: cover; border: 3px solid var(--color-titulos); margin-bottom: 1rem; }}
-    .comillas-testimonio {{ font-size: 4rem; line-height: 0.5; font-family: serif; color: var(--color-titulos); opacity: 0.8; }}
+    .tarjeta-testimonio img {{ width: 6rem; height: 6rem; border-radius: 50%; object-fit: cover; border: 3px solid var(--color-primario); margin-bottom: 1rem; }}
+    .comillas-testimonio {{ font-size: 4rem; line-height: 0.5; font-family: serif; color: var(--color-primario); opacity: 0.8; }}
     .texto-testimonio {{ font-style: italic; margin-bottom: 1rem; font-size: 1.1rem; }}
     .estrellas-testimonio {{ color: #FFD700; margin-bottom: 0.5rem; }}
     .autor-testimonio {{ font-weight: bold; font-size: 1rem; text-transform: uppercase; }}
-    .tarjeta-beneficio {{ background: var(--color-fondo-cards); color: var(--color-texto-cards); text-align: center; padding: 2rem 1rem; border-radius: 1rem; border: 1px solid var(--color-borde-sutil); box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.3s ease; }}
+    .tarjeta-beneficio {{ background: var(--color-fondo-tarjeta); color: var(--color-texto-inverso); text-align: center; padding: 2rem 1rem; border-radius: 1rem; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.3s ease; }}
     .tarjeta-beneficio:hover {{ transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }}
 
     /* --- Footer y Redes --- */
@@ -189,7 +177,7 @@ def generar_maqueta_v2(datos):
     .social-icon svg {{ width: 40px; height: 40px; transition: var(--transicion-estandar); }}
     .social-icon.instagram {{ color: #E1306C; }}
     .social-icon.facebook {{ color: #1877F2; }}
-    .social-icon.active-link:hover svg {{ transform: scale(1.1); }}
+    .social-icon.active-link:hover {{ opacity: 0.8; transform: scale(1.1); }}
     .social-icon:not(.active-link) {{ cursor: default; opacity: 0.5; }}
     .posicion-fixed {{ position: fixed; bottom: 2rem; right: 2rem; z-index: 1000; }}
 
@@ -248,7 +236,7 @@ def generar_maqueta_v2(datos):
                 <a href="{cta_button_link}" class="cta-button">{cta_button_text}</a>
             </section>
 
-            <section id="sobre-nosotros" class="seccion-ubicacion">
+            <section id="sobre-nosotros" class="seccion-presentacion">
                 <h2 class="libre-baskerville">Sobre Nosotros</h2>
                 <p style="max-width: 800px; margin: 0 auto; font-size: 1.2rem;">{descripcion_presentacion}</p>
             </section>

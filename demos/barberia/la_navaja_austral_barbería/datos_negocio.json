@@ -1,0 +1,21 @@
+{
+  "nombre": "La Navaja Austral Barbería",
+  "categoria": "barberia",
+  "direccion": "Avenida Fontana 567, Trelew, Chubut",
+  "telefono": "+54 9 280 4567890",
+  "rating": "4.9",
+  "comentarios": [
+    {
+      "autor": "Martín R.",
+      "texto": "Excelente ambiente y cortes de primera. ¡Mi barbería de confianza en Trelew!",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Pablo F.",
+      "texto": "Atención súper profesional, siempre salgo contento con el look. Los detalles marcan la diferencia.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/LaNavajaAustralBarberia",
+  "instagram": "https://instagram.com/lanavajaaustral"
+}

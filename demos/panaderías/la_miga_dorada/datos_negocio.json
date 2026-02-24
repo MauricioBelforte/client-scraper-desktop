@@ -1,0 +1,21 @@
+{
+  "nombre": "La Miga Dorada",
+  "categoria": "Panaderías",
+  "direccion": "Mitre 456, Trelew, Chubut",
+  "telefono": "+54 9 280 4334455",
+  "rating": "4.9",
+  "comentarios": [
+    {
+      "autor": "Ana Torres",
+      "texto": "¡Las medialunas son las mejores de Trelew! Siempre frescas y deliciosas.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Martín Sosa",
+      "texto": "Excelente calidad en panadería y confitería. El pan de campo es espectacular.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/LaMigaDoradaTW",
+  "instagram": "https://instagram.com/lamigadoradatw"
+}

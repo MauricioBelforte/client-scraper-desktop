@@ -102,23 +102,8 @@ PALETAS_COLORES = {
             "texto": "#e9e9e9",          # Blanco humo
             "texto_inverso": "#181818",  # Texto oscuro sobre dorado
             "overlay": "#000000b8",      # Oscurecer fondo
-            "fondo_tarjeta": "#ffffff",  # Fondo tarjeta (Blanco)
-            "acento": "#c69f3a",         # Dorado oscuro
-            
-            # --- Variables V2 ---
-            "fondo_botones": "#efc355",
-            "fondo_botones_hover": "#c69f3a",
-            "texto_botones": "#181818",
-            "texto_general": "#e9e9e9",
-            "texto_hero": "#ffffff",
-            "texto_cards": "#181818",    # Texto oscuro para tarjeta blanca
-            "titulos": "#efc355",
-            "titulo_h1": "#ffffff",
-            "titulo_h2": "#e9e9e9",
-            "fondo_general": "#111111",
-            "fondo_cards": "#ffffff",
-            "overlay_hero": "#000000b8",
-            "borde_sutil": "rgba(255,255,255,0.1)" # Borde sutil para separar secciones oscuras
+            "fondo_tarjeta": "#ffffff",  # Fondo tarjeta
+            "acento": "#e9e9e9"          # Dorado oscuro
         },
         "categorias": [
             "restaurante", "restaurantes", "bar", "bares", "cerveceria", "cervecería", 
@@ -139,22 +124,7 @@ PALETAS_COLORES = {
             "texto_inverso": "#4e342e",  # Marrón oscuro para texto sobre el rosa pastel (en lugar de blanco, para mejor legibilidad)
             "overlay": "#0000004f",      # 
             "fondo_tarjeta": "#ffffff",  # Fondo tarjeta blanco para mantener la limpieza visual
-            "acento": "#fa9fcb",         # Rosa más claro para acentos y detalles, manteniendo la armonía pastel
-
-            # --- Variables V2 ---
-            "fondo_botones": "#ffcfe7",
-            "fondo_botones_hover": "#fa9fcb",
-            "texto_botones": "#4e342e",
-            "texto_general": "#4e342e",
-            "texto_hero": "#ffffff",
-            "texto_cards": "#4e342e",
-            "titulos": "#9a4972",        # Títulos suaves
-            "titulo_h1": "#ffffff",
-            "titulo_h2": "#4e342e",
-            "fondo_general": "#fffde7",
-            "fondo_cards": "#ffffff",
-            "overlay_hero": "#0000004f",
-            "borde_sutil": "rgba(0,0,0,0.05)"
+            "acento": "#fa9fcb"          # Rosa más claro para acentos y detalles, manteniendo la armonía pastel
         },
         "categorias": [
             "heladeria", "heladería", "heladerias", "heladerías", "pasteleria", 
@@ -172,67 +142,21 @@ PALETAS_COLORES = {
             "texto_inverso": "#ffffff",  # Blanco sobre azul
             "overlay": "#ffffff00",      # Aclarar fondo (Overlay blanco)
             "fondo_tarjeta": "#ffffff",  # Fondo tarjeta
-            "acento": "#0b5ed7",         # Azul intenso
-
-            # --- Variables V2 ---
-            "fondo_botones": "#0d6efd",
-            "fondo_botones_hover": "#0b5ed7",
-            "texto_botones": "#ffffff",
-            "texto_general": "#212529",
-            "texto_hero": "#ffffff",
-            "texto_cards": "#212529",
-            "titulos": "#0d6efd",
-            "titulo_h1": "#ffffff",
-            "titulo_h2": "#212529",
-            "fondo_general": "#dbdce2",
-            "fondo_cards": "#ffffff",
-            "overlay_hero": "#00000066", # Un poco de oscuridad para que el texto blanco del hero se lea
-            "borde_sutil": "rgba(0,0,0,0.1)"
+            "acento": "#0b5ed7"          # Azul intenso
         },
         "categorias": [
             "medico", "médico", "medicos", "médicos", "odont", "odontologo", 
             "odontólogo", "odontologos", "odontólogos", "odontologia", "odontología", 
             "kinesio", "kinesiologo", "kinesiólogo", "kinesiologos", "kinesiólogos", 
             "kinesiologia", "kinesiología", "salud", "clinic", "clínic", "clinica", 
-            "clínica", "clinicas", "clínicas", "farmacia", "farmacias", 
+            "clínica", "clinicas", "clínicas", "farmacia", "farmacias", "abogado", 
+            "abogados", "abogacia", "abogacía", "contab", "contador", "contadores", 
+            "contable", "contables", "estudio", "estudios", "inmobiliaria", 
+            "inmobiliarias", "arquitecto", "arquitectos", "arquitectura", 
             "veterinaria", "veterinarias", "veterinario", "veterinarios", "psicolog", 
             "psicologo", "psicólogo", "psicologos", "psicólogos", "psicologia", 
             "psicología", "nutricion", "nutrición", "nutricionista", "nutricionistas", 
             "consultorio", "consultorios"
-        ]
-    },
-    "ELEGANTE_SERIO": {
-        "colores": {
-            "primario": "#95c0ff",      # Azul claro (Titulos)
-            "fondo": "#313447",         # Fondo oscuro elegante
-            "texto": "#c5ccd3",         # Texto gris claro
-            "texto_inverso": "#152141", # Texto oscuro para botones
-            "overlay": "#00000066",     # Overlay
-            "fondo_tarjeta": "#ffffff", # Tarjeta blanca
-            "acento": "#5280c3",        # Azul medio (Hover)
-
-            # --- Variables V2 ---
-            "fondo_botones": "#b5b5b5",
-            "fondo_botones_hover": "#5280c3",
-            "texto_botones": "#152141",
-            "texto_botones_hover": "#ffffff",
-            "texto_general": "#c5ccd3",
-            "texto_hero": "#ffffff",
-            "texto_cards": "#214061",
-            "titulos": "#95c0ff",
-            "titulo_h1": "#ffffff",
-            "titulo_h2": "#e7f3ff",
-            "fondo_general": "#313447",
-            "fondo_cards": "#ffffff",
-            "overlay_hero": "#00000066",
-            "borde_sutil": "rgba(0, 0, 0, 0.1)"
-        },
-        "categorias": [
-            "abogado", "abogados", "abogacia", "abogacía", "contab", "contador", 
-            "contadores", "contable", "contables", "estudio", "estudios", 
-            "inmobiliaria", "inmobiliarias", "arquitecto", "arquitectos", 
-            "arquitectura", "escribania", "escribanía", "consultora", "consultoria",
-            "consultor", "consultores", "notaria", "notaría"
         ]
     },
     "ESTETICA_BELLEZA": {
@@ -242,23 +166,8 @@ PALETAS_COLORES = {
             "texto": "#7a3c5c",          
             "texto_inverso": "#ffffff",  # Blanco sobre rosa
             "overlay": "#0000004f",      # Oscurecer fondo (Overlay negro semitransparente)   
-            "fondo_tarjeta": "#ffe5fa",  # Fondo tarjeta (Rosa claro)
-            "acento": "#c21b6c",         # Rosa oscuro
-
-            # --- Variables V2 ---
-            "fondo_botones": "#d63384",
-            "fondo_botones_hover": "#c21b6c",
-            "texto_botones": "#ffffff",
-            "texto_general": "#7a3c5c",
-            "texto_hero": "#ffffff",
-            "texto_cards": "#7a3c5c",
-            "titulos": "#d63384",
-            "titulo_h1": "#ffffff",
-            "titulo_h2": "#7a3c5c",
-            "fondo_general": "#fff0f5",
-            "fondo_cards": "#ffe5fa",
-            "overlay_hero": "#0000004f",
-            "borde_sutil": "rgba(214, 51, 132, 0.1)" # Borde rosado muy sutil
+            "fondo_tarjeta": "#ffe5fa",  # Fondo tarjeta (Rosa claro solicitado)
+            "acento": "#c21b6c"          # Rosa oscuro
         },
         "categorias": [
             "peluqu", "peluqueria", "peluquería", "peluquerias", "peluquerías", 
@@ -280,22 +189,7 @@ PALETAS_COLORES = {
             "texto_inverso": "#ffffff",  # Blanco
             "overlay": "#00000047",      # Oscuro semitransparente
             "fondo_tarjeta": "#ffffff",  # Fondo tarjeta
-            "acento": "#804020",         # Marrón oscuro
-
-            # --- Variables V2 ---
-            "fondo_botones": "#A0522D",
-            "fondo_botones_hover": "#804020",
-            "texto_botones": "#ffffff",
-            "texto_general": "#514a4a",
-            "texto_hero": "#ffffff",
-            "texto_cards": "#514a4a",
-            "titulos": "#A0522D",
-            "titulo_h1": "#ffffff",
-            "titulo_h2": "#514a4a",
-            "fondo_general": "#F8F8F8",
-            "fondo_cards": "#ffffff",
-            "overlay_hero": "#00000047",
-            "borde_sutil": "rgba(160, 82, 45, 0.1)"
+            "acento": "#804020"          # Marrón oscuro
         },
         "categorias": [
             "muebleria", "mueblería", "mueblerias", "mueblerías", "muebles", "mueble", 
@@ -308,26 +202,11 @@ PALETAS_COLORES = {
         "colores": {
             "primario": "#28a745",       # Verde éxito (Bootstrap Success Green)
             "fondo": "#f0fff0",          # Honeydew (Verde muy pálido)
-            "texto": "#1e4d2b",          # Verde muy oscuro (Corregido para contraste)
+            "texto": "#eceaea",          
             "texto_inverso": "#ffffff",  # Blanco
             "overlay": "#00000066",      # Overlay oscuro para contraste
             "fondo_tarjeta": "#ffffff",  # Fondo tarjeta blanco
-            "acento": "#218838",         # Verde oscuro
-
-            # --- Variables V2 ---
-            "fondo_botones": "#28a745",
-            "fondo_botones_hover": "#218838",
-            "texto_botones": "#ffffff",
-            "texto_general": "#1e4d2b",
-            "texto_hero": "#ffffff",
-            "texto_cards": "#1e4d2b",
-            "titulos": "#28a745",
-            "titulo_h1": "#ffffff",
-            "titulo_h2": "#1e4d2b",
-            "fondo_general": "#f0fff0",
-            "fondo_cards": "#ffffff",
-            "overlay_hero": "#00000066",
-            "borde_sutil": "rgba(40, 167, 69, 0.1)"
+            "acento": "#218838"          # Verde oscuro
         },
         "categorias": [
             "verduleria", "verdulería", "verdulerias", "verdulerías", "botanica", 
@@ -347,23 +226,8 @@ PALETAS_COLORES = {
             "texto": "#f0f0f0",         # Texto claro
             "texto_inverso": "#111111",
             "overlay": "#000000b8",     # Overlay oscuro
-            "fondo_tarjeta": "#2a2a2a", # Tarjeta oscura (Gris muy oscuro)
-            "acento": "#a67f4d",        # Bronce oscuro
-
-            # --- Variables V2 ---
-            "fondo_botones": "#c89f68",
-            "fondo_botones_hover": "#a67f4d",
-            "texto_botones": "#111111",
-            "texto_general": "#f0f0f0",
-            "texto_hero": "#ffffff",
-            "texto_cards": "#f0f0f0",   # Texto claro sobre tarjeta oscura
-            "titulos": "#c89f68",
-            "titulo_h1": "#ffffff",
-            "titulo_h2": "#f0f0f0",
-            "fondo_general": "#1a1a1a",
-            "fondo_cards": "#2a2a2a",
-            "overlay_hero": "#000000b8",
-            "borde_sutil": "rgba(255,255,255,0.05)" # Borde claro sutil
+            "fondo_tarjeta": "#2a2a2a", # Tarjeta oscura
+            "acento": "#e9e9e9"         # Bronce oscuro
         }
     },
     "TATTOO_INK": {
@@ -372,25 +236,10 @@ PALETAS_COLORES = {
             "primario": "#e53935",      # Un rojo intenso como acento
             "fondo": "#121212",         # Fondo muy oscuro, casi negro
             "texto": "#ffffff",         # Texto blanco puro
-            "texto_inverso": "#000000", # Negro
-            "overlay": "#000000d9",     # Overlay muy oscuro (casi negro)
-            "fondo_tarjeta": "#1e1e1e", # Tarjeta gris oscuro (casi negro)
-            "acento": "#c62828",        # Rojo oscuro
-
-            # --- Variables V2 ---
-            "fondo_botones": "#e53935",
-            "fondo_botones_hover": "#c62828",
-            "texto_botones": "#ffffff", # Blanco sobre rojo
-            "texto_general": "#ffffff",
-            "texto_hero": "#ffffff",
-            "texto_cards": "#ffffff",   # Blanco sobre tarjeta oscura
-            "titulos": "#e53935",
-            "titulo_h1": "#ffffff",
-            "titulo_h2": "#ffffff",
-            "fondo_general": "#121212",
-            "fondo_cards": "#1e1e1e",
-            "overlay_hero": "#000000d9",
-            "borde_sutil": "rgba(255,255,255,0.08)"
+            "texto_inverso": "#000000",
+            "overlay": "#000000d9",     # Overlay muy oscuro
+            "fondo_tarjeta": "#1e1e1e", # Tarjeta gris oscuro
+            "acento": "#c62828"         # Rojo oscuro
         }
     },
     "FUERZA_TECNICA": {
@@ -400,23 +249,8 @@ PALETAS_COLORES = {
             "texto": "#f0f0f0",          # Blanco grisáceo
             "texto_inverso": "#ffffff",  # Blanco sobre naranja
             "overlay": "#000000d9",      # Oscurecer fondo fuerte
-            "fondo_tarjeta": "#ffffff",  # Fondo tarjeta (Blanco)
-            "acento": "#cc3700",         # Naranja oscuro
-
-            # --- Variables V2 ---
-            "fondo_botones": "#ff4500",
-            "fondo_botones_hover": "#cc3700",
-            "texto_botones": "#ffffff",
-            "texto_general": "#f0f0f0",
-            "texto_hero": "#ffffff",
-            "texto_cards": "#1a1a1a",    # Texto oscuro sobre tarjeta blanca (Inverso del general)
-            "titulos": "#ff4500",
-            "titulo_h1": "#ffffff",
-            "titulo_h2": "#f0f0f0",
-            "fondo_general": "#1a1a1a",
-            "fondo_cards": "#ffffff",
-            "overlay_hero": "#000000d9",
-            "borde_sutil": "rgba(255,255,255,0.1)"
+            "fondo_tarjeta": "#ffffff",  # Fondo tarjeta
+            "acento": "#cc3700"          # Naranja oscuro
         },
         "categorias": [
             "taller", "talleres", "mecanic", "mecánic", "mecanico", "mecánico", 

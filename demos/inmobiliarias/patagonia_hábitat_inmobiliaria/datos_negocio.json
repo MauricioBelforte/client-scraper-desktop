@@ -1,0 +1,21 @@
+{
+  "nombre": "Patagonia Hábitat Inmobiliaria",
+  "categoria": "Inmobiliarias",
+  "direccion": "Avenida Fontana 543, Trelew, Chubut",
+  "telefono": "+54 9 280 4567890",
+  "rating": "4.8",
+  "comentarios": [
+    {
+      "autor": "Ana Rodríguez",
+      "texto": "Excelente asesoramiento y variedad de propiedades. Muy contenta con mi nueva casa en Trelew.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Carlos Pereyra",
+      "texto": "Profesionalismo y transparencia en todo el proceso de venta de mi departamento. ¡Recomendados!",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/PatagoniaHabitatInmo",
+  "instagram": "https://instagram.com/PatagoniaHabitat"
+}
