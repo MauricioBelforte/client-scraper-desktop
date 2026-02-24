@@ -1,0 +1,21 @@
+{
+  "nombre": "Estudio Jurídico Fontana & Asociados",
+  "categoria": "Abogados",
+  "direccion": "Avenida Fontana 543, Trelew, Chubut",
+  "telefono": "+54 9 280 4357890",
+  "rating": "4.8",
+  "comentarios": [
+    {
+      "autor": "Silvia Gómez",
+      "texto": "Excelente servicio, muy profesionales y claros en el asesoramiento. Altamente recomendados.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Ricardo Paredes",
+      "texto": "Resolvieron mi consulta con gran eficiencia y dedicación. Realmente satisfecho con la atención.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/EstudioJuridicoFontana",
+  "instagram": "https://instagram.com/fontana_asociados_legal"
+}

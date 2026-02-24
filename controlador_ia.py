@@ -198,6 +198,15 @@ def generar_datos_demo(categoria):
       "direccion": "Calle Nueva 123, Trelew, Chubut",
       "telefono": "+54 9 280 4123456",
       "rating": "4.8",
+      "horarios_detallados": [
+        "Lunes: 09:00-13:00, 16:00-20:00",
+        "Martes: 09:00-13:00, 16:00-20:00",
+        "Miércoles: 09:00-13:00, 16:00-20:00",
+        "Jueves: 09:00-13:00, 16:00-20:00",
+        "Viernes: 09:00-13:00, 16:00-20:00",
+        "Sábado: 10:00-14:00",
+        "Domingo: Cerrado"
+      ],
       "comentarios": [
         {{"autor": "Nombre 1", "texto": "Reseña positiva corta...", "rating": "5 estrellas"}},
         {{"autor": "Nombre 2", "texto": "Reseña positiva corta...", "rating": "5 estrellas"}}

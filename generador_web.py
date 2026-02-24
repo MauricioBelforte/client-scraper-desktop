@@ -9,6 +9,7 @@ import time
 from src.constants import PALETAS_COLORES
 from maquetas.v1 import generar_maqueta_v1
 from maquetas.v2 import generar_maqueta_v2
+from src.utils import get_open_status_and_next_time # Import the new utility function
 
 def generar_y_guardar_imagen(prompt: str, ruta_guardado: str):
     """
@@ -200,19 +201,14 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
     # Ahora usamos PALETAS_COLORES importado de src.constants
 
     # Lógica de Selección
-    paleta_seleccionada = None
     texto_busqueda = (categoria_raw + " " + nombre_negocio).lower() # Buscamos en categoría y nombre
     
-    # 1. Buscar coincidencia en las listas definidas
-    print(f"[PRUEBA_NO_ITERABLE] Iniciando iteracion PALETAS_COLORES (Tipo: {type(PALETAS_COLORES)})")
     for nombre_paleta, datos in PALETAS_COLORES.items():
         # Verificamos si alguna keyword de la paleta está en el texto de búsqueda
         if any(keyword in texto_busqueda for keyword in datos["categorias"]):
             paleta_seleccionada = datos["colores"]
             print(f"[DISEÑO] Categoría detectada: '{nombre_paleta}'. Aplicando paleta predefinida.")
             break
-    print("[PRUEBA_NO_ITERABLE] Cerrando iteracion PALETAS_COLORES")
-    
     # 2. Si no hubo coincidencia, usar Default (NOCTURNA_GOURMET) y permitir sugerencia IA
     if not paleta_seleccionada:
         print("[DISEÑO] Categoría no reconocida. Usando Default (Nocturna) y consultando IA...")
@@ -316,13 +312,11 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
     
     # Lógica de selección de prompts de imagen
     prompts = prompts_por_categoria["default"]["prompts"] # Empezamos con el default
-    print(f"[PRUEBA_NO_ITERABLE] Iniciando iteracion prompts_por_categoria (Tipo: {type(prompts_por_categoria)})")
     for key, data in prompts_por_categoria.items():
         if key != "default" and any(keyword in texto_busqueda for keyword in data["keywords"]):
             prompts = data["prompts"]
             print(f"[IMAGEN] Categoría de imagen detectada: '{key}'. Aplicando prompts específicos.")
             break
-    print("[PRUEBA_NO_ITERABLE] Cerrando iteracion prompts_por_categoria")
 
     # Generar y guardar imágenes, obteniendo sus rutas relativas
     ruta_logo_local = f"{ruta_web}/assets/img/logo.png"
@@ -380,13 +374,10 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
     comentarios_reales = data_json.get('comentarios') or []
     comentarios_filtrados = []
     
-    # 1. Filtrar solo reseñas buenas (4 o 5 estrellas/puntos)
-    print(f"[PRUEBA_NO_ITERABLE] Iniciando iteracion comentarios_reales (Tipo: {type(comentarios_reales)})")
-    for c in comentarios_reales:
+    for c in comentarios_reales: # type: ignore
         rating_raw = str(c.get('rating', '')).lower()
         if '4' in rating_raw or '5' in rating_raw:
             comentarios_filtrados.append(c)
-    print("[PRUEBA_NO_ITERABLE] Cerrando iteracion comentarios_reales")
             
     # 2. Seleccionar top 3 o rellenar con ficticios
     comentarios_finales = comentarios_filtrados[:3]
@@ -409,8 +400,7 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
         })
 
     comentarios_html = ""
-    print(f"[PRUEBA_NO_ITERABLE] Iniciando iteracion comentarios_finales (Tipo: {type(comentarios_finales)})")
-    for i, c in enumerate(comentarios_finales):
+    for i, c in enumerate(comentarios_finales): # type: ignore
         url_testimonio = "https://via.placeholder.com/150" # Fallback por defecto
 
         # --- NUEVA ESTRATEGIA DE AVATARES ---
@@ -444,7 +434,6 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
             <h3 class="autor-testimonio">{c.get('autor')}</h3>
         </article>
         '''
-    print("[PRUEBA_NO_ITERABLE] Cerrando iteracion comentarios_finales")
 
     # Generar HTML para los beneficios extraídos por la IA
     # Hacemos la carga más robusta. Si la IA devuelve 'null' para beneficios, lo convertimos en lista vacía.
@@ -458,6 +447,12 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
     
     # --- NUEVO: Sección Dónde Estamos ---
     direccion = data_json.get('direccion')
+    
+    # --- NUEVO: Estado de Horarios (Abierto/Cerrado) ---
+    open_status_text = ""
+    next_time_info = ""
+    if data_json.get('horarios_detallados'):
+        open_status_text, next_time_info = get_open_status_and_next_time(data_json['horarios_detallados'])
     
     # --- Empaquetado de Datos para las Maquetas ---
     # Reunimos todo lo necesario en un diccionario para pasarlo limpio a las funciones de diseño
@@ -478,7 +473,10 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
         "facebook_url": facebook_url,
         "has_instagram": has_instagram,
         "instagram_url": instagram_url,
-        "direccion": direccion
+        "direccion": direccion,
+        "open_status_text": open_status_text,
+        "next_time_info": next_time_info,
+        "horarios_detallados": data_json.get('horarios_detallados', []) # Pass detailed hours
     }
     
     # --- CREACIÓN DE CARPETA DE ASSETS ADICIONALES (JS, CSS) ---

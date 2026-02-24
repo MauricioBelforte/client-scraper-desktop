@@ -1,0 +1,30 @@
+{
+  "nombre": "El Rincón del Mate",
+  "categoria": "Cafeterías",
+  "direccion": "Mitre 678, Trelew, Chubut",
+  "telefono": "+54 9 280 4321098",
+  "rating": "4.8",
+  "horarios_detallados": [
+    "Lunes: 08:30-13:00, 16:30-20:30",
+    "Martes: 08:30-13:00, 16:30-20:30",
+    "Miércoles: 08:30-13:00, 16:30-20:30",
+    "Jueves: 08:30-13:00, 16:30-20:30",
+    "Viernes: 08:30-13:00, 16:30-20:30",
+    "Sábado: 09:00-14:00",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Ana Torres",
+      "texto": "Un lugar encantador con excelente café y atención. ¡Volveré pronto!",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Martín Gómez",
+      "texto": "Las medialunas son espectaculares y el ambiente muy cálido. Ideal para un break.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/elrincondelmatetw",
+  "instagram": "https://instagram.com/elrincondelmate.tw"
+}

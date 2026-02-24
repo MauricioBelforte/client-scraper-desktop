@@ -51,8 +51,8 @@ Soy de Trelew.
 Estoy ofreciendo mis servicios a distintos negocios y profesionales locales.
 
 Si gustan pueden pasar a ver estos 2 modelos de plantillas que estoy trabajando. Se pueden adaptar y modificar rapidamente.
-Modelo 1: https://capable-liger-02b6bd.netlify.app/
-Modelo 2: https://inquisitive-cendol-ec0b27.netlify.app/
+Modelo 1: https://abogadotrelew.netlify.app/
+Modelo 2: https://cafeteriatrelew.netlify.app/
 
 Sino tambien podemos trabajar en una página con un diseño mas elaborado y funcionalidades más especificas pero a un costo mayor.
 
@@ -186,13 +186,42 @@ class TrelewLeadApp:
                                            command=self.lanzar_enriquecimiento_global)
         self.btn_global_enrich.pack(side="bottom", fill="x", pady=(10, 20))
 
+        # --- SCROLLABLE AREA (Canvas + Scrollbar) ---
+        canvas_frame = tk.Frame(self.right_panel, bg=constantes.COLOR_FONDO)
+        canvas_frame.pack(side="top", fill="both", expand=True)
+
+        self.canvas = tk.Canvas(canvas_frame, bg=constantes.COLOR_FONDO, highlightthickness=0)
+        self.scrollbar = ttk.Scrollbar(canvas_frame, orient="vertical", command=self.canvas.yview)
+        
+        self.scrollable_frame = tk.Frame(self.canvas, bg=constantes.COLOR_FONDO)
+        
+        self.scrollable_frame.bind(
+            "<Configure>",
+            lambda e: self.canvas.configure(
+                scrollregion=self.canvas.bbox("all")
+            )
+        )
+
+        self.canvas_window = self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
+        self.canvas.bind("<Configure>", lambda e: self.canvas.itemconfig(self.canvas_window, width=e.width))
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+
+        self.canvas.pack(side="left", fill="both", expand=True)
+        self.scrollbar.pack(side="right", fill="y")
+
+        def _on_mousewheel(event):
+            self.canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+            
+        canvas_frame.bind('<Enter>', lambda e: self.canvas.bind_all("<MouseWheel>", _on_mousewheel))
+        canvas_frame.bind('<Leave>', lambda e: self.canvas.unbind_all("<MouseWheel>"))
+
         # Mensaje de ayuda inicial
-        self.card_placeholder = tk.Label(self.right_panel, text=constantes.TEXTO_PLACEHOLDER_CARD, 
+        self.card_placeholder = tk.Label(self.scrollable_frame, text=constantes.TEXTO_PLACEHOLDER_CARD, 
                                          font=constantes.FUENTE_ITALICA, fg=constantes.COLOR_TEXTO_TENUE, bg=constantes.COLOR_FONDO, pady=100)
         self.card_placeholder.pack()
 
         # Marco de la Card (invisible hasta que se seleccione algo)
-        self.detail_card = tk.Frame(self.right_panel, bg=constantes.COLOR_BLANCO, highlightbackground=constantes.COLOR_BORDE, highlightthickness=1)
+        self.detail_card = tk.Frame(self.scrollable_frame, bg=constantes.COLOR_BLANCO, highlightbackground=constantes.COLOR_BORDE, highlightthickness=1)
         
         # --- Barra de Estado (Feedback al usuario) ---
         self.status_label = tk.Label(self.root, text=constantes.ESTADO_LISTO, bd=1, relief="flat", anchor="w", bg=constantes.COLOR_FONDO_ESTADO, padx=10)
@@ -353,6 +382,12 @@ class TrelewLeadApp:
 
         tk.Label(body, text=nombre, font=constantes.FUENTE_SUBTITULO, bg=constantes.COLOR_BLANCO, wraplength=280, justify="center").pack(pady=(0, 10))
         
+        # Botón de Enriquecer (Arriba del todo para indicar que busca los datos de abajo)
+        btn_enrich = tk.Button(body, text="🌍 BUSCAR DATOS (Enriquecer)", bg=constantes.COLOR_BTN_BUSCAR, fg=constantes.COLOR_BLANCO, 
+                           font=constantes.FUENTE_PEQUENA_NEGRITA, relief="flat", cursor="hand2",
+                           command=lambda: self.lanzar_busqueda_externa(nombre))
+        btn_enrich.pack(fill="x", pady=(0, 10))
+        
         # Filas de información
         self.create_info_row(body, "Categoría:", datos.get('categoria', 'General'))
         self.create_info_row(body, constantes.ETIQUETA_TELEFONO, datos.get('telefono', 'No disponible'))
@@ -411,21 +446,27 @@ class TrelewLeadApp:
                            command=lambda: self.mostrar_info_detallada(nombre, datos))
         btn_info.pack(fill="x", pady=5)
 
-        # Frame para acciones de Google (Búsqueda automática y manual)
-        google_frame = tk.Frame(body, bg=constantes.COLOR_BLANCO)
-        google_frame.pack(fill="x", pady=5)
-        google_frame.columnconfigure(0, weight=1)
-        google_frame.columnconfigure(1, weight=1)
+        # --- SECCIÓN WEB MANUAL ---
+        web_frame = tk.Frame(body, bg=constantes.COLOR_BLANCO)
+        web_frame.pack(fill="x", pady=5)
         
-        btn_enrich = tk.Button(google_frame, text="🌍 BUSCAR DATOS", bg=constantes.COLOR_BTN_BUSCAR, fg=constantes.COLOR_BLANCO, 
-                           font=constantes.FUENTE_PEQUENA_NEGRITA, relief="flat", cursor="hand2",
-                           command=lambda: self.lanzar_busqueda_externa(nombre))
-        btn_enrich.grid(row=0, column=0, padx=2, sticky="ew")
+        tiene_web = datos.get("website")
+        if tiene_web:
+            btn_web_text = "✏️ Editar Web Existente"
+            btn_web_bg = constantes.COLOR_BTN_INFO 
+        else:
+            btn_web_text = "🌐 Ingresar una WEB"
+            btn_web_bg = constantes.COLOR_BTN_INFO 
+            
+        tk.Button(web_frame, text=btn_web_text, bg=btn_web_bg, fg="white",
+                  font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2",
+                  command=lambda: self.gestionar_web_manual(nombre)).pack(fill="x")
 
-        btn_manual_google = tk.Button(google_frame, text="👁️ VER EN GOOGLE", bg="#5f3dc4", fg=constantes.COLOR_BLANCO, 
+        # Botón para ver en Google manual (ahora solo y full width)
+        btn_manual_google = tk.Button(body, text="👁️ VER EN GOOGLE", bg="#5f3dc4", fg=constantes.COLOR_BLANCO, 
                            font=constantes.FUENTE_PEQUENA_NEGRITA, relief="flat", cursor="hand2",
                            command=lambda: self.abrir_busqueda_manual(nombre, datos.get('categoria') or ''))
-        btn_manual_google.grid(row=0, column=1, padx=2, sticky="ew")
+        btn_manual_google.pack(fill="x", pady=5)
         
         # Botones Generar Web (IA) V1 y V2
         btn_web_frame = tk.Frame(body, bg=constantes.COLOR_BLANCO)
@@ -446,22 +487,6 @@ class TrelewLeadApp:
                            font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2",
                            command=lambda: self.lanzar_generacion_web(nombre, datos, "v2"))
         btn_web_v2.grid(row=0, column=1, padx=2, sticky="ew")
-
-        # --- SECCIÓN WEB MANUAL ---
-        web_frame = tk.Frame(body, bg=constantes.COLOR_BLANCO)
-        web_frame.pack(fill="x", pady=(5, 5))
-        
-        tiene_web = datos.get("website")
-        if tiene_web:
-            btn_web_text = "✏️ Editar Web Existente"
-            btn_web_bg = "#ced4da" # Gris
-        else:
-            btn_web_text = "🌐 Marcar CON WEB"
-            btn_web_bg = "#17a2b8" # Cyan/Info
-            
-        tk.Button(web_frame, text=btn_web_text, bg=btn_web_bg, fg="white",
-                  font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2",
-                  command=lambda: self.gestionar_web_manual(nombre)).pack(fill="x")
 
         # --- SECCIÓN ESTADO DE PROPUESTA ---
         propuesta_frame = tk.Frame(body, bg=constantes.COLOR_BLANCO)
@@ -602,6 +627,7 @@ class TrelewLeadApp:
         crear_campo("Nombre del Negocio:", "nombre", nombre)
         crear_campo("Rubro / Categoría:", "categoria", datos.get("categoria", ""))
         crear_campo("Teléfono:", "telefono", datos.get("telefono", ""))
+        crear_campo("Email:", "email", datos.get("email", ""))
         crear_campo("Sitio Web:", "website", datos.get("website", ""))
         crear_campo("Facebook:", "facebook", datos.get("facebook", ""))
         crear_campo("Instagram:", "instagram", datos.get("instagram", ""))
@@ -615,6 +641,9 @@ class TrelewLeadApp:
             # Actualizar datos en el diccionario
             datos["categoria"] = entries["categoria"].get().strip()
             datos["telefono"] = entries["telefono"].get().strip() or "Sin teléfono"
+            
+            email = entries["email"].get().strip()
+            datos["email"] = email if email else "No detectado"
             
             web = entries["website"].get().strip()
             if web: datos["website"] = web
