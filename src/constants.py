@@ -118,7 +118,19 @@ PALETAS_COLORES = {
             "fondo_general": "#111111",
             "fondo_cards": "#ffffff",
             "overlay_hero": "#000000b8",
-            "borde_sutil": "rgba(255,255,255,0.1)" # Borde sutil para separar secciones oscuras
+            "borde_sutil": "rgba(255,255,255,0.1)",
+
+            # --- Variables V1 (Específicas One Page) ---
+            "v1_hero_titulo": "#efc355",      # Dorado impactante
+            "v1_hero_lema": "#ffffff",        # Blanco puro
+            "v1_boton_fondo": "#efc355",      # Botón dorado
+            "v1_boton_texto": "#111111",      # Texto negro para contraste
+            "v1_seccion_fondo": "#111111",    # Fondo oscuro continuo
+            "v1_seccion_titulos": "#efc355",  # Títulos dorados
+            "v1_seccion_texto": "#cccccc",    # Texto gris claro
+            "v1_card_fondo": "#1a1a1a",       # Tarjetas gris muy oscuro
+            "v1_card_texto": "#e0e0e0",       # Texto claro
+            "v1_card_borde": "#333333"        # Borde sutil
         },
         "categorias": [
             "restaurante", "restaurantes", "bar", "bares", "cerveceria", "cervecería", 
@@ -154,7 +166,19 @@ PALETAS_COLORES = {
             "fondo_general": "#fffde7",
             "fondo_cards": "#ffffff",
             "overlay_hero": "#0000004f",
-            "borde_sutil": "rgba(0,0,0,0.05)"
+            "borde_sutil": "rgba(0,0,0,0.05)",
+
+            # --- Variables V1 (Específicas One Page) ---
+            "v1_hero_titulo": "#4e342e",      # Marrón chocolate
+            "v1_hero_lema": "#4e342e",
+            "v1_boton_fondo": "#ffcfe7",      # Rosa pastel
+            "v1_boton_texto": "#4e342e",      # Texto chocolate
+            "v1_seccion_fondo": "#fffde7",    # Crema suave
+            "v1_seccion_titulos": "#9a4972",  # Rosa oscuro/Frambuesa
+            "v1_seccion_texto": "#5d4037",    # Marrón medio
+            "v1_card_fondo": "#ffffff",       # Blanco puro
+            "v1_card_texto": "#5d4037",
+            "v1_card_borde": "#ffcfe7"        # Borde rosa
         },
         "categorias": [
             "heladeria", "heladería", "heladerias", "heladerías", "pasteleria", 
@@ -187,7 +211,19 @@ PALETAS_COLORES = {
             "fondo_general": "#dbdce2",
             "fondo_cards": "#ffffff",
             "overlay_hero": "#00000066", # Un poco de oscuridad para que el texto blanco del hero se lea
-            "borde_sutil": "rgba(0,0,0,0.1)"
+            "borde_sutil": "rgba(0,0,0,0.1)",
+
+            # --- Variables V1 (Específicas One Page) ---
+            "v1_hero_titulo": "#ffffff",      # Blanco clínico
+            "v1_hero_lema": "#e3f2fd",        # Azul muy pálido
+            "v1_boton_fondo": "#0d6efd",      # Azul Bootstrap
+            "v1_boton_texto": "#ffffff",      # Blanco
+            "v1_seccion_fondo": "#f8f9fa",    # Gris muy claro (casi blanco)
+            "v1_seccion_titulos": "#0b5ed7",  # Azul oscuro
+            "v1_seccion_texto": "#495057",    # Gris oscuro
+            "v1_card_fondo": "#ffffff",       # Blanco
+            "v1_card_texto": "#212529",       # Negro suave
+            "v1_card_borde": "#dee2e6"        # Borde gris
         },
         "categorias": [
             "medico", "médico", "medicos", "médicos", "odont", "odontologo", 
@@ -225,7 +261,19 @@ PALETAS_COLORES = {
             "fondo_general": "#313447",
             "fondo_cards": "#ffffff",
             "overlay_hero": "#00000066",
-            "borde_sutil": "rgba(0, 0, 0, 0.1)"
+            "borde_sutil": "rgba(0, 0, 0, 0.1)",
+
+            # --- Variables V1 (Específicas One Page) ---
+            "v1_hero_titulo": "#ffffff",      # Blanco
+            "v1_hero_lema": "#c5ccd3",        # Gris azulado claro
+            "v1_boton_fondo": "#95c0ff",      # Azul claro elegante
+            "v1_boton_texto": "#152141",      # Azul oscuro
+            "v1_seccion_fondo": "#f4f6f8",    # Gris muy claro (profesional)
+            "v1_seccion_titulos": "#152141",  # Azul marino profundo
+            "v1_seccion_texto": "#4a5568",    # Gris pizarra
+            "v1_card_fondo": "#ffffff",       # Blanco
+            "v1_card_texto": "#2d3748",       # Gris oscuro
+            "v1_card_borde": "#cbd5e0"        # Borde gris azulado
         },
         "categorias": [
             "abogado", "abogados", "abogacia", "abogacía", "contab", "contador", 
@@ -258,7 +306,19 @@ PALETAS_COLORES = {
             "fondo_general": "#fff0f5",
             "fondo_cards": "#ffe5fa",
             "overlay_hero": "#0000004f",
-            "borde_sutil": "rgba(214, 51, 132, 0.1)" # Borde rosado muy sutil
+            "borde_sutil": "rgba(214, 51, 132, 0.1)", # Borde rosado muy sutil
+
+            # --- Variables V1 (Específicas One Page) ---
+            "v1_hero_titulo": "#ffffff",
+            "v1_hero_lema": "#ffe5fa",
+            "v1_boton_fondo": "#d63384",      # Rosa fuerte
+            "v1_boton_texto": "#ffffff",
+            "v1_seccion_fondo": "#fff0f5",    # Lavanda blush
+            "v1_seccion_titulos": "#d63384",  # Rosa
+            "v1_seccion_texto": "#7a3c5c",    # Púrpura oscuro
+            "v1_card_fondo": "#ffffff",
+            "v1_card_texto": "#7a3c5c",
+            "v1_card_borde": "#f8bbd0"        # Rosa pastel borde
         },
         "categorias": [
             "peluqu", "peluqueria", "peluquería", "peluquerias", "peluquerías", 
@@ -295,7 +355,19 @@ PALETAS_COLORES = {
             "fondo_general": "#F8F8F8",
             "fondo_cards": "#ffffff",
             "overlay_hero": "#00000047",
-            "borde_sutil": "rgba(160, 82, 45, 0.1)"
+            "borde_sutil": "rgba(160, 82, 45, 0.1)",
+
+            # --- Variables V1 (Específicas One Page) ---
+            "v1_hero_titulo": "#ffffff",
+            "v1_hero_lema": "#f0f0f0",
+            "v1_boton_fondo": "#A0522D",      # Sienna
+            "v1_boton_texto": "#ffffff",
+            "v1_seccion_fondo": "#fafafa",    # Casi blanco
+            "v1_seccion_titulos": "#8B4513",  # SaddleBrown
+            "v1_seccion_texto": "#514a4a",    # Gris cálido
+            "v1_card_fondo": "#ffffff",
+            "v1_card_texto": "#514a4a",
+            "v1_card_borde": "#d7ccc8"        # Marrón muy claro
         },
         "categorias": [
             "muebleria", "mueblería", "mueblerias", "mueblerías", "muebles", "mueble", 
@@ -327,7 +399,19 @@ PALETAS_COLORES = {
             "fondo_general": "#f0fff0",
             "fondo_cards": "#ffffff",
             "overlay_hero": "#00000066",
-            "borde_sutil": "rgba(40, 167, 69, 0.1)"
+            "borde_sutil": "rgba(40, 167, 69, 0.1)",
+
+            # --- Variables V1 (Específicas One Page) ---
+            "v1_hero_titulo": "#ffffff",
+            "v1_hero_lema": "#e8f5e9",
+            "v1_boton_fondo": "#28a745",      # Verde
+            "v1_boton_texto": "#ffffff",
+            "v1_seccion_fondo": "#f1f8e9",    # Verde muy claro
+            "v1_seccion_titulos": "#1b5e20",  # Verde bosque
+            "v1_seccion_texto": "#33691e",    # Verde oliva oscuro
+            "v1_card_fondo": "#ffffff",
+            "v1_card_texto": "#1e4d2b",
+            "v1_card_borde": "#c8e6c9"        # Verde pálido
         },
         "categorias": [
             "verduleria", "verdulería", "verdulerias", "verdulerías", "botanica", 
@@ -363,7 +447,19 @@ PALETAS_COLORES = {
             "fondo_general": "#1a1a1a",
             "fondo_cards": "#2a2a2a",
             "overlay_hero": "#000000b8",
-            "borde_sutil": "rgba(255,255,255,0.05)" # Borde claro sutil
+            "borde_sutil": "rgba(255,255,255,0.05)", # Borde claro sutil
+
+            # --- Variables V1 (Específicas One Page) ---
+            "v1_hero_titulo": "#c89f68",      # Dorado vintage
+            "v1_hero_lema": "#f0f0f0",
+            "v1_boton_fondo": "#c89f68",
+            "v1_boton_texto": "#111111",
+            "v1_seccion_fondo": "#1a1a1a",    # Oscuro
+            "v1_seccion_titulos": "#c89f68",  # Dorado
+            "v1_seccion_texto": "#dcdcdc",    # Gris claro
+            "v1_card_fondo": "#2a2a2a",       # Gris oscuro
+            "v1_card_texto": "#dcdcdc",
+            "v1_card_borde": "#444444"
         }
     },
     "TATTOO_INK": {
@@ -373,7 +469,7 @@ PALETAS_COLORES = {
             "fondo": "#121212",         # Fondo muy oscuro, casi negro
             "texto": "#ffffff",         # Texto blanco puro
             "texto_inverso": "#000000", # Negro
-            "overlay": "#000000d9",     # Overlay muy oscuro (casi negro)
+            "overlay": "#000000b3",     # Overlay muy oscuro (casi negro)
             "fondo_tarjeta": "#1e1e1e", # Tarjeta gris oscuro (casi negro)
             "acento": "#c62828",        # Rojo oscuro
 
@@ -390,7 +486,19 @@ PALETAS_COLORES = {
             "fondo_general": "#121212",
             "fondo_cards": "#1e1e1e",
             "overlay_hero": "#000000d9",
-            "borde_sutil": "rgba(255,255,255,0.08)"
+            "borde_sutil": "rgba(255,255,255,0.08)",
+
+            # --- Variables V1 (Específicas One Page) ---
+            "v1_hero_titulo": "#ffffff",
+            "v1_hero_lema": "#e53935",        # Rojo
+            "v1_boton_fondo": "#e53935",
+            "v1_boton_texto": "#ffffff",
+            "v1_seccion_fondo": "#000000",    # Negro puro
+            "v1_seccion_titulos": "#ffffff",  # Blanco
+            "v1_seccion_texto": "#b0b0b0",    # Gris medio
+            "v1_card_fondo": "#121212",       # Casi negro
+            "v1_card_texto": "#e0e0e0",
+            "v1_card_borde": "#333333"
         }
     },
     "FUERZA_TECNICA": {
@@ -416,22 +524,119 @@ PALETAS_COLORES = {
             "fondo_general": "#1a1a1a",
             "fondo_cards": "#ffffff",
             "overlay_hero": "#000000d9",
-            "borde_sutil": "rgba(255,255,255,0.1)"
+            "borde_sutil": "rgba(255,255,255,0.1)",
+
+            # --- Variables V1 (Específicas One Page) ---
+            "v1_hero_titulo": "#ff4500",      # Naranja industrial
+            "v1_hero_lema": "#ffffff",
+            "v1_boton_fondo": "#ff4500",
+            "v1_boton_texto": "#ffffff",
+            "v1_seccion_fondo": "#212121",    # Gris oscuro industrial
+            "v1_seccion_titulos": "#ff4500",
+            "v1_seccion_texto": "#f5f5f5",    # Blanco humo
+            "v1_card_fondo": "#333333",       # Gris maquinaria
+            "v1_card_texto": "#ffffff",
+            "v1_card_borde": "#ff4500"        # Borde naranja
         },
         "categorias": [
             "taller", "talleres", "mecanic", "mecánic", "mecanico", "mecánico", 
             "mecanicos", "mecánicos", "mecanica", "mecánica", "gimnasio", "gimnasios", 
             "gym", "crossfit", "fitness", "ferreteria", "ferretería", "ferreterias", 
             "ferreterías", "construc", "construccion", "construcción", "constructora", 
-            "constructoras", "obra", "obras", "repuestos", "repuesto", "pet shop", 
-            "pet shops", "petshop", "petshops", "computacion", "computación", "tecnic", 
+            "constructoras", "obra", "obras", "repuestos", "repuesto", 
+            "computacion", "computación", "tecnic",
             "técnic", "tecnico", "técnico", "tecnicos", "técnicos", "tecnica", 
             "técnica", "reparacion", "reparación", "reparaciones", "kiosco", "kioscos", 
-            "quiosco", "quioscos", "carniceria", "carnicería", "carnicerias", 
-            "carnicerías", "polleria", "pollería", "pollerias", "pollerías", 
+            "quiosco", "quioscos",
             "electricista", "electricistas", "electricidad", "plomero", "plomeros", 
             "plomeria", "plomería", "pintureria", "pinturería", "pinturerias", 
             "pinturerías"
+        ]
+    },
+    "MASCOTAS_VIBRANTE": {
+        "colores": {
+            "primario": "#fdee52",      # Amarillo vibrante (Botones)
+            "fondo": "#292929",         # Gris oscuro (Secciones)
+            "texto": "#ffffff",         # Blanco
+            "texto_inverso": "#12121f", # Azul oscuro casi negro (Texto botones)
+            "overlay": "#00000000",     # Transparente (Solicitado)
+            "fondo_tarjeta": "#333333", # Gris medio
+            "acento": "#e7abc3",        # Rosa (Títulos secciones)
+
+            # --- Variables V2 ---
+            "fondo_botones": "#fdee52",
+            "fondo_botones_hover": "#e7abc3",
+            "texto_botones": "#12121f",
+            "texto_botones_hover": "#12121f",
+            "texto_general": "#ffffff",
+            "texto_hero": "#272727",    # Título Hero oscuro
+            "texto_cards": "#ffffff",
+            "titulos": "#e7abc3",
+            "titulo_h1": "#272727",
+            "titulo_h2": "#e7abc3",
+            "fondo_general": "#292929",
+            "fondo_cards": "#333333",
+            "overlay_hero": "#00000000",
+            "borde_sutil": "#3d3a43",
+
+            # --- Variables V1 (Específicas One Page) ---
+            "v1_hero_titulo": "#272727",
+            "v1_hero_lema": "#65edff",
+            "v1_boton_fondo": "#fdee52",
+            "v1_boton_texto": "#12121f",
+            "v1_seccion_fondo": "#292929",
+            "v1_seccion_titulos": "#e7abc3",
+            "v1_seccion_texto": "#ffffff",
+            "v1_card_fondo": "#333333",
+            "v1_card_texto": "#ffffff",
+            "v1_card_borde": "#3d3a43"
+        },
+        "categorias": [
+            "pet shop", "pet shops", "petshop", "petshops", "mascota", "mascotas", 
+            "alimento balanceado", "forrajeria", "forrajería"
+        ]
+    },
+    "CARNICERIA_CLASICA": {
+        "colores": {
+            "primario": "#c8102e",      # Rojo clásico
+            "fondo": "#f8f9fa",         # Gris muy claro (limpio)
+            "texto": "#212529",         # Negro suave
+            "texto_inverso": "#ffffff", # Blanco
+            "overlay": "#0000001a",     # Overlay muy sutil para el hero
+            "fondo_tarjeta": "#ffffff", # Tarjetas blancas
+            "acento": "#a41e22",        # Rojo oscuro para hover
+
+            # --- Variables V2 ---
+            "fondo_botones": "#c8102e",
+            "fondo_botones_hover": "#a41e22",
+            "texto_botones": "#ffffff",
+            "texto_botones_hover": "#ffffff",
+            "texto_general": "#212529",
+            "texto_hero": "#ffffff",    # Texto blanco sobre imagen de hero
+            "texto_cards": "#212529",
+            "titulos": "#c8102e",
+            "titulo_h1": "#ffffff",
+            "titulo_h2": "#212529",
+            "fondo_general": "#f8f9fa",
+            "fondo_cards": "#ffffff",
+            "overlay_hero": "#0000004d", # Overlay para que el texto blanco del hero se lea
+            "borde_sutil": "#dee2e6",
+
+            # --- Variables V1 (Específicas One Page) ---
+            "v1_hero_titulo": "#ffffff",
+            "v1_hero_lema": "#ffffff",
+            "v1_boton_fondo": "#c8102e",
+            "v1_boton_texto": "#ffffff",
+            "v1_seccion_fondo": "#f8f9fa",
+            "v1_seccion_titulos": "#a41e22",
+            "v1_seccion_texto": "#212529",
+            "v1_card_fondo": "#ffffff",
+            "v1_card_texto": "#212529",
+            "v1_card_borde": "#dee2e6"
+        },
+        "categorias": [
+            "carniceria", "carnicería", "carnicerias", "carnicerías",
+            "polleria", "pollería", "pollerias", "pollerías"
         ]
     }
 }

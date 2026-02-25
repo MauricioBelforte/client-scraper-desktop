@@ -1,0 +1,30 @@
+{
+  "nombre": "El Rincón del Barista",
+  "categoria": "Cafeterías",
+  "direccion": "Avenida Fontana 1150, Trelew, Chubut",
+  "telefono": "+54 9 280 4567890",
+  "rating": "4.7",
+  "horarios_detallados": [
+    "Lunes: 08:30-13:00, 16:00-20:30",
+    "Martes: 08:30-13:00, 16:00-20:30",
+    "Miércoles: 08:30-13:00, 16:00-20:30",
+    "Jueves: 08:30-13:00, 16:00-20:30",
+    "Viernes: 08:30-13:00, 16:00-20:30",
+    "Sábado: 09:30-13:30",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Laura G.",
+      "texto": "¡Excelente café de especialidad! El ambiente es super acogedor y la atención siempre es amable. Perfecto para un break.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Martín S.",
+      "texto": "Un lugar increíble para disfrutar de un buen desayuno. Las medialunas son de otro nivel y el café es delicioso. ¡Recomendado!",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/ElRinconDelBaristaTrelew",
+  "instagram": "https://instagram.com/elrincondelbarista.tw"
+}

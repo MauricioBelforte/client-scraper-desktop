@@ -1,0 +1,30 @@
+{
+  "nombre": "Tinta Patagónica Tattoo Studio",
+  "categoria": "tatuajes",
+  "direccion": "Belgrano 456, Trelew, Chubut",
+  "telefono": "+54 9 280 4321789",
+  "rating": "4.9",
+  "horarios_detallados": [
+    "Lunes: 10:00-14:00, 16:00-20:00",
+    "Martes: 10:00-14:00, 16:00-20:00",
+    "Miércoles: 10:00-14:00, 16:00-20:00",
+    "Jueves: 10:00-14:00, 16:00-20:00",
+    "Viernes: 10:00-14:00, 16:00-20:00",
+    "Sábado: 10:00-15:00",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Lucas G.",
+      "texto": "¡Excelente estudio! El artista fue súper profesional y paciente. Mi tatuaje quedó exactamente como lo imaginaba. Un ambiente muy cómodo y limpio.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Sofía R.",
+      "texto": "El mejor lugar para tatuarse en Trelew. La atención es de primera y el arte es impecable. Ya estoy pensando en mi próximo diseño con ellos.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/TintaPatagonicaTattoo",
+  "instagram": "https://instagram.com/tintapatagonica.tattoo"
+}

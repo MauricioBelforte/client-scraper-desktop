@@ -42,7 +42,8 @@ def generar_maqueta_v1(datos):
 
     # SVGs for social icons
     facebook_svg = '<svg fill="currentColor" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Facebook</title><path d="M22.675 0h-21.35C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.732 0 1.323-.593 1.323-1.325V1.325C24 .593 23.407 0 22.675 0z"/></svg>'
-    instagram_svg = '<svg fill="currentColor" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Instagram</title><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.936 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.314.936 20.644.523 19.854.218 19.095-.08 18.225-.282 16.947-.341 15.667-.398 15.26-.413 12-.413h0zm0 2.163c3.204 0 3.584.012 4.85.07 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.055 1.17-.249 1.805-.413 2.227-.217.562-.477.96-.896 1.382-.42.419-.819.679-1.381.896-.422.164-1.057.36-2.227.413-1.266.057-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.055-1.805-.249-2.227-.413-.562-.217-.96-.477-1.382-.896-.419-.42-.679-.819-.896-1.381-.164-.422-.36-1.057-.413-2.227-.057-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.055-1.17.249-1.805.413-2.227.217-.562.477.96.896-1.382.42-.419.819.679 1.381-.896.422-.164 1.057.36 2.227.413 1.266-.057 1.646-.07 4.85.07zM12 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.88 1.44 1.44 0 000-2.88z"/></svg>'
+    instagram_svg = '<svg fill="currentColor" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Instagram</title><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.936 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.314.936 20.644.523 19.854.218 19.095-.08 18.225-.282 16.947-.341 15.667-.398 15.26-.413 12-.413h0zm0 2.163c3.204 0 3.584.012 4.85.07 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.055 1.17-.249 1.805-.413 2.227-.217.562-.477.96-.896 1.382-.42.419-.819.679-1.381.896-.422.164-1.057.36-2.227.413-1.266.057-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.055-1.805-.249-2.227-.413-.562-.217-.96-.477-1.382-.896-.419-.42-.679-.819-.896-1.381-.164-.422-.36-1.057-.413-2.227-.057-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.055-1.17.249-1.805.413-2.227.217-.562.477.96.896-1.382.42-.419.819.679 1.381-.896.422-.164 1.057.36 2.227-.413 1.266-.057 1.646-.07 4.85.07zM12 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.88 1.44 1.44 0 000-2.88z"/></svg>'
+    
            
     # --- NUEVO: Sección de Menú (si aplica) ---
     menu_section_html = ""
@@ -77,17 +78,27 @@ def generar_maqueta_v1(datos):
     CSS_MASTER = f"""
     /* --- Reset y Variables (Basado en instrucciones_sistema.md) --- */
     :root {{
-        /* Colores (adaptados de los valores originales del generador) */
-        --color-primario: {paleta['primario']};
-        --color-fondo-base: {paleta['fondo']};
-        --color-texto-base: {paleta['texto']};
-        --color-texto-inverso: {paleta['texto_inverso']};
-        --color-overlay: {paleta['overlay']};
-        --color-fondo-tarjeta: {paleta.get('fondo_tarjeta', '#ffffff')};
+        /* --- SISTEMA DE COLORES SEMÁNTICO V1 (Personalizado por Rubro) --- */
         
-        --color-acento-oscuro: {paleta.get('acento', '#5a1111')};
-        --color-fondo-claro: #F8F6F4;
+        /* Hero (Portada) */
+        --v1-hero-titulo: {paleta.get('v1_hero_titulo', '#ffffff')};
+        --v1-hero-lema: {paleta.get('v1_hero_lema', '#f0f0f0')};
+        --v1-hero-overlay: {paleta.get('overlay', '#00000066')};
 
+        /* Botones */
+        --v1-boton-fondo: {paleta.get('v1_boton_fondo', paleta.get('primario', '#000000'))};
+        --v1-boton-texto: {paleta.get('v1_boton_texto', '#ffffff')};
+
+        /* Secciones de Contenido */
+        --v1-seccion-fondo: {paleta.get('v1_seccion_fondo', '#ffffff')};
+        --v1-seccion-titulos: {paleta.get('v1_seccion_titulos', '#000000')};
+        --v1-seccion-texto: {paleta.get('v1_seccion_texto', '#333333')};
+
+        /* Tarjetas (Beneficios, Testimonios) */
+        --v1-card-fondo: {paleta.get('v1_card_fondo', '#ffffff')};
+        --v1-card-texto: {paleta.get('v1_card_texto', '#333333')};
+        --v1-card-borde: {paleta.get('v1_card_borde', '#eeeeee')};
+        
         /* Fuentes (de las instrucciones) */
         --fuente-base: 'El Messiri', 'Georgia', sans-serif;
         --fuente-secundaria: 'Libre Baskerville', serif;
@@ -116,44 +127,45 @@ def generar_maqueta_v1(datos):
     html {{ scroll-behavior: smooth; }}
     body {{ 
         font-family: var(--fuente-base); 
-        background: linear-gradient(180deg, var(--color-overlay) 42%, var(--color-overlay) 84%), url('{url_fondo_css}');
+        background: linear-gradient(180deg, var(--v1-hero-overlay) 42%, var(--v1-hero-overlay) 84%), url('{url_fondo_css}');
         background-size: cover; background-attachment: fixed; 
-        color: var(--color-texto-base);
-        background-color: var(--color-fondo-base);
+        color: var(--v1-seccion-texto);
+        background-color: var(--v1-seccion-fondo);
         font-size: var(--font-size-xs);
         line-height: 1.6;
         overflow-x: hidden;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }}
     img {{ max-width: 100%; height: auto; display: block; }}
-    h1, h2, h3 {{ font-family: var(--fuente-secundaria); }}
+    h1, h2, h3 {{ font-family: var(--fuente-secundaria); color: var(--v1-seccion-titulos); }}
 
     /* --- Estilos Generales y Componentes --- */
     .barra-navegacion {{ width: 100%; display: flex; flex-direction: column; align-items: center; padding: var(--espaciado-sm); }}
-    .logo img {{ width: 10.5rem; height: 10.5rem; border-radius: 50%; border: 3px solid var(--color-primario); }}
+    .logo img {{ width: 10.5rem; height: 10.5rem; border-radius: 50%; border: 3px solid var(--v1-boton-fondo); }}
     .seccion-hero {{ text-align: center; padding: var(--espaciado-lg) var(--espaciado-md); min-height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }}
-    .seccion-hero h1 {{ font-size: var(--font-size-xxl); }}
-    .lema-hero {{ text-transform: uppercase; font-weight: 700; font-size: var(--font-size-xxs); opacity: 0.9; margin-top: var(--espaciado-sm);}}
-    .cta-button {{ background-color: var(--color-texto-inverso); color: var(--color-primario); padding: 0.75rem 1.5rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; display: inline-block; margin-top: var(--espaciado-md); border: 1px solid var(--color-primario); transition: var(--transicion-estandar); }}
-    .cta-button:hover {{ background-color: var(--color-primario); color: var(--color-texto-inverso); }}
+    .seccion-hero h1 {{ font-size: var(--font-size-xxl); color: var(--v1-hero-titulo); }}
+    .lema-hero {{ text-transform: uppercase; font-weight: 700; font-size: var(--font-size-xxs); opacity: 0.9; margin-top: var(--espaciado-sm); color: var(--v1-hero-lema); }}
+    .cta-button {{ background-color: var(--v1-boton-fondo); color: var(--v1-boton-texto); padding: 0.75rem 1.5rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; display: inline-block; margin-top: var(--espaciado-md); border: 1px solid var(--v1-boton-fondo); transition: var(--transicion-estandar); }}
+    .cta-button:hover {{ transform: scale(1.05); filter: brightness(1.1); }}
     .contenedor-tarjetas {{ display: grid; grid-template-columns: 1fr; gap: var(--espaciado-md); }}
-    .tarjeta-producto {{ background: var(--color-primario); border-radius: var(--radio-card); padding: 1.5rem; color: var(--color-texto-inverso); transition: var(--transicion-estandar); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }}
+    .tarjeta-producto {{ background: var(--v1-card-fondo); border: 1px solid var(--v1-card-borde); border-radius: var(--radio-card); padding: 1.5rem; color: var(--v1-card-texto); transition: var(--transicion-estandar); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }}
     .tarjeta-producto:hover {{ transform: translateY(-5px); }}
     .tarjeta-producto img {{ width: 100%; height: 15rem; object-fit: cover; border-radius: 0.5rem; }}
-    .tarjeta-beneficio {{ background: #ffffff; color: var(--color-texto-base); text-align: center; padding: 2rem 1rem; display: flex; align-items: center; justify-content: center; border: 1px solid #eee; }}
-    .tarjeta-beneficio h3 {{ font-size: var(--font-size-sm); }}
+    .tarjeta-beneficio {{ background: var(--v1-card-fondo); color: var(--v1-card-texto); text-align: center; padding: 2rem 1rem; display: flex; align-items: center; justify-content: center; border: 1px solid var(--v1-card-borde); }}
+    .tarjeta-beneficio h3 {{ font-size: var(--font-size-sm); color: var(--v1-seccion-titulos); }}
     
     /* --- Estilos Nuevos para Testimonios --- */
-    .tarjeta-testimonio {{ background: var(--color-fondo-tarjeta); border-radius: var(--radio-card); padding: 2rem; display: flex; flex-direction: column; align-items: center; text-align: center; color: var(--color-texto-base); transition: var(--transicion-estandar); position: relative; border: 1px solid #eee; }}
+    .tarjeta-testimonio {{ background: var(--v1-card-fondo); border-radius: var(--radio-card); padding: 2rem; display: flex; flex-direction: column; align-items: center; text-align: center; color: var(--v1-card-texto); transition: var(--transicion-estandar); position: relative; border: 1px solid var(--v1-card-borde); }}
     .tarjeta-testimonio:hover {{ transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }}
-    .tarjeta-testimonio img {{ width: 6rem; height: 6rem; border-radius: 50%; object-fit: cover; border: 3px solid var(--color-primario); margin-bottom: 1rem; }}
-    .comillas-testimonio {{ font-size: 4rem; line-height: 0.5; font-family: serif; color: var(--color-primario); display: block; margin-bottom: 1rem; margin-top: 0.5rem; opacity: 0.8; }}
+    .tarjeta-testimonio img {{ width: 6rem; height: 6rem; border-radius: 50%; object-fit: cover; border: 3px solid var(--v1-boton-fondo); margin-bottom: 1rem; }}
+    .comillas-testimonio {{ font-size: 4rem; line-height: 0.5; font-family: serif; color: var(--v1-seccion-titulos); display: block; margin-bottom: 1rem; margin-top: 0.5rem; opacity: 0.8; }}
     .texto-testimonio {{ font-style: italic; margin-bottom: 1rem; font-size: 1.1rem; }}
     .estrellas-testimonio {{ color: #FFD700; margin-bottom: 0.5rem; font-size: 1.2rem; letter-spacing: 2px; }}
-    .autor-testimonio {{ font-weight: bold; font-family: var(--fuente-secundaria); font-size: 1rem; text-transform: uppercase; }}
+    .autor-testimonio {{ font-weight: bold; font-family: var(--fuente-secundaria); font-size: 1rem; text-transform: uppercase; color: var(--v1-seccion-titulos); }}
 
-    .precio-real {{ color: var(--color-acento-oscuro); font-weight: bold; font-size: var(--font-size-sm); margin-top: var(--espaciado-sm); display: block; }}
+    .precio-real {{ color: var(--v1-boton-fondo); font-weight: bold; font-size: var(--font-size-sm); margin-top: var(--espaciado-sm); display: block; }}
     .posicion-fixed {{ position: fixed; bottom: 5vh; right: 2vw; background: #2cc748; border-radius: 50%; padding: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 1000; }}
-    .seccion-beneficios, .seccion-presentacion, .seccion-productos {{ padding: var(--espaciado-lg) var(--espaciado-md); text-align: center; }}
+    .seccion-beneficios, .seccion-presentacion, .seccion-productos {{ padding: var(--espaciado-lg) var(--espaciado-md); text-align: center; background-color: var(--v1-seccion-fondo); }}
     .seccion-beneficios h2, .seccion-presentacion h2, .seccion-productos h2 {{ margin-bottom: var(--espaciado-md); font-size: var(--font-size-xl); }}
     
     /* --- NUEVO: Estilos para iconos de redes sociales --- */
@@ -219,12 +231,12 @@ def generar_maqueta_v1(datos):
             
             <!-- NUEVO: Sección de Horarios -->
             <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.1);">
-                <h3 class="libre-baskerville" style="font-size: 1.5rem; margin-bottom: 0.5rem;">Horarios</h3>
-                <p style="font-weight: bold; font-size: 1.1rem; color: var(--color-primario);">{open_status_text}</p>
-                <p style="font-size: 0.95rem; margin-bottom: 1rem;">{next_time_info}</p>
+                <h3 class="libre-baskerville" style="font-size: 2rem; margin-bottom: 1rem;">Horarios</h3>
+                <p style="font-weight: bold; font-size: 1.5rem; color: var(--v1-boton-fondo); margin-bottom: 0.5rem;">{open_status_text}</p>
+                <p style="font-size: 1.2rem; margin-bottom: 1.5rem;">{next_time_info}</p>
                 
                 <!-- Horarios detallados en un formato más discreto -->
-                <div style="font-size: 0.9rem; color: var(--color-texto-base); opacity: 0.8;">
+                <div style="font-size: 1.1rem; color: var(--v1-seccion-texto); opacity: 0.9;">
                     {''.join([f'<p>{h}</p>' for h in horarios_detallados]) if horarios_detallados else '<p>Horarios no especificados.</p>'}
                 </div>
             </div>

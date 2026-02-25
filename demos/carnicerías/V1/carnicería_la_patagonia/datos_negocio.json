@@ -1,0 +1,30 @@
+{
+  "nombre": "Carnicería La Patagonia",
+  "categoria": "Carnicerías",
+  "direccion": "Urquiza 550, Trelew, Chubut",
+  "telefono": "+54 9 280 4456789",
+  "rating": "4.7",
+  "horarios_detallados": [
+    "Lunes: 09:00-13:00, 16:00-20:00",
+    "Martes: 09:00-13:00, 16:00-20:00",
+    "Miércoles: 09:00-13:00, 16:00-20:00",
+    "Jueves: 09:00-13:00, 16:00-20:00",
+    "Viernes: 09:00-13:00, 16:00-20:00",
+    "Sábado: 10:00-14:00",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Martín G.",
+      "texto": "¡Excelente calidad de carne! Siempre fresca y con los mejores cortes para el asado. La atención es de primera.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Florencia R.",
+      "texto": "Mi carnicería de confianza en Trelew. Tienen gran variedad de productos y los precios son muy razonables. ¡Recomendado!",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/carnicerialapatagonia.trelew",
+  "instagram": "https://instagram.com/carnicerialapatagonia"
+}

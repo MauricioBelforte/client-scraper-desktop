@@ -114,7 +114,7 @@ def generar_maqueta_v2(datos):
     }}
     * {{ box-sizing: border-box; margin: 0; padding: 0; }}
     html {{ scroll-behavior: smooth; }}
-    body {{ font-family: var(--fuente-base); background-color: var(--color-fondo-general); color: var(--color-texto-general); line-height: 1.6; }}
+    body {{ font-family: var(--fuente-base); background-color: var(--color-fondo-general); color: var(--color-texto-general); line-height: 1.6; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }}
     img {{ max-width: 100%; height: auto; display: block; }}
     h1, h2, h3 {{ font-family: var(--fuente-secundaria); }}
     

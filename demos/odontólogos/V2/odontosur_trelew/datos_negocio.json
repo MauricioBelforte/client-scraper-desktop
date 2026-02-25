@@ -1,0 +1,30 @@
+{
+  "nombre": "OdontoSur Trelew",
+  "categoria": "Odontólogos",
+  "direccion": "San Martín 789, Trelew, Chubut",
+  "telefono": "+54 9 280 4789123",
+  "rating": "4.9",
+  "horarios_detallados": [
+    "Lunes: 09:00-13:00, 16:00-20:00",
+    "Martes: 09:00-13:00, 16:00-20:00",
+    "Miércoles: 09:00-13:00, 16:00-20:00",
+    "Jueves: 09:00-13:00, 16:00-20:00",
+    "Viernes: 09:00-13:00, 16:00-20:00",
+    "Sábado: 09:30-13:00",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Mariana R.",
+      "texto": "Excelente atención, muy profesionales y con la última tecnología. Mi boca está impecable.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Carlos P.",
+      "texto": "Un lugar cómodo y cálido. El Dr. Fernández es muy atento y explica todo con claridad. Lo recomiendo!",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/odontosurtw",
+  "instagram": "https://instagram.com/odontosur.trelew"
+}
