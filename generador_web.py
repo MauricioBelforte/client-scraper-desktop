@@ -183,9 +183,9 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
     # Crea un slug simple de la categoría, ej: "Centro de Estética" -> "centro"
     # Aseguramos que siempre haya un slug válido, incluso si la categoría viene vacía
     primera_palabra = categoria_raw.split(" ")[0] if categoria_raw else "general"
-    categoria_slug = re.sub(r'[\W_]+', '_', primera_palabra) or "general"
+    categoria_slug = re.sub(r'[\W_]+', '-', primera_palabra) or "general"
 
-    nombre_slug = re.sub(r'[\W_]+', '_', nombre_negocio.lower())
+    nombre_slug = re.sub(r'[\W_]+', '-', nombre_negocio.lower())
     
     # Nueva ruta dinámica: {carpeta_salida}/{categoria_slug}/{nombre_slug}
     ruta_web = f"{carpeta_salida}/{categoria_slug}/{nombre_slug}"

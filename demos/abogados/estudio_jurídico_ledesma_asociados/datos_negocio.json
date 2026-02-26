@@ -1,0 +1,30 @@
+{
+  "nombre": "Estudio Jurídico Ledesma & Asociados",
+  "categoria": "Abogados",
+  "direccion": "Belgrano 450, Trelew, Chubut",
+  "telefono": "+54 9 280 4789012",
+  "rating": "4.9",
+  "horarios_detallados": [
+    "Lunes: 09:00-13:00, 16:00-20:00",
+    "Martes: 09:00-13:00, 16:00-20:00",
+    "Miércoles: 09:00-13:00, 16:00-20:00",
+    "Jueves: 09:00-13:00, 16:00-20:00",
+    "Viernes: 09:00-13:00, 16:00-20:00",
+    "Sábado: 09:30-13:00",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Ana Rodríguez",
+      "texto": "Excelente atención y profesionalismo. Me ayudaron con mi caso de principio a fin con total transparencia. Muy recomendables.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Carlos Giménez",
+      "texto": "El equipo del estudio Ledesma es muy eficiente y siempre está dispuesto a resolver dudas. Su asesoramiento fue clave para mi situación.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/EstudioLedesmaAsociadosTrelew",
+  "instagram": "https://instagram.com/ledesma_asociados_legal"
+}

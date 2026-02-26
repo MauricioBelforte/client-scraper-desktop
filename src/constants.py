@@ -122,6 +122,7 @@ PALETAS_COLORES = {
 
             # --- Variables V1 (Específicas One Page) ---
             "v1_hero_titulo": "#efc355",      # Dorado impactante
+            "v1_hero_texto_secundario": "#ffffff", # Blanco puro para el texto secundario
             "v1_hero_lema": "#ffffff",        # Blanco puro
             "v1_boton_fondo": "#efc355",      # Botón dorado
             "v1_boton_texto": "#111111",      # Texto negro para contraste
@@ -170,6 +171,7 @@ PALETAS_COLORES = {
 
             # --- Variables V1 (Específicas One Page) ---
             "v1_hero_titulo": "#4e342e",      # Marrón chocolate
+            "v1_hero_texto_secundario": "#795548", # Marrón más claro
             "v1_hero_lema": "#4e342e",
             "v1_boton_fondo": "#ffcfe7",      # Rosa pastel
             "v1_boton_texto": "#4e342e",      # Texto chocolate
@@ -215,6 +217,7 @@ PALETAS_COLORES = {
 
             # --- Variables V1 (Específicas One Page) ---
             "v1_hero_titulo": "#ffffff",      # Blanco clínico
+            "v1_hero_texto_secundario": "#e3f2fd", # Azul muy pálido
             "v1_hero_lema": "#e3f2fd",        # Azul muy pálido
             "v1_boton_fondo": "#0d6efd",      # Azul Bootstrap
             "v1_boton_texto": "#ffffff",      # Blanco
@@ -253,7 +256,7 @@ PALETAS_COLORES = {
             "texto_botones": "#152141",
             "texto_botones_hover": "#ffffff",
             "texto_general": "#c5ccd3",
-            "texto_hero": "#ffffff",
+            "texto_hero": "#d3a760",
             "texto_cards": "#214061",
             "titulos": "#95c0ff",
             "titulo_h1": "#ffffff",
@@ -261,16 +264,17 @@ PALETAS_COLORES = {
             "fondo_general": "#313447",
             "fondo_cards": "#ffffff",
             "overlay_hero": "#00000066",
-            "borde_sutil": "rgba(0, 0, 0, 0.1)",
+            "borde_sutil": "#838383", # Borde gris medio para tarjetas
 
             # --- Variables V1 (Específicas One Page) ---
             "v1_hero_titulo": "#ffffff",      # Blanco
+            "v1_hero_texto_secundario": "#d1d5db", # Gris claro
             "v1_hero_lema": "#c5ccd3",        # Gris azulado claro
             "v1_boton_fondo": "#95c0ff",      # Azul claro elegante
             "v1_boton_texto": "#152141",      # Azul oscuro
             "v1_seccion_fondo": "#f4f6f8",    # Gris muy claro (profesional)
             "v1_seccion_titulos": "#152141",  # Azul marino profundo
-            "v1_seccion_texto": "#4a5568",    # Gris pizarra
+            "v1_seccion_texto": "#292929",    # Negro suave para mejor legibilidad
             "v1_card_fondo": "#ffffff",       # Blanco
             "v1_card_texto": "#2d3748",       # Gris oscuro
             "v1_card_borde": "#cbd5e0"        # Borde gris azulado
@@ -310,6 +314,7 @@ PALETAS_COLORES = {
 
             # --- Variables V1 (Específicas One Page) ---
             "v1_hero_titulo": "#ffffff",
+            "v1_hero_texto_secundario": "#ffe5fa", # Rosa muy pálido
             "v1_hero_lema": "#ffe5fa",
             "v1_boton_fondo": "#d63384",      # Rosa fuerte
             "v1_boton_texto": "#ffffff",
@@ -359,6 +364,7 @@ PALETAS_COLORES = {
 
             # --- Variables V1 (Específicas One Page) ---
             "v1_hero_titulo": "#ffffff",
+            "v1_hero_texto_secundario": "#f0f0f0", # Blanco humo
             "v1_hero_lema": "#f0f0f0",
             "v1_boton_fondo": "#A0522D",      # Sienna
             "v1_boton_texto": "#ffffff",
@@ -403,6 +409,7 @@ PALETAS_COLORES = {
 
             # --- Variables V1 (Específicas One Page) ---
             "v1_hero_titulo": "#ffffff",
+            "v1_hero_texto_secundario": "#e8f5e9", # Verde muy pálido
             "v1_hero_lema": "#e8f5e9",
             "v1_boton_fondo": "#28a745",      # Verde
             "v1_boton_texto": "#ffffff",
@@ -451,6 +458,7 @@ PALETAS_COLORES = {
 
             # --- Variables V1 (Específicas One Page) ---
             "v1_hero_titulo": "#c89f68",      # Dorado vintage
+            "v1_hero_texto_secundario": "#dcdcdc", # Gris claro
             "v1_hero_lema": "#f0f0f0",
             "v1_boton_fondo": "#c89f68",
             "v1_boton_texto": "#111111",
@@ -490,6 +498,7 @@ PALETAS_COLORES = {
 
             # --- Variables V1 (Específicas One Page) ---
             "v1_hero_titulo": "#ffffff",
+            "v1_hero_texto_secundario": "#cccccc", # Gris plata
             "v1_hero_lema": "#e53935",        # Rojo
             "v1_boton_fondo": "#e53935",
             "v1_boton_texto": "#ffffff",
@@ -528,6 +537,7 @@ PALETAS_COLORES = {
 
             # --- Variables V1 (Específicas One Page) ---
             "v1_hero_titulo": "#ff4500",      # Naranja industrial
+            "v1_hero_texto_secundario": "#ffffff", # Blanco
             "v1_hero_lema": "#ffffff",
             "v1_boton_fondo": "#ff4500",
             "v1_boton_texto": "#ffffff",
@@ -581,6 +591,7 @@ PALETAS_COLORES = {
 
             # --- Variables V1 (Específicas One Page) ---
             "v1_hero_titulo": "#272727",
+            "v1_hero_texto_secundario": "#ffffff", # Blanco para contrastar si el fondo es oscuro
             "v1_hero_lema": "#65edff",
             "v1_boton_fondo": "#fdee52",
             "v1_boton_texto": "#12121f",
@@ -624,6 +635,7 @@ PALETAS_COLORES = {
 
             # --- Variables V1 (Específicas One Page) ---
             "v1_hero_titulo": "#ffffff",
+            "v1_hero_texto_secundario": "#f8f9fa", # Blanco humo
             "v1_hero_lema": "#ffffff",
             "v1_boton_fondo": "#c8102e",
             "v1_boton_texto": "#ffffff",

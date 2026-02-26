@@ -1,0 +1,30 @@
+{
+  "nombre": "Patagonia Urbana Inmobiliaria",
+  "categoria": "Inmobiliarias",
+  "direccion": "Rivadavia 480, Trelew, Chubut",
+  "telefono": "+54 9 280 4456789",
+  "rating": "4.7",
+  "horarios_detallados": [
+    "Lunes: 09:00-13:00, 16:00-20:00",
+    "Martes: 09:00-13:00, 16:00-20:00",
+    "Miércoles: 09:00-13:00, 16:00-20:00",
+    "Jueves: 09:00-13:00, 16:00-20:00",
+    "Viernes: 09:00-13:00, 16:00-20:00",
+    "Sábado: 10:00-14:00",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Ana López",
+      "texto": "Excelente asesoramiento y atención personalizada. Encontraron lo que buscaba muy rápido en Trelew.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Martín Gómez",
+      "texto": "Muy profesionales y transparentes. Recomiendo Patagonia Urbana al 100% para alquileres y ventas.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/patagoniaurbanainmo",
+  "instagram": "https://instagram.com/patagoniaurbanainmo"
+}

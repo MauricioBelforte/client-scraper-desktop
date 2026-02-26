@@ -27,8 +27,9 @@ from controlador_ia import generar_contenido_ia, limpiar_datos_ia, generar_datos
 from generador_web import generar_web_profesional
 from src.enriquecedor import buscar_datos_externos, ejecutar_enriquecimiento_global
 from src.ui_search import BuscadorVisual
+from src.mensajes import generar_mensaje_whatsapp
 
-def abrir_whatsapp(nombre, telefono):
+def abrir_whatsapp(nombre, telefono, categoria="General"):
     """Abre WhatsApp Web con un mensaje personalizado."""
     tel_limpio = "".join(filter(str.isdigit, str(telefono)))
     
@@ -45,22 +46,8 @@ def abrir_whatsapp(nombre, telefono):
     if tel_limpio.startswith("5490"):
         tel_limpio = "549" + tel_limpio[4:]
 
-    mensaje = f"""Hola, {nombre}. Mi nombre es Mauricio Belforte, me dedico al desarrollo de páginas web. 
-Soy de Trelew.
-
-Estoy ofreciendo mis servicios a distintos negocios y profesionales locales.
-
-Si gustan pueden pasar a ver estos 2 modelos de plantillas que estoy trabajando. Se pueden adaptar y modificar rapidamente.
-Modelo 1: https://abogadotrelew.netlify.app/
-Modelo 2: https://cafeteriatrelew.netlify.app/
-
-Sino tambien podemos trabajar en una página con un diseño mas elaborado y funcionalidades más especificas pero a un costo mayor.
-
-Pueden ver más de mis trabajos en mi portfolio: https://mauriciobelforte.github.io/mi-portfolio/.
-
-Si les sirve, no duden en contactarme. Saludos!"""
-    
-    url = f"https://wa.me/{tel_limpio}?text={urllib.parse.quote(mensaje)}"
+    mensaje_codificado = generar_mensaje_whatsapp(nombre, categoria)
+    url = f"https://wa.me/{tel_limpio}?text={mensaje_codificado}"
     webbrowser.open(url)
 
 class TrelewLeadApp:
@@ -427,7 +414,7 @@ class TrelewLeadApp:
 
         # WhatsApp (Verde/Rojo)
         c_wa = constantes.COLOR_WHATSAPP if has_wa else constantes.COLOR_PELIGRO
-        tk.Button(btn_grid, text="WhatsApp", bg=c_wa, fg=constantes.COLOR_BLANCO, font=constantes.FUENTE_PEQUENA_NEGRITA, relief="flat", cursor="hand2" if has_wa else "arrow", command=lambda: abrir_whatsapp(nombre, tel) if has_wa else None).grid(row=0, column=0, padx=2, pady=2, sticky="ew")
+        tk.Button(btn_grid, text="WhatsApp", bg=c_wa, fg=constantes.COLOR_BLANCO, font=constantes.FUENTE_PEQUENA_NEGRITA, relief="flat", cursor="hand2" if has_wa else "arrow", command=lambda: abrir_whatsapp(nombre, tel, datos.get('categoria', 'General')) if has_wa else None).grid(row=0, column=0, padx=2, pady=2, sticky="ew")
 
         # Facebook (Azul/Rojo)
         c_fb = constantes.COLOR_FACEBOOK if has_fb else constantes.COLOR_PELIGRO
@@ -516,7 +503,7 @@ class TrelewLeadApp:
         """Abre todos los canales de contacto disponibles para un negocio en pestañas separadas."""
         tel = datos.get('telefono')
         if tel and "Sin" not in str(tel) and "No" not in str(tel):
-            abrir_whatsapp(nombre, tel)
+            abrir_whatsapp(nombre, tel, datos.get('categoria', 'General'))
             time.sleep(0.5) # Pausa para que el sistema operativo procese la apertura
 
         fb = datos.get('facebook')
@@ -700,6 +687,10 @@ class TrelewLeadApp:
             parent.destroy() # Cerramos la ficha vieja
             self.mostrar_info_detallada(nombre_final, datos) # Abrimos la nueva actualizada
 
+        btn_guardar = tk.Button(edit_win, text="💾 GUARDAR CAMBIOS", bg=constantes.COLOR_BTN_INFO, fg="white",
+                                font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2", command=guardar)
+        btn_guardar.pack(pady=20, fill="x", padx=20)
+
     def abrir_alta_manual(self):
         """Abre un formulario completo para dar de alta un nuevo emprendimiento manualmente."""
         alta_win = tk.Toplevel(self.root)
@@ -798,10 +789,6 @@ class TrelewLeadApp:
         btn_guardar = tk.Button(form_frame, text="💾 AGREGAR A LA LISTA", bg=constantes.COLOR_BTN_INFO, fg="white",
                                 font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2", command=guardar_nuevo)
         btn_guardar.pack(pady=20, fill="x")
-
-        btn_guardar = tk.Button(edit_win, text="💾 GUARDAR CAMBIOS", bg=constantes.COLOR_BTN_INFO, fg="white",
-                                font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2", command=guardar)
-        btn_guardar.pack(pady=20, fill="x", padx=20)
 
     def mostrar_info_detallada(self, nombre, datos):
         """Muestra una ventana flotante con toda la información pública recolectada."""

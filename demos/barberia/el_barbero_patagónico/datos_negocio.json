@@ -1,0 +1,35 @@
+{
+  "nombre": "El Barbero Patagónico",
+  "categoria": "barberia",
+  "direccion": "Avenida Fontana 550, Trelew, Chubut",
+  "telefono": "+54 9 280 4567890",
+  "rating": "4.7",
+  "horarios_detallados": [
+    "Lunes: 09:30-13:30, 16:30-20:30",
+    "Martes: 09:30-13:30, 16:30-20:30",
+    "Miércoles: 09:30-13:30, 16:30-20:30",
+    "Jueves: 09:30-13:30, 16:30-20:30",
+    "Viernes: 09:00-14:00, 16:00-20:00",
+    "Sábado: 10:00-15:00",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Juan Pérez",
+      "texto": "Excelente corte y atención, siempre salgo satisfecho.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Ana Gómez",
+      "texto": "Mi pareja se cortó el pelo y quedó impecable. Muy profesionales.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Carlos Rossi",
+      "texto": "Muy buen ambiente y el barbero es un crack. Recomendado.",
+      "rating": "4 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/elbarberopatagonico",
+  "instagram": "https://instagram.com/elbarberopatagonico_tw"
+}

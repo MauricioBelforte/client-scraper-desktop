@@ -1,5 +1,6 @@
 import datetime
 import urllib.parse
+import json
 
 def generar_maqueta_v1(datos):
     """
@@ -27,6 +28,7 @@ def generar_maqueta_v1(datos):
     horarios_detallados = datos["horarios_detallados"]
     open_status_text = datos["open_status_text"]
     next_time_info = datos["next_time_info"]
+
 
     # Lógica específica de V1 para secciones HTML
     beneficios_html = ""
@@ -82,6 +84,7 @@ def generar_maqueta_v1(datos):
         
         /* Hero (Portada) */
         --v1-hero-titulo: {paleta.get('v1_hero_titulo', '#ffffff')};
+        --v1-hero-texto-secundario: {paleta.get('v1_hero_texto_secundario', '#ffffff')};
         --v1-hero-lema: {paleta.get('v1_hero_lema', '#f0f0f0')};
         --v1-hero-overlay: {paleta.get('overlay', '#00000066')};
 
@@ -134,10 +137,9 @@ def generar_maqueta_v1(datos):
         font-size: var(--font-size-xs);
         line-height: 1.6;
         overflow-x: hidden;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }}
     img {{ max-width: 100%; height: auto; display: block; }}
-    h1, h2, h3 {{ font-family: var(--fuente-secundaria); color: var(--v1-seccion-titulos); }}
+    h1, h2, h3 {{ font-family: var(--fuente-secundaria); color: var(--v1-seccion-titulos); text-shadow: 0 1px 3px rgba(0,0,0,0.4); }}
 
     /* --- Estilos Generales y Componentes --- */
     .barra-navegacion {{ width: 100%; display: flex; flex-direction: column; align-items: center; padding: var(--espaciado-sm); }}
@@ -217,11 +219,11 @@ def generar_maqueta_v1(datos):
         <section class="seccion-hero">
             <div class="contenedor-hero">
                 <h1 class="el-messiri" style="text-transform: capitalize;">{nombre_negocio}</h1>
-                <p style="font-size: 1.5rem; margin-top: 0.5rem; font-weight: 300;">{titulo_hero}</p>
                 <div class="texto-adornado">
                     <p class="lema-hero">{lema_hero}</p>
                 </div>
                 <a href="{cta_button_link}" class="cta-button">{cta_button_text}</a>
+                <p style="font-size: 1.5rem; margin-top: 10vh; font-weight: 300; color: var(--v1-hero-texto-secundario); text-shadow: 0 1px 2px rgba(0,0,0,0.5);">{titulo_hero}</p>
             </div>
         </section>
 
@@ -232,8 +234,8 @@ def generar_maqueta_v1(datos):
             <!-- NUEVO: Sección de Horarios -->
             <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.1);">
                 <h3 class="libre-baskerville" style="font-size: 2rem; margin-bottom: 1rem;">Horarios</h3>
-                <p style="font-weight: bold; font-size: 1.5rem; color: var(--v1-boton-fondo); margin-bottom: 0.5rem;">{open_status_text}</p>
-                <p style="font-size: 1.2rem; margin-bottom: 1.5rem;">{next_time_info}</p>
+                <p id="estado-horario" style="font-weight: bold; font-size: 1.5rem; color: var(--v1-boton-fondo); margin-bottom: 0.5rem;">{open_status_text}</p>
+                <p id="proximo-horario" style="font-size: 1.2rem; margin-bottom: 1.5rem;">{next_time_info}</p>
                 
                 <!-- Horarios detallados en un formato más discreto -->
                 <div style="font-size: 1.1rem; color: var(--v1-seccion-texto); opacity: 0.9;">
@@ -260,6 +262,113 @@ def generar_maqueta_v1(datos):
         </a>
 
         {footer_html}
+
+        <script>
+        (function() {{
+            const horarios = {json.dumps(horarios_detallados)};
+            const statusEl = document.getElementById('estado-horario');
+            const nextEl = document.getElementById('proximo-horario');
+            
+            if (!statusEl || !horarios || horarios.length === 0) return;
+
+            const diasSemana = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+            const now = new Date();
+            const diaActual = now.getDay(); // 0-6
+            const minutosActuales = now.getHours() * 60 + now.getMinutes();
+
+            // Parsear horarios
+            const agenda = {{}};
+            
+            horarios.forEach(h => {{
+                const partes = h.split(': ');
+                if (partes.length < 2) return;
+                
+                let diaNombre = partes[0].toLowerCase().trim();
+                // Normalizar nombres
+                diaNombre = diaNombre.replace('é', 'e').replace('á', 'a');
+                if (diaNombre === 'miercoles') diaNombre = 'miércoles';
+                if (diaNombre === 'sabado') diaNombre = 'sábado';
+
+                const rangosStr = partes[1];
+                if (rangosStr.toLowerCase().includes('cerrado')) return;
+
+                const diaIndex = diasSemana.indexOf(diaNombre);
+                if (diaIndex === -1) return;
+
+                const rangos = [];
+                rangosStr.split(', ').forEach(r => {{
+                    const [inicio, fin] = r.split('-');
+                    if (inicio && fin) {{
+                        const [h1, m1] = inicio.split(':').map(Number);
+                        const [h2, m2] = fin.split(':').map(Number);
+                        rangos.push({{
+                            inicio: h1 * 60 + m1,
+                            fin: h2 * 60 + m2
+                        }});
+                    }}
+                }});
+                agenda[diaIndex] = rangos.sort((a, b) => a.inicio - b.inicio);
+            }});
+
+            function formatearHora(minutos) {{
+                const h = Math.floor(minutos / 60).toString().padStart(2, '0');
+                const m = (minutos % 60).toString().padStart(2, '0');
+                return `${{h}}:${{m}}`;
+            }}
+
+            // Determinar estado
+            let estaAbierto = false;
+            let textoEstado = "Cerrado";
+            let textoProximo = "";
+            let color = "#dc3545"; // Rojo
+
+            const rangosHoy = agenda[diaActual] || [];
+            let cierreHoy = null;
+
+            for (const rango of rangosHoy) {{
+                if (minutosActuales >= rango.inicio && minutosActuales < rango.fin) {{
+                    estaAbierto = true;
+                    cierreHoy = rango.fin;
+                    break;
+                }}
+            }}
+
+            if (estaAbierto) {{
+                textoEstado = "Abierto ahora";
+                color = "#28a745"; // Verde
+                textoProximo = `Cierra a las ${{formatearHora(cierreHoy)}}`;
+            }} else {{
+                // Buscar próxima apertura
+                let encontrado = false;
+                // 1. Resto de hoy
+                for (const rango of rangosHoy) {{
+                    if (minutosActuales < rango.inicio) {{
+                        textoProximo = `Abre hoy a las ${{formatearHora(rango.inicio)}}`;
+                        encontrado = true;
+                        break;
+                    }}
+                }}
+                // 2. Días siguientes
+                if (!encontrado) {{
+                    for (let i = 1; i <= 7; i++) {{
+                        const diaCheck = (diaActual + i) % 7;
+                        const rangosCheck = agenda[diaCheck];
+                        if (rangosCheck && rangosCheck.length > 0) {{
+                            const diaNombre = i === 1 ? "mañana" : "el " + diasSemana[diaCheck];
+                            textoProximo = `Abre ${{diaNombre}} a las ${{formatearHora(rangosCheck[0].inicio)}}`;
+                            encontrado = true;
+                            break;
+                        }}
+                    }}
+                }}
+                if (!encontrado) textoProximo = "Horarios no disponibles";
+            }}
+
+            statusEl.textContent = textoEstado;
+            statusEl.style.color = color;
+            if (nextEl) nextEl.textContent = textoProximo;
+        }})();
+        </script>
     </body>
     </html>
     """

@@ -1,0 +1,30 @@
+{
+  "nombre": "Tinta Austral",
+  "categoria": "tatuajes",
+  "direccion": "Belgrano 345, Trelew, Chubut",
+  "telefono": "+54 9 280 4678901",
+  "rating": "4.9",
+  "horarios_detallados": [
+    "Lunes: 09:00-13:00, 16:00-20:00",
+    "Martes: 09:00-13:00, 16:00-20:00",
+    "Miércoles: 09:00-13:00, 16:00-20:00",
+    "Jueves: 09:00-13:00, 16:00-20:00",
+    "Viernes: 09:00-13:00, 16:00-20:00",
+    "Sábado: 10:00-14:00",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Martina S.",
+      "texto": "Excelente trabajo de Tinta Austral! Profesionalismo, atención al detalle y un ambiente súper cómodo. Mi tatuaje quedó impecable, ¡volveré sin dudas!",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Ramiro G.",
+      "texto": "Totalmente recomendable. Los artistas son muy talentosos, interpretaron mi idea a la perfección y el estudio está siempre impecable. La mejor opción en Trelew.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/TintaAustralTatuajes",
+  "instagram": "https://instagram.com/tinta.austral"
+}
