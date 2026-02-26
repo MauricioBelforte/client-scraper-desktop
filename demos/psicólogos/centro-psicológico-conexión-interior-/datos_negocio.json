@@ -1,0 +1,30 @@
+{
+  "nombre": "Centro Psicológico 'Conexión Interior'",
+  "categoria": "Psicólogos",
+  "direccion": "Av. Fontana 678, Trelew, Chubut",
+  "telefono": "+54 9 280 4789012",
+  "rating": "4.9",
+  "horarios_detallados": [
+    "Lunes: 09:00-13:00, 15:30-19:30",
+    "Martes: 09:00-13:00, 15:30-19:30",
+    "Miércoles: 09:00-13:00, 15:30-19:30",
+    "Jueves: 09:00-13:00, 15:30-19:30",
+    "Viernes: 09:00-13:00",
+    "Sábado: 09:30-13:00 (solo con turno previo)",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Ana Laura M.",
+      "texto": "Excelente profesionalismo y calidez. Me sentí muy cómoda y acompañada en todo el proceso. ¡Muy recomendable!",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Javier R.",
+      "texto": "El centro ofrece un ambiente muy acogedor. La terapia fue de gran ayuda, con resultados muy positivos en poco tiempo.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/ConexionInteriorPsicologiaTW",
+  "instagram": "https://instagram.com/conexioninterior.psicologia"
+}

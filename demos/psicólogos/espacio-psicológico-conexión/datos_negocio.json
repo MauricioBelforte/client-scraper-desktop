@@ -1,0 +1,30 @@
+{
+  "nombre": "Espacio Psicológico Conexión",
+  "categoria": "Psicólogos",
+  "direccion": "San Martín 678, Trelew, Chubut",
+  "telefono": "+54 9 280 4357890",
+  "rating": "4.9",
+  "horarios_detallados": [
+    "Lunes: 09:00-13:00, 16:00-20:00",
+    "Martes: 09:00-13:00, 16:00-20:00",
+    "Miércoles: 09:00-13:00, 16:00-20:00",
+    "Jueves: 09:00-13:00, 16:00-20:00",
+    "Viernes: 09:00-13:00, 16:00-20:00",
+    "Sábado: 10:00-14:00",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Mariana R.",
+      "texto": "Excelente profesionalismo y calidez. Me sentí muy cómoda desde la primera sesión.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Carlos S.",
+      "texto": "Un espacio de mucha contención y ayuda real. Muy recomendable para cualquiera que lo necesite.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/EspacioPsicologicoConexion",
+  "instagram": "https://instagram.com/espaciopsicologiconexion"
+}
