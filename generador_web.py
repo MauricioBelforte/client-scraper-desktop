@@ -5,11 +5,29 @@ import urllib.parse
 import datetime
 import random
 import requests
+import unicodedata
 import time
 from src.constants import PALETAS_COLORES
 from maquetas.v1 import generar_maqueta_v1
 from maquetas.v2 import generar_maqueta_v2
 from src.utils import get_open_status_and_next_time # Import the new utility function
+
+def crear_slug(texto: str) -> str:
+    """
+    Crea un slug 'URL-friendly' a partir de un texto.
+    Convierte a minúsculas, quita acentos, y reemplaza espacios y caracteres especiales por guiones.
+    """
+    if not texto:
+        return ""
+    # 1. Normalizar para separar acentos de letras (NFD) y convertir a minúsculas
+    texto_normalizado = unicodedata.normalize('NFD', str(texto).lower())
+    # 2. Quitar los diacríticos (acentos)
+    texto_sin_acentos = "".join(c for c in texto_normalizado if unicodedata.category(c) != 'Mn')
+    # 3. Reemplazar caracteres no alfanuméricos por guiones
+    slug = re.sub(r'[^a-z0-9]+', '-', texto_sin_acentos)
+    # 4. Colapsar guiones múltiples y limpiar extremos
+    slug = re.sub(r'-+', '-', slug).strip('-')
+    return slug
 
 def generar_y_guardar_imagen(prompt: str, ruta_guardado: str):
     """
@@ -183,9 +201,8 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
     # Crea un slug simple de la categoría, ej: "Centro de Estética" -> "centro"
     # Aseguramos que siempre haya un slug válido, incluso si la categoría viene vacía
     primera_palabra = categoria_raw.split(" ")[0] if categoria_raw else "general"
-    categoria_slug = re.sub(r'[\W_]+', '-', primera_palabra) or "general"
-
-    nombre_slug = re.sub(r'[\W_]+', '-', nombre_negocio.lower())
+    categoria_slug = crear_slug(primera_palabra) or "general"
+    nombre_slug = crear_slug(nombre_negocio)
     
     # Nueva ruta dinámica: {carpeta_salida}/{categoria_slug}/{nombre_slug}
     ruta_web = f"{carpeta_salida}/{categoria_slug}/{nombre_slug}"
