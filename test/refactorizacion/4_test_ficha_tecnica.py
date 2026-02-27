@@ -78,3 +78,30 @@ def test_literales_españoles_en_ficha_tecnica():
     for literal in literales_esperados:
         assert literal in contenido, \
             f"El literal '{literal}' no se encuentra en lead_app.py"
+
+
+def test_scroll_configurado_en_ficha_tecnica():
+    """
+    Verifica que el scroll de la ventana de ficha técnica esté correctamente configurado.
+    Asegura que el binding para MouseWheel funciona en múltiples widgets.
+    """
+    with open("lead_app.py", "r", encoding="utf-8") as f:
+        contenido = f.read()
+    
+    # Verificar que el scroll está vinculado a múltiples widgets
+    assert 'top.bind("<MouseWheel>"' in contenido or 'top.bind("<MouseWheel>"' in contenido, \
+        "El binding del scroll debería estar vinculado a la ventana principal (top)"
+    
+    assert 'canvas.bind("<MouseWheel>"' in contenido, \
+        "El binding del scroll debería estar vinculado al canvas"
+    
+    assert 'info_frame.bind("<MouseWheel>"' in contenido, \
+        "El binding del scroll debería estar vinculado al info_frame"
+    
+    # Verificar que hay una función para vincular recursivamente a los hijos
+    assert "bind_mousewheel_to_children" in contenido, \
+        "Debe existir una función para vincular el scroll a los widgets hijos recursivamente"
+    
+    # Verificar que el evento se limpia correctamente al cerrar
+    assert "unbind" in contenido, \
+        "Debe haber un unbind para limpiar el evento al cerrar la ventana"

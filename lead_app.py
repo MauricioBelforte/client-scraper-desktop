@@ -815,17 +815,34 @@ class TrelewLeadApp:
         canvas.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
 
-        # Habilitar scroll con la rueda del ratón
+        # Habilitar scroll con la rueda del ratón en cualquier parte de la ventana
         def _on_mousewheel(event):
             try:
                 canvas.yview_scroll(int(-1*(event.delta/120)), "units")
             except tk.TclError:
                 pass
-        canvas.bind_all("<MouseWheel>", _on_mousewheel)
+        
+        # Vincular el evento a la ventana principal para que funcione en cualquier lugar
+        top.bind("<MouseWheel>", _on_mousewheel)
+        canvas.bind("<MouseWheel>", _on_mousewheel)
+        info_frame.bind("<MouseWheel>", _on_mousewheel)
+        
+        # También vincular a todos los widgets dentro de info_frame
+        def bind_mousewheel_to_children(widget):
+            widget.bind("<MouseWheel>", _on_mousewheel)
+            for child in widget.winfo_children():
+                bind_mousewheel_to_children(child)
+        
+        info_frame.bind("<Configure>", lambda e: bind_mousewheel_to_children(info_frame))
 
         # Limpiar evento al cerrar la ventana para evitar errores
         def on_close():
-            canvas.unbind_all("<MouseWheel>")
+            try:
+                top.unbind("<MouseWheel>")
+                canvas.unbind("<MouseWheel>")
+                info_frame.unbind("<MouseWheel>")
+            except:
+                pass
             top.destroy()
         top.protocol("WM_DELETE_WINDOW", on_close)
 
