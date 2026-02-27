@@ -29,8 +29,8 @@ from src.enriquecedor import buscar_datos_externos, ejecutar_enriquecimiento_glo
 from src.ui_search import BuscadorVisual
 from src.mensajes import generar_mensaje_whatsapp
 
-def abrir_whatsapp(nombre, telefono, categoria="General"):
-    """Abre WhatsApp Web con un mensaje personalizado."""
+def abrir_whatsapp(nombre, telefono, nombre_archivo="General"):
+    """Abre WhatsApp Web con un mensaje personalizado basado en el archivo JSON."""
     tel_limpio = "".join(filter(str.isdigit, str(telefono)))
     
     # --- CORRECCIÓN DE FORMATO ARGENTINA ---
@@ -46,7 +46,7 @@ def abrir_whatsapp(nombre, telefono, categoria="General"):
     if tel_limpio.startswith("5490"):
         tel_limpio = "549" + tel_limpio[4:]
 
-    mensaje_codificado = generar_mensaje_whatsapp(nombre, categoria)
+    mensaje_codificado = generar_mensaje_whatsapp(nombre, nombre_archivo)
     url = f"https://wa.me/{tel_limpio}?text={mensaje_codificado}"
     webbrowser.open(url)
 
@@ -414,7 +414,7 @@ class TrelewLeadApp:
 
         # WhatsApp (Verde/Rojo)
         c_wa = constantes.COLOR_WHATSAPP if has_wa else constantes.COLOR_PELIGRO
-        tk.Button(btn_grid, text="WhatsApp", bg=c_wa, fg=constantes.COLOR_BLANCO, font=constantes.FUENTE_PEQUENA_NEGRITA, relief="flat", cursor="hand2" if has_wa else "arrow", command=lambda: abrir_whatsapp(nombre, tel, datos.get('categoria', 'General')) if has_wa else None).grid(row=0, column=0, padx=2, pady=2, sticky="ew")
+        tk.Button(btn_grid, text="WhatsApp", bg=c_wa, fg=constantes.COLOR_BLANCO, font=constantes.FUENTE_PEQUENA_NEGRITA, relief="flat", cursor="hand2" if has_wa else "arrow", command=lambda: abrir_whatsapp(nombre, tel, self.archivo_activo) if has_wa else None).grid(row=0, column=0, padx=2, pady=2, sticky="ew")
 
         # Facebook (Azul/Rojo)
         c_fb = constantes.COLOR_FACEBOOK if has_fb else constantes.COLOR_PELIGRO
@@ -503,7 +503,7 @@ class TrelewLeadApp:
         """Abre todos los canales de contacto disponibles para un negocio en pestañas separadas."""
         tel = datos.get('telefono')
         if tel and "Sin" not in str(tel) and "No" not in str(tel):
-            abrir_whatsapp(nombre, tel, datos.get('categoria', 'General'))
+            abrir_whatsapp(nombre, tel, self.archivo_activo)
             time.sleep(0.5) # Pausa para que el sistema operativo procese la apertura
 
         fb = datos.get('facebook')

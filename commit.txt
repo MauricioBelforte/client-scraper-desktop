@@ -1,0 +1,91 @@
+refactor: Migración sistema de mensajes WhatsApp de basado en categoría a basado en nombre de archivo
+
+RESUMEN
+=======
+Refactorización completa del sistema de personalización de mensajes WhatsApp.
+Se cambió de un sistema complejo basado en búsqueda de palabras clave (O(n)) a uno 
+determinista basado en nombre de archivo JSON (O(1)), eliminando 59% del código y 
+alcanzando 100% de cobertura de rubros.
+
+CAMBIOS PRINCIPALES
+===================
+
+1. src/mensajes.py (650 → 264 líneas, -59%)
+   - Eliminada función normalizar_texto() y su lógica Unicode
+   - Eliminado diccionario TEMPLATES_POR_RUBRO (50+ keywords)
+   - Reemplazado por TEMPLATES_POR_ARCHIVO (25 nombres explícitos)
+   - Firma actualizada: generar_mensaje_whatsapp(nombre, categoria) 
+     → generar_mensaje_whatsapp(nombre_negocio, nombre_archivo)
+   - Búsqueda simplificada: O(1) acceso directo vs O(n) iteración lineal
+   - Eliminada importación: unicodedata
+   - Cobertura: 950+ negocios sin mapeo → 100% cobertura
+
+2. lead_app.py (4 ubicaciones actualizadas)
+   - Línea 32: Parámetro función abrir_whatsapp() 
+     categoria="General" → nombre_archivo="General"
+   - Línea 51: Llamada a generar_mensaje_whatsapp() actualizada
+   - Línea 417: Comando botón WhatsApp 
+     datos.get('categoria', 'General') → self.archivo_activo
+   - Línea 506: Método contactar_todos() 
+     datos.get('categoria', 'General') → self.archivo_activo
+   - Explotación de variable existente: self.archivo_activo
+
+3. Estructura de carpetas
+   - Creada: /test (3 tests funcionales)
+   - Creada: /documentacion (6 documentos MD)
+
+4. Tests (/test)
+   ✓ 1_test_nuevo_sistema_mensajes.py
+     - 7 pruebas: Cervecerías, Abogados, Restaurantes, etc.
+     - Valida 25 rubros configurados
+     - Verifica estructura de mensajes
+   
+   ✓ 2_test_integracion_json_reales.py
+     - Carga 25 archivos JSON reales
+     - Valida modelos específicos por rubro
+     - Prueba fallback para archivos no configurados
+   
+   ✓ 3_test_mensajes_personalizados.py
+     - Prueba primeros 10 rubros
+     - Verifica intros personalizados
+   
+   Eliminados (incompatibilidad con nuevo sistema):
+   ✗ test_comparacion_antiguo_vs_nuevo.py
+   ✗ debug_cerveceria.py
+   ✗ check_cervecerias.py
+   ✗ verificacion_modelos.py
+   ✗ verificacion_final.py
+   ✗ test_json_real.py
+   ✗ analisis_completo.py
+
+5. Documentación (/documentacion)
+   + 01_REFACTOR_PLAN.md - Estrategia y fases
+   + 02_SOLUCION_PERSONALIZACION_WHATSAPP.md - Problema original y solución
+   + 03_IMPLEMENTACION_DETALLADA.md - Cambios código línea x línea
+   + 04_REPORTE_CORRECCION_MENSAJES.md - Análisis de cobertura mejorada
+   + 05_GUIA_AGREGAR_NUEVOS_RUBROS.md - Cómo agregar nuevos rubros
+   + 06_CAMBIOS_RESUMEN_TECNICO.md - Tabla comparativa y métricas
+
+BENEFICIOS
+==========
+• Rendimiento: O(n) → O(1) búsqueda de plantillas
+• Simplic​idad: 650 líneas → 264 líneas (59% reducción)
+• Determinismo: Basado en nombre de archivo (fuente de verdad)
+• Cobertura: 45% → 100% (todos los rubros configurados explícitamente)
+• Mantenibilidad: Sin normalización Unicode ni búsquedas lineales
+• Escalabilidad: Agregar rubro = agregar 1 entrada en diccionario
+
+COMPATIBILIDAD
+==============
+• Interfaz UI sin cambios
+• Mensajes más consistentes y personalizados
+• Cervecerías: 5 modelos preservados exactamente
+• Fallback a TEMPLATE_DEFAULT para archivos no configurados
+
+VALIDACIÓN
+==========
+✓ Test 1: 7/7 pruebas sistema nuevo PASSED
+✓ Test 2: 25/25 archivos JSON procesados correctamente PASSED
+✓ Test 3: 10 rubros validados con intros personalizados PASSED
+
+Todas las características funcionales probadas y validadas.

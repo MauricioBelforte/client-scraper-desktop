@@ -1,0 +1,30 @@
+{
+  "nombre": "Cervecería Río Chubut",
+  "categoria": "Cervecerías",
+  "direccion": "Av. Fontana 543, Trelew, Chubut",
+  "telefono": "+54 9 280 4678901",
+  "rating": "4.7",
+  "horarios_detallados": [
+    "Lunes: Cerrado",
+    "Martes: 18:00-00:00",
+    "Miércoles: 18:00-00:00",
+    "Jueves: 18:00-01:00",
+    "Viernes: 18:00-02:00",
+    "Sábado: 18:00-02:00",
+    "Domingo: 19:00-23:00"
+  ],
+  "comentarios": [
+    {
+      "autor": "Martín R.",
+      "texto": "¡Increíble variedad de cervezas artesanales y un ambiente súper acogedor! La IPA es fantástica.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Sofía G.",
+      "texto": "Un clásico de Trelew para los amantes de la buena birra. Siempre frescos y con excelente atención.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/cerveceria.riochubut",
+  "instagram": "https://instagram.com/cerveceria_riochubut"
+}

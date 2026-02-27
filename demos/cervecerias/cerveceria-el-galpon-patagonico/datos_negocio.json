@@ -1,0 +1,30 @@
+{
+  "nombre": "Cervecería El Galpón Patagónico",
+  "categoria": "Cervecerías",
+  "direccion": "Lewis Jones 450, Trelew, Chubut",
+  "telefono": "+54 9 280 4357890",
+  "rating": "4.7",
+  "horarios_detallados": [
+    "Lunes: 18:00-00:00",
+    "Martes: 18:00-00:00",
+    "Miércoles: 18:00-00:00",
+    "Jueves: 18:00-01:00",
+    "Viernes: 18:00-02:00",
+    "Sábado: 18:00-03:00",
+    "Domingo: 19:00-00:00"
+  ],
+  "comentarios": [
+    {
+      "autor": "Sofía Giménez",
+      "texto": "¡Increíble variedad de cervezas artesanales! El ambiente es super cálido y la atención de 10. Siempre que estoy en Trelew, paso por acá.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Martín Rodríguez",
+      "texto": "Las mejores IPA de la zona, acompañadas de unas papas rústicas espectaculares. Un lugar perfecto para desconectar después del trabajo.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/ElGalponPatagonicoCerveceria",
+  "instagram": "https://instagram.com/elgalponpatagonico"
+}

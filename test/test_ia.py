@@ -1,4 +1,10 @@
 # test_ia.py
+import sys
+from pathlib import Path
+
+# Ensure project root is in path for imports
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 import json
 from controlador_ia import generar_contenido_ia
 
