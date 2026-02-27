@@ -57,41 +57,16 @@ FUENTE_DIMINUTA = ("Segoe UI", 8, "italic")
 FUENTE_LINK = ("Segoe UI", 10, "underline")
 
 # --- TEXTOS DE LA INTERFAZ (UI) ---
-TITULO_APP = "Trelew Digital Leads - Prospector de Negocios"
-TEXTO_ENCABEZADO = "TRELEW LEAD PROSPECTOR"
-TITULO_FRAME_BUSQUEDA = " Gestión de Búsquedas "
-ETIQUETA_NUEVA_BUSQUEDA = "Nueva Búsqueda (Google Maps):"
-BTN_BUSCAR = "🔍 BUSCAR Y GUARDAR"
-BTN_MODO_RAPIDO = "⚡ MODO RÁPIDO (JS)"
-BTN_MODO_HUMANO = "👤 MODO HUMANO (TECLADO)"
-BTN_ENRIQUECER = "🌍 ENRIQUECER TODOS"
-ETIQUETA_CARGAR_ARCHIVO = "📂 Cargar Ficha Guardada:"
-BTN_CARGAR = "CARGAR"
-ETIQUETA_RESULTADOS = "Emprendimientos Encontrados"
-COLUMNA_NOMBRE = "Nombre"
-COLUMNA_ESTADO = "Estado"
-TEXTO_PLACEHOLDER_CARD = "Selecciona un comercio\npara ver el detalle"
-ESTADO_LISTO = "Listo para prospectar en Trelew"
-ENCABEZADO_CARD = "DETALLE DEL CLIENTE"
-ETIQUETA_TELEFONO = "📱 Teléfono:"
-ETIQUETA_WEB = "🌐 Web:"
-ETIQUETA_CIUDAD = "📍 Ciudad:"
-VALOR_SIN_WEB = "No posee (Oportunidad)"
-VALOR_CIUDAD = "Trelew, Chubut"
-BTN_CONTACTAR_TODOS = "CONTACTAR POR TODOS LOS MEDIOS"
-BTN_VER_FICHA = "📄 VER FICHA TÉCNICA (WEB DEMO)"
-BTN_BUSCAR_GOOGLE = "🌍 BUSCAR DATOS EXTRA (GOOGLE)"
-ENCABEZADO_FICHA = "DATOS PÚBLICOS PARA WEB DEMO"
-SECCION_COMENTARIOS = "Últimos Comentarios (Testimonios):"
-MSJ_SIN_COMENTARIOS = "No se encontraron comentarios recientes."
-NOTA_PIE = "* Los datos se guardan automáticamente en la carpeta 'fichas_leads'"
+# Nota: la mayoría de los textos de la UI se definieron originalmente como
+# constantes pero se prefieren literales en el código para mejorar legibilidad
+# durante el desarrollo. Sólo mantener aquí aquellos que se usan en más de un
+# módulo o que cambian dinámicamente.
+
+# (Si en el futuro se detecta duplicación, mover la constante de nuevo.)
 
 # --- MENSAJES Y ALERTAS ---
-MSJ_ADVERTENCIA_RUBRO = "Ingresa un rubro comercial para comenzar."
-MSJ_ERROR_SIN_TELEFONO = "Este comercio no dispone de un teléfono válido."
-MSJ_ADVERTENCIA_SIN_LISTA = "Primero debes buscar o cargar una lista de emprendimientos."
-MSJ_CONFIRMAR_ENRIQUECIMIENTO = "Esto buscará datos extra en Google para {} contactos.\nEl proceso puede tardar unos minutos.\n¿Deseas continuar?"
-MSJ_NAVEGADOR_BLOQUEADO = "No se pudo iniciar el robot.\n\nCierra todas las ventanas de Chrome (o el script de configuración) antes de buscar."
+# similares a los textos, dejar en el código donde se usan; sólo extraer si
+# varias funciones comparten el mismo mensaje.
 
 # --- SISTEMA DE PALETAS DE COLORES (DEFINICIÓN CENTRAL) ---
 PALETAS_COLORES = {

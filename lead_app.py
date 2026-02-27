@@ -57,7 +57,7 @@ class TrelewLeadApp:
     """
     def __init__(self, root):
         self.root = root
-        self.root.title(constantes.TITULO_APP)
+        self.root.title("Trelew Digital Leads - Prospector de Negocios")
         self.root.geometry("1100x700")
         self.root.state('zoomed')
         self.root.configure(bg=constantes.COLOR_FONDO)
@@ -81,40 +81,40 @@ class TrelewLeadApp:
         header = tk.Frame(self.root, bg=constantes.COLOR_PRIMARIO, height=70)
         header.pack(fill="x")
         
-        tk.Label(header, text=constantes.TEXTO_ENCABEZADO, font=constantes.FUENTE_TITULO, 
+        tk.Label(header, text="TRELEW LEAD PROSPECTOR", font=constantes.FUENTE_TITULO, 
                  bg=constantes.COLOR_PRIMARIO, fg=constantes.COLOR_BLANCO).pack(pady=15)
 
         # --- Panel de Control: Búsqueda ---
-        search_frame = tk.LabelFrame(self.root, text=constantes.TITULO_FRAME_BUSQUEDA, font=constantes.FUENTE_NEGRITA, bg=constantes.COLOR_FONDO, pady=10, padx=10)
+        search_frame = tk.LabelFrame(self.root, text=" Gestión de Búsquedas ", font=constantes.FUENTE_NEGRITA, bg=constantes.COLOR_FONDO, pady=10, padx=10)
         search_frame.pack(fill="x", padx=20)
 
         # Sección 1: Nueva Búsqueda (Online)
-        tk.Label(search_frame, text=constantes.ETIQUETA_NUEVA_BUSQUEDA, font=constantes.FUENTE_PEQUENA, bg=constantes.COLOR_FONDO).pack(side="left")
+        tk.Label(search_frame, text="Nueva Búsqueda (Google Maps):", font=constantes.FUENTE_PEQUENA, bg=constantes.COLOR_FONDO).pack(side="left")
         
         self.entry_rubro = ttk.Combobox(search_frame, values=constantes.RUBROS_SUGERIDOS, width=28)
         self.entry_rubro.pack(side="left", padx=5)
         self.entry_rubro.set("Gimnasios")
 
-        self.btn_rapido = ttk.Button(search_frame, text=constantes.BTN_MODO_RAPIDO, command=lambda: self.start_scraping_thread("js"))
+        self.btn_rapido = ttk.Button(search_frame, text="⚡ MODO RÁPIDO (JS)", command=lambda: self.start_scraping_thread("js"))
         self.btn_rapido.pack(side="left", padx=5)
 
-        self.btn_humano = ttk.Button(search_frame, text=constantes.BTN_MODO_HUMANO, command=lambda: self.start_scraping_thread("teclado"))
+        self.btn_humano = ttk.Button(search_frame, text="👤 MODO HUMANO (TECLADO)", command=lambda: self.start_scraping_thread("teclado"))
         self.btn_humano.pack(side="left", padx=5)
 
         # Botón para enriquecimiento masivo
-        self.btn_enrich_all = ttk.Button(search_frame, text=constantes.BTN_ENRIQUECER, command=self.lanzar_enriquecimiento_masivo)
+        self.btn_enrich_all = ttk.Button(search_frame, text="🌍 ENRIQUECER TODOS", command=self.lanzar_enriquecimiento_masivo)
         self.btn_enrich_all.pack(side="left", padx=5)
 
         # Separador visual
         ttk.Separator(search_frame, orient="vertical").pack(side="left", fill="y", padx=20)
 
         # Sección 2: Cargar Ficha (Offline)
-        tk.Label(search_frame, text=constantes.ETIQUETA_CARGAR_ARCHIVO, font=constantes.FUENTE_PEQUENA, bg=constantes.COLOR_FONDO).pack(side="left")
+        tk.Label(search_frame, text="📂 Cargar Ficha Guardada:", font=constantes.FUENTE_PEQUENA, bg=constantes.COLOR_FONDO).pack(side="left")
         self.combo_fichas = ttk.Combobox(search_frame, width=25, state="readonly")
         self.combo_fichas.pack(side="left", padx=5)
         self.actualizar_lista_fichas() # Cargar lista inicial
         
-        self.btn_cargar = ttk.Button(search_frame, text=constantes.BTN_CARGAR, command=self.cargar_ficha_offline)
+        self.btn_cargar = ttk.Button(search_frame, text="CARGAR", command=self.cargar_ficha_offline)
         self.btn_cargar.pack(side="left", padx=5)
 
         # Botón Demo Web V1
@@ -133,12 +133,12 @@ class TrelewLeadApp:
         left_panel = tk.Frame(main_container, bg=constantes.COLOR_BLANCO, relief="flat")
         left_panel.pack(side="left", fill="both", expand=True)
 
-        tk.Label(left_panel, text=constantes.ETIQUETA_RESULTADOS, font=constantes.FUENTE_NEGRITA, bg=constantes.COLOR_BLANCO, pady=5).pack()
+        tk.Label(left_panel, text="Emprendimientos Encontrados", font=constantes.FUENTE_NEGRITA, bg=constantes.COLOR_BLANCO, pady=5).pack()
 
         columns = ("nombre", "estado", "propuesta", "web")
         self.tree = ttk.Treeview(left_panel, columns=columns, show="headings")
-        self.tree.heading("nombre", text=constantes.COLUMNA_NOMBRE)
-        self.tree.heading("estado", text=constantes.COLUMNA_ESTADO)
+        self.tree.heading("nombre", text="Nombre")
+        self.tree.heading("estado", text="Estado")
         self.tree.heading("propuesta", text="Propuesta")
         self.tree.heading("web", text="Web")
         self.tree.column("nombre", width=250)
@@ -209,7 +209,7 @@ class TrelewLeadApp:
         canvas_frame.bind('<Leave>', lambda e: self.canvas.unbind_all("<MouseWheel>"))
 
         # Mensaje de ayuda inicial
-        self.card_placeholder = tk.Label(self.scrollable_frame, text=constantes.TEXTO_PLACEHOLDER_CARD, 
+        self.card_placeholder = tk.Label(self.scrollable_frame, text="Selecciona un emprendimiento para ver detalles", 
                                          font=constantes.FUENTE_ITALICA, fg=constantes.COLOR_TEXTO_TENUE, bg=constantes.COLOR_FONDO, pady=100)
         self.card_placeholder.pack()
 
@@ -217,7 +217,7 @@ class TrelewLeadApp:
         self.detail_card = tk.Frame(self.scrollable_frame, bg=constantes.COLOR_BLANCO, highlightbackground=constantes.COLOR_BORDE, highlightthickness=1)
         
         # --- Barra de Estado (Feedback al usuario) ---
-        self.status_label = tk.Label(self.root, text=constantes.ESTADO_LISTO, bd=1, relief="flat", anchor="w", bg=constantes.COLOR_FONDO_ESTADO, padx=10)
+        self.status_label = tk.Label(self.root, text="Listo", bd=1, relief="flat", anchor="w", bg=constantes.COLOR_FONDO_ESTADO, padx=10)
         self.status_label.pack(side="bottom", fill="x")
 
     def log(self, mensaje):
@@ -368,7 +368,7 @@ class TrelewLeadApp:
         # Header de la Card
         card_header = tk.Frame(self.detail_card, bg=constantes.COLOR_PRIMARIO, pady=10)
         card_header.pack(fill="x")
-        tk.Label(card_header, text=constantes.ENCABEZADO_CARD, font=constantes.FUENTE_PEQUENA_NEGRITA, bg=constantes.COLOR_PRIMARIO, fg=constantes.COLOR_BLANCO).pack()
+        tk.Label(card_header, text="Información del Emprendimiento", font=constantes.FUENTE_PEQUENA_NEGRITA, bg=constantes.COLOR_PRIMARIO, fg=constantes.COLOR_BLANCO).pack()
 
         # Cuerpo de la Card
         body = tk.Frame(self.detail_card, bg=constantes.COLOR_BLANCO, padx=15, pady=15)
@@ -384,9 +384,9 @@ class TrelewLeadApp:
         
         # Filas de información
         self.create_info_row(body, "Categoría:", datos.get('categoria', 'General'))
-        self.create_info_row(body, constantes.ETIQUETA_TELEFONO, datos.get('telefono', 'No disponible'))
-        self.create_info_row(body, constantes.ETIQUETA_WEB, datos.get('website', constantes.VALOR_SIN_WEB))
-        self.create_info_row(body, constantes.ETIQUETA_CIUDAD, constantes.VALOR_CIUDAD)
+        self.create_info_row(body, "📱 Teléfono:", datos.get('telefono', 'No disponible'))
+        self.create_info_row(body, "🌐 Web:", datos.get('website', 'No posee (Oportunidad)'))
+        self.create_info_row(body, "📍 Ciudad:", "Trelew, Chubut")
 
         # Separador visual
         tk.Frame(body, height=1, bg=constantes.COLOR_BORDE).pack(fill="x", pady=15)
@@ -432,10 +432,10 @@ class TrelewLeadApp:
         # 3. Botón "Contactar por todos" (Gris/Rojo)
         has_any = has_wa or has_fb or has_ig or has_email
         c_all = constantes.COLOR_BTN_OSCURO if has_any else constantes.COLOR_PELIGRO
-        tk.Button(body, text=constantes.BTN_CONTACTAR_TODOS, bg=c_all, fg=constantes.COLOR_BLANCO, font=constantes.FUENTE_PEQUENA_NEGRITA, relief="flat", cursor="hand2" if has_any else "arrow", command=lambda n=nombre, d=datos: self.contactar_todos(n, d) if has_any else None).pack(fill="x", pady=(5, 5))
+        tk.Button(body, text="CONTACTAR POR TODOS LOS MEDIOS", bg=c_all, fg=constantes.COLOR_BLANCO, font=constantes.FUENTE_PEQUENA_NEGRITA, relief="flat", cursor="hand2" if has_any else "arrow", command=lambda n=nombre, d=datos: self.contactar_todos(n, d) if has_any else None).pack(fill="x", pady=(5, 5))
 
         # Botón de información detallada (Ficha Técnica)
-        btn_info = tk.Button(body, text=constantes.BTN_VER_FICHA, bg=constantes.COLOR_BTN_INFO, fg=constantes.COLOR_BLANCO, 
+        btn_info = tk.Button(body, text="📄 VER FICHA TÉCNICA (WEB DEMO)", bg=constantes.COLOR_BTN_INFO, fg=constantes.COLOR_BLANCO, 
                            font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2",
                            command=lambda: self.mostrar_info_detallada(nombre, datos))
         btn_info.pack(fill="x", pady=5)

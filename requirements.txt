@@ -2,3 +2,7 @@ selenium
 webdriver-manager
 python-dotenv
 requests
+
+# dependencies for running the automated test suite
+pytest
+pytest-mock

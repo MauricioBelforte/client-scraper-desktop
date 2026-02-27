@@ -28,7 +28,7 @@ client-scraper-desktop/
 - [x] **2. Mover `RUBROS_SUGERIDOS`:** Corta la lista `rubros_sugeridos` de `lead_app.py` y pégala en `src/constants.py` como `RUBROS_SUGERIDOS`. Importa y úsala en `setup_ui`.
 - [x] **3. Mover Nombres de Carpetas:** Crea constantes en `src/constants.py` para `"fichas_leads"` y `"selenium_profile"`. Por ejemplo: `DATA_FOLDER = "fichas_leads"`. Reemplaza el texto literal en el código por estas constantes.
 - [x] **4. Mover Colores y Fuentes:** Crea constantes para los códigos de color (`#f8f9fa`, `#1a73e8`, etc.) y las definiciones de fuentes (`("Segoe UI", 10)`) en `src/constants.py`. Reemplaza los valores en el código.
-- [x] **5. Mover Textos de la UI (OPCIONAL):** Inicialmente se colocaron como constantes. Se revisará cada texto; si se usa en más de un lugar o cambia dinámicamente, mantenerlo aquí; de lo contrario, volverlo literal en el código para mejorar legibilidad y eliminarlo de `constants.py`. Esta decisión se refleja en la fase de limpieza posterior.
+- [x] **5. Mover Textos de la UI:** Crea constantes para todos los textos fijos de la UI (títulos de ventanas, etiquetas, mensajes de error) en `src/constants.py`.
 
 ---
 
@@ -57,15 +57,13 @@ client-scraper-desktop/
 
 *Objetivo: Descomponer la monolítica función `ejecutar_scraping` en métodos pequeños y específicos dentro de una nueva clase `Scraper`.*
 
-> **Nota actual:** ya existen módulos auxiliares `src/scroll_strategies.py` (estrategias de scroll) y `src/enriquecedor.py` (búsqueda externa global). La fase considera cómo integrar o migrar esas piezas dentro de `Scraper` según convenga.
-
 ### 4.1: Configuración y Arranque
 
-- [x] **13. Crear Clase `Scraper`:** Crea el archivo `src/scraper.py` con una clase `Scraper`. Su `__init__` debe aceptar un `logger_callback` para poder enviar logs a la UI. (Realizado, clase es instanciable y test asociado creado)
-- [x] **14. Mover Configuración de Opciones:** Mueve toda la creación y configuración del objeto `options` de Selenium a un método `_get_chrome_options(self)` en `Scraper`. (Implementado y verificado mediante prueba 4_1_14)
-- [x] **15. Mover Inicialización del Driver:** Mueve la creación del `webdriver.Chrome` y la ejecución del comando CDP (`Page.addScriptToEvaluateOnNewDocument`) a un método `_initialize_driver(self)` en `Scraper`. (Implementado y cubierto por test 4_1_15)
-- [x] **16. Mover Navegación Inicial:** Mueve la línea `driver.get(...)` a un método `navigate_to_maps(self, driver, query)` en `Scraper`. (Implementado y verificado con test 4_1_16)
-- [x] **17. Mover Espera del Feed:** Mueve la lógica `wait.until(EC.presence_of_element_located((By.XPATH, '//div[@role="feed"]')))` a un método `_wait_for_feed(self, wait)` en `Scraper`. (Hecho y cubierto con test 4_1_17)
+- [ ] **13. Crear Clase `Scraper`:** Crea el archivo `src/scraper.py` con una clase `Scraper`. Su `__init__` debe aceptar un `logger_callback` para poder enviar logs a la UI.
+- [ ] **14. Mover Configuración de Opciones:** Mueve toda la creación y configuración del objeto `options` de Selenium a un método `_get_chrome_options(self)` en `Scraper`.
+- [ ] **15. Mover Inicialización del Driver:** Mueve la creación del `webdriver.Chrome` y la ejecución del comando CDP (`Page.addScriptToEvaluateOnNewDocument`) a un método `_initialize_driver(self)` en `Scraper`.
+- [ ] **16. Mover Navegación Inicial:** Mueve la línea `driver.get(...)` a un método `navigate_to_maps(self, driver, query)` en `Scraper`.
+- [ ] **17. Mover Espera del Feed:** Mueve la lógica `wait.until(EC.presence_of_element_located((By.XPATH, '//div[@role="feed"]')))` a un método `_wait_for_feed(self, wait)` en `Scraper`.
 
 ### 4.2: Interacción con la Lista de Resultados
 
@@ -131,30 +129,6 @@ client-scraper-desktop/
     - En `__init__`: Instanciar `GestorDatos`, `UIManager` y `Scraper`.
     - Mantener el estado principal de la aplicación (el diccionario `prospectos_datos`).
     - Contener los métodos que son llamados por los eventos de la UI (ej. `start_scraping_thread`), los cuales a su vez llamarán a los métodos correspondientes en `Scraper` y `GestorDatos`, y luego usarán `UIManager` para actualizar la vista.
-
----
-
-## Fase 7: Cobertura de Tests y Calidad
-
-*Objetivo: Asegurar que cada unidad de código tenga pruebas automatizadas y configurar la integración continua.*
-
-- [ ] **48. Crear estructura de pruebas:** Añadir la carpeta `test/` con un `__init__.py` y un subdirectorio `test/refactorizacion/` donde irán todas las pruebas específicas de refactorización. Dentro de esta carpeta pueden crearse subcarpetas por fase (ej. `fase 4-1-configuracion-arranque`). Los archivos deben numerarse secuencialmente (`1_test_xyz.py`, `2_test_abc.py`, etc.) para facilitar ordenamiento.- [ ] **49. Tests para utilidades y constantes:** En `test/refactorizacion/` escribe pruebas unitarias que verifiquen valores de constantes y el comportamiento de `create_whatsapp_url`, etc.
-- [ ] **50. Tests para `GestorDatos`:** En el mismo subdirectorio, simular lectura/escritura usando `tmp_path` y validar métodos `guardar_datos`, `cargar_datos` y `obtener_archivos`.
-- [ ] **51. Tests para `Scraper` con mocking:** Usar `unittest.mock` para comprobar que cada método aislado es invocado correctamente sin abrir un navegador real.
-- [ ] **52. Tests para `UIManager`:** Crear pruebas que instancien la clase en un root de Tkinter y simulen eventos básicos; verificar que los widgets se crean y actualizan.
-- [ ] **53. Configurar CI:** Añadir un workflow de GitHub Actions (`.github/workflows/tests.yml`) que instale dependencias y ejecute `pytest` en cada push/pull request.
-
----
-
-## Fase 8: Revisión Final y Preparación de Release
-
-*Objetivo: Pulir detalles, documentar cambios y dejar el repositorio listo para un tag/versión.*
-
-- [ ] **54. Limpieza de imports y código muerto:** Ejecutar `flake8`/`ruff` y eliminar funciones o variables sin uso. Aprovechar para borrar constantes de texto de UI que ya fueron movidas a literales o que no se utilizan.
-- [ ] **55. Actualizar documentación:** Revisar `README.md`, `AGENTS.md` y los archivos en `documentacion/` para reflejar la nueva arquitectura.
-- [ ] **56. Verificación de estilo:** Correr pre‑commit hooks y confirmar que no quedan advertencias de formato o lint.
-- [ ] **57. Generar notas de release:** Redactar un `CHANGELOG.md` o sección en el README con los cambios importantes de la refactorización.
-- [ ] **58. Crear rama de release y etiqueta:** Preparar branch `release/vX.Y` y aplicar un tag semántico cuando todo esté aprobado.
 
 ---
 

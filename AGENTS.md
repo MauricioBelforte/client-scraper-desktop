@@ -41,3 +41,4 @@ El formato obligatorio para los mensajes de commit es:
 - **Paso a Paso:** Preferir instrucciones granulares y listas de verificación (checklists) para tareas complejas.
 - **Conservadurismo:** Si algo funciona bien, evitar refactorizarlo agresivamente a menos que sea parte de un plan acordado.
 - **Planificación Proactiva:** Ante cambios grandes o nuevas funcionalidades complejas, sugerir generar primero un plan detallado con checklist.
+- **Pruebas de Refactorización:** Ubicar nuevas pruebas relacionadas con refactor en `test/refactorizacion/`, numerar los ficheros y asegurar que sean reutilizables entre iteraciones.
