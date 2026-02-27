@@ -1,0 +1,30 @@
+{
+  "nombre": "Sabores del Valle",
+  "categoria": "Restaurantes",
+  "direccion": "Avenida Fontana 345, Trelew, Chubut",
+  "telefono": "+54 9 280 4678901",
+  "rating": "4.7",
+  "horarios_detallados": [
+    "Lunes: 12:00-15:00, 20:00-23:00",
+    "Martes: 12:00-15:00, 20:00-23:00",
+    "Miércoles: 12:00-15:00, 20:00-23:00",
+    "Jueves: 12:00-15:00, 20:00-23:00",
+    "Viernes: 12:00-15:00, 20:00-00:00",
+    "Sábado: 20:00-00:00",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Martina S.",
+      "texto": "Excelente cocina regional con un toque moderno. El cordero patagónico es simplemente espectacular.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Pedro G.",
+      "texto": "Un ambiente muy cálido y acogedor. La atención fue de primera y los postres, imperdibles. Volveremos sin duda.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/SaboresDelValleTrelew",
+  "instagram": "https://instagram.com/saboresdelvalle_trelew"
+}

@@ -158,6 +158,64 @@ client-scraper-desktop/
 
 ---
 
+## 🐛 Problemas Identificados y Corregidos
+
+### BUG #001: Ventana de Ficha Técnica Aparecía Vacía
+
+**Estado:** ✅ CORREGIDO  
+**Fecha:** 27 de febrero de 2026  
+**Severidad:** Medio (funcionalidad visual)  
+
+**Descripción:**
+Cuando el usuario presionaba el botón "VER FICHA TÉCNICA" en la tarjeta de detalles, se abría una ventana emergente pero aparecía completamente vacía, sin mostrar la información recopilada del emprendimiento.
+
+**Causa Raíz:**
+Durante la refactorización de Fase 1 (Extracción de Constantes), se removieron del archivo `src/constants.py` cuatro constantes de texto que se usaban en la función `mostrar_info_detallada()`:
+- `ENCABEZADO_FICHA` → Encabezado de la ventana de ficha técnica
+- `SECCION_COMENTARIOS` → Etiqueta de la sección de comentarios
+- `MSJ_SIN_COMENTARIOS` → Mensaje cuando no hay comentarios
+- `NOTA_PIE` → Texto de advertencia al pie
+
+Sin embargo, estas constantes seguían siendo referenciadas en `lead_app.py` (líneas 438, 836, 890, 900, 903). Cuando Tkinter intentaba acceder a ellas, se levantaba un `AttributeError`, lo que causaba que los labels se crearan vacíos.
+
+**Síntomas:**
+- La ventana se abría sin problemas
+- Los frames y estructura estaban presente
+- Los labels aparecían vacíos en lugar de mostrar el texto esperado
+- No se levantaba un error visible al usuario
+
+**Solución Aplicada:**
+Reemplazar todas las referencias a constantes faltantes con literales en español:
+
+| Variable Constante | Línea | Reemplazada por |
+|-------------------|-------|-----------------|
+| `COLUMNA_NOMBRE` | 140 | `"Nombre"` |
+| `COLUMNA_ESTADO` | 141 | `"Estado"` |
+| `ENCABEZADO_CARD` | 371 | `"Información del Emprendimiento"` |
+| `TEXTO_PLACEHOLDER_CARD` | 212 | `"Selecciona un emprendimiento para ver detalles"` |
+| `ESTADO_LISTO` | 220 | `"Listo"` |
+| `ENCABEZADO_FICHA` | 836 | `"Información Pública del Emprendimiento"` |
+| `SECCION_COMENTARIOS` | 890 | `"Comentarios y Reseñas"` |
+| `MSJ_SIN_COMENTARIOS` | 900 | `"No hay comentarios disponibles"` |
+| `NOTA_PIE` | 903 | `"Esta información fue recopilada automáticamente desde Google Maps y sitios web públicos. Verifica los datos directamente con el emprendimiento."` |
+
+Además, se actualizó el texto del botón:
+- **Antes:** `"📄 VER FICHA TÉCNICA (WEB DEMO)"`
+- **Después:** `"📄 VER FICHA TÉCNICA"`
+
+**Tests Asociados:**
+Se creó el archivo `test/refactorizacion/4_test_ficha_tecnica.py` con tres tests:
+1. `test_mostrar_info_detallada_no_falla()` → Verifica que la función se ejecute sin errores
+2. `test_botón_ficha_tecnica_texto_actualizado()` → Valida que "(WEB DEMO)" fue removido
+3. `test_no_referencias_a_constantes_faltantes()` → Confirma que no existan referencias a constantes removidas
+
+**Lecciones Aprendidas:**
+1. **Verificación cruzada:** Cuando se remuevan constantes, realizar una búsqueda exhaustiva en todo el codebase para asegurar que no hay referencias huérfanas.
+2. **Tests preventivos:** Los tests de regresión como `test_no_referencias_a_constantes_faltantes()` podrían haber detectado este problema preemptivamente.
+3. **Documentación de cambios:** Mantener un registro de qué constantes se removieron y por qué, especialmente durante refactorizaciones.
+
+---
+
 ### Mensaje para el Commit de este Plan
 
 `docs: Add detailed, step-by-step refactoring plan`

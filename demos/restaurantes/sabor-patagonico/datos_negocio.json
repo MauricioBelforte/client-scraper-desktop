@@ -1,0 +1,30 @@
+{
+  "nombre": "Sabor Patagónico",
+  "categoria": "Restaurantes",
+  "direccion": "Av. San Martín 345, Trelew, Chubut",
+  "telefono": "+54 9 280 4567890",
+  "rating": "4.7",
+  "horarios_detallados": [
+    "Lunes: 12:00-15:00, 20:00-23:30",
+    "Martes: 12:00-15:00, 20:00-23:30",
+    "Miércoles: 12:00-15:00, 20:00-23:30",
+    "Jueves: 12:00-15:00, 20:00-23:30",
+    "Viernes: 12:00-15:30, 20:00-00:30",
+    "Sábado: 12:00-15:30, 20:00-00:30",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Ana G.",
+      "texto": "Excelente comida patagónica y atención cálida. ¡Imperdible si visitas Trelew!",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Martín P.",
+      "texto": "Los platos son abundantes y deliciosos. Recomiendo el cordero, estaba exquisito.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/saborpatagonicotrelew",
+  "instagram": "https://instagram.com/saborpatagonico_tw"
+}

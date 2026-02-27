@@ -435,7 +435,7 @@ class TrelewLeadApp:
         tk.Button(body, text="CONTACTAR POR TODOS LOS MEDIOS", bg=c_all, fg=constantes.COLOR_BLANCO, font=constantes.FUENTE_PEQUENA_NEGRITA, relief="flat", cursor="hand2" if has_any else "arrow", command=lambda n=nombre, d=datos: self.contactar_todos(n, d) if has_any else None).pack(fill="x", pady=(5, 5))
 
         # Botón de información detallada (Ficha Técnica)
-        btn_info = tk.Button(body, text="📄 VER FICHA TÉCNICA (WEB DEMO)", bg=constantes.COLOR_BTN_INFO, fg=constantes.COLOR_BLANCO, 
+        btn_info = tk.Button(body, text="📄 VER FICHA TÉCNICA", bg=constantes.COLOR_BTN_INFO, fg=constantes.COLOR_BLANCO, 
                            font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2",
                            command=lambda: self.mostrar_info_detallada(nombre, datos))
         btn_info.pack(fill="x", pady=5)
@@ -833,7 +833,7 @@ class TrelewLeadApp:
         header_frame = tk.Frame(info_frame, bg=constantes.COLOR_BLANCO)
         header_frame.pack(fill="x", pady=15)
         
-        tk.Label(header_frame, text=constantes.ENCABEZADO_FICHA, font=constantes.FUENTE_SUBTITULO, bg=constantes.COLOR_BLANCO, fg=constantes.COLOR_PRIMARIO).pack(side="left")
+        tk.Label(header_frame, text="Información Pública del Emprendimiento", font=constantes.FUENTE_SUBTITULO, bg=constantes.COLOR_BLANCO, fg=constantes.COLOR_PRIMARIO).pack(side="left")
         
         tk.Button(header_frame, text="✏️ Editar", bg=constantes.COLOR_BTN_INFO, fg="white", 
                   font=constantes.FUENTE_PEQUENA_NEGRITA, relief="flat", cursor="hand2",
@@ -887,7 +887,7 @@ class TrelewLeadApp:
         if imgs: add_row("Imágenes:", f"{len(imgs)} capturadas (URLs)")
 
         # Sección de Comentarios
-        tk.Label(info_frame, text=constantes.SECCION_COMENTARIOS, font=constantes.FUENTE_NEGRITA, bg=constantes.COLOR_BLANCO, pady=10).pack(anchor="w")
+        tk.Label(info_frame, text="Comentarios y Reseñas", font=constantes.FUENTE_NEGRITA, bg=constantes.COLOR_BLANCO, pady=10).pack(anchor="w")
         comentarios_frame = tk.Frame(info_frame, bg=constantes.COLOR_FONDO_COMENTARIO, padx=10, pady=10)
         comentarios_frame.pack(fill="x")
         
@@ -897,10 +897,10 @@ class TrelewLeadApp:
                 tk.Label(comentarios_frame, text=f"👤 {com['autor']} ({com['rating']})", font=constantes.FUENTE_PEQUENA_NEGRITA, bg=constantes.COLOR_FONDO_COMENTARIO, anchor="w").pack(fill="x")
                 tk.Label(comentarios_frame, text=f"💬 {com['texto'][:100]}...", font=constantes.FUENTE_PEQUENA, bg=constantes.COLOR_FONDO_COMENTARIO, anchor="w", fg=constantes.COLOR_TEXTO_COMENTARIO).pack(fill="x", pady=(0, 5))
         else:
-            tk.Label(comentarios_frame, text=constantes.MSJ_SIN_COMENTARIOS, bg=constantes.COLOR_FONDO_COMENTARIO).pack()
+            tk.Label(comentarios_frame, text="No hay comentarios disponibles", bg=constantes.COLOR_FONDO_COMENTARIO).pack()
 
         # Nota al pie
-        tk.Label(info_frame, text=constantes.NOTA_PIE, font=constantes.FUENTE_DIMINUTA, bg=constantes.COLOR_BLANCO, pady=15, fg=constantes.COLOR_TEXTO_TENUE).pack()
+        tk.Label(info_frame, text="Esta información fue recopilada automáticamente desde Google Maps y sitios web públicos. Verifica los datos directamente con el emprendimiento.", font=constantes.FUENTE_DIMINUTA, bg=constantes.COLOR_BLANCO, pady=15, fg=constantes.COLOR_TEXTO_TENUE).pack()
 
     def create_info_row(self, parent, label, value):
         """Crea una fila de información etiquetada dentro de la Card."""
@@ -1031,7 +1031,7 @@ class TrelewLeadApp:
             return
         
         rubro = self.entry_rubro.get()
-        confirm = messagebox.askyesno("Confirmar", constantes.MSJ_CONFIRMAR_ENRIQUECIMIENTO.format(len(self.prospectos_datos)))
+        confirm = messagebox.askyesno("Confirmar", f"¿Estás seguro de enriquecer {len(self.prospectos_datos)} prospectos? Esto puede tomar tiempo.")
         if confirm:
             self.log("Iniciando enriquecimiento masivo...")
             threading.Thread(target=self.ejecutar_enriquecimiento_masivo, args=(rubro,), daemon=True).start()
