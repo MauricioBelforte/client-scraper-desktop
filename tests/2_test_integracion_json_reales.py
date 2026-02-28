@@ -100,7 +100,6 @@ def test_integracion_json_reales():
     assert mensajes_correctos >= len(archivos_json) * 0.8, "Menos del 80% de archivos son válidos"
     
     print("[OK] TEST DE INTEGRACIÓN COMPLETADO EXITOSAMENTE")
-    return resultados
 
 def test_modelos_especificos_por_rubro():
     """Verifica que modelos específicos están en los mensajes"""
@@ -146,7 +145,6 @@ def test_modelos_especificos_por_rubro():
         assert modelos_encontrados > 0, f"{rubro} no tiene modelos en mensaje"
     
     print(f"\n[OK] VALIDACIÓN DE MODELOS COMPLETADA")
-    return True
 
 def test_consistencia_mensajes():
     """Verifica que todos los mensajes tienen la estructura correcta"""
@@ -185,7 +183,6 @@ def test_consistencia_mensajes():
         assert all(todos_componentes), f"{rubro} no tiene estructura completa"
     
     print(f"\n[OK] CONSISTENCIA VERIFICADA")
-    return True
 
 def test_archivo_no_configurado():
     """Verifica que archivos no configurados usan TEMPLATE_DEFAULT"""
@@ -212,7 +209,6 @@ def test_archivo_no_configurado():
         print(f"[WN] No se encontraron URLs del default")
     
     assert urls_encontradas > 0, "Fallback no funciona"
-    return True
 
 if __name__ == "__main__":
     print("\n" + "="*70)

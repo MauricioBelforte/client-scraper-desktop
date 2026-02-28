@@ -82,26 +82,29 @@ def test_literales_españoles_en_ficha_tecnica():
 
 def test_scroll_configurado_en_ficha_tecnica():
     """
-    Verifica que el scroll de la ventana de ficha técnica esté correctamente configurado.
-    Asegura que el binding para MouseWheel funciona en múltiples widgets.
+    Verifica que el scroll de la ventana de ficha técnica esté correctamente configurado
+    usando el método `bind_all` y que se limpie al cerrar, como en la versión anterior.
     """
     with open("lead_app.py", "r", encoding="utf-8") as f:
         contenido = f.read()
     
-    # Verificar que el scroll está vinculado a múltiples widgets
-    assert 'top.bind("<MouseWheel>"' in contenido or 'top.bind("<MouseWheel>"' in contenido, \
-        "El binding del scroll debería estar vinculado a la ventana principal (top)"
+    # Extraer solo el contenido de la función `mostrar_info_detallada` para un análisis más preciso
+    try:
+        inicio = contenido.index("def mostrar_info_detallada(self, nombre, datos):")
+        fin = contenido.index("def create_info_row(self, parent, label, value):")
+        contenido_funcion = contenido[inicio:fin]
+    except ValueError:
+        contenido_funcion = contenido # Fallback a todo el archivo si no se encuentra
+
+    # 1. Verificar que se usa bind_all para el scroll
+    assert 'canvas.bind_all("<MouseWheel>", _on_mousewheel)' in contenido_funcion, \
+        "Debe usarse 'canvas.bind_all' para el evento MouseWheel en la ficha técnica."
     
-    assert 'canvas.bind("<MouseWheel>"' in contenido, \
-        "El binding del scroll debería estar vinculado al canvas"
+    # 2. Verificar que se define un handler on_close y se usa para limpiar el evento
+    assert "def on_close():" in contenido_funcion, "Debe existir una función 'on_close'."
+    assert 'canvas.unbind_all("<MouseWheel>")' in contenido_funcion, "Se debe llamar a 'canvas.unbind_all' al cerrar."
+    assert 'top.protocol("WM_DELETE_WINDOW", on_close)' in contenido_funcion, "El protocolo de cierre debe llamar a on_close."
     
-    assert 'info_frame.bind("<MouseWheel>"' in contenido, \
-        "El binding del scroll debería estar vinculado al info_frame"
-    
-    # Verificar que hay una función para vincular recursivamente a los hijos
-    assert "bind_mousewheel_to_children" in contenido, \
-        "Debe existir una función para vincular el scroll a los widgets hijos recursivamente"
-    
-    # Verificar que el evento se limpia correctamente al cerrar
-    assert "unbind" in contenido, \
-        "Debe haber un unbind para limpiar el evento al cerrar la ventana"
+    # 3. Verificar que la lógica de límites YA NO está presente
+    assert "canvas.yview()[0] <= 0.0" not in contenido_funcion, "La lógica de límite superior no debería estar presente."
+    assert "canvas.yview()[1] >= 1.0" not in contenido_funcion, "La lógica de límite inferior no debería estar presente."

@@ -202,12 +202,33 @@ class TrelewLeadApp:
         self.canvas.pack(side="left", fill="both", expand=True)
         self.scrollbar.pack(side="right", fill="y")
 
+        # Función de scroll con límites para evitar el desplazamiento infinito
         def _on_mousewheel(event):
-            self.canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+            scroll_units = int(-1 * (event.delta / 120))
             
-        canvas_frame.bind('<Enter>', lambda e: self.canvas.bind_all("<MouseWheel>", _on_mousewheel))
-        canvas_frame.bind('<Leave>', lambda e: self.canvas.unbind_all("<MouseWheel>"))
+            # Bloquear scroll hacia arriba si ya se está en el tope
+            if scroll_units < 0 and self.canvas.yview()[0] <= 0.0: return
+            # Bloquear scroll hacia abajo si ya se está en el fondo
+            if scroll_units > 0 and self.canvas.yview()[1] >= 1.0: return
+            
+            self.canvas.yview_scroll(scroll_units, "units")
 
+        # Vincular scroll recursivamente a todos los widgets hijos
+        def bind_scroll(widget):
+            try:
+                widget.bind("<MouseWheel>", _on_mousewheel)
+                for child in widget.winfo_children():
+                    bind_scroll(child)
+            except tk.TclError: pass
+
+        # Vincular inicialmente y re-vincular al cambiar contenido
+        self.canvas.bind("<MouseWheel>", _on_mousewheel)
+        self.scrollable_frame.bind("<MouseWheel>", _on_mousewheel)
+        self.scrollable_frame.bind("<Configure>", lambda e: [
+            self.canvas.configure(scrollregion=self.canvas.bbox("all")),
+            bind_scroll(self.scrollable_frame)
+        ])
+        
         # Mensaje de ayuda inicial
         self.card_placeholder = tk.Label(self.scrollable_frame, text="Selecciona un emprendimiento para ver detalles", 
                                          font=constantes.FUENTE_ITALICA, fg=constantes.COLOR_TEXTO_TENUE, bg=constantes.COLOR_FONDO, pady=100)
@@ -821,28 +842,11 @@ class TrelewLeadApp:
                 canvas.yview_scroll(int(-1*(event.delta/120)), "units")
             except tk.TclError:
                 pass
+        canvas.bind_all("<MouseWheel>", _on_mousewheel)
         
-        # Vincular el evento a la ventana principal para que funcione en cualquier lugar
-        top.bind("<MouseWheel>", _on_mousewheel)
-        canvas.bind("<MouseWheel>", _on_mousewheel)
-        info_frame.bind("<MouseWheel>", _on_mousewheel)
-        
-        # También vincular a todos los widgets dentro de info_frame
-        def bind_mousewheel_to_children(widget):
-            widget.bind("<MouseWheel>", _on_mousewheel)
-            for child in widget.winfo_children():
-                bind_mousewheel_to_children(child)
-        
-        info_frame.bind("<Configure>", lambda e: bind_mousewheel_to_children(info_frame))
-
         # Limpiar evento al cerrar la ventana para evitar errores
         def on_close():
-            try:
-                top.unbind("<MouseWheel>")
-                canvas.unbind("<MouseWheel>")
-                info_frame.unbind("<MouseWheel>")
-            except:
-                pass
+            canvas.unbind_all("<MouseWheel>")
             top.destroy()
         top.protocol("WM_DELETE_WINDOW", on_close)
 

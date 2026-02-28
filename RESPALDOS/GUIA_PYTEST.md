@@ -79,9 +79,8 @@ test/
 └── GUIA_PYTEST.md             # Este documento
 ```
 
-**Regla de oro**: De la estructura de carpetas **no importa**, solo que el archivo cumpla con el patrón de nombres. Pytest los encontrará en cualquier subcarpeta dentro de `test/`.
+**Regla de oro**: Pytest encontrará los tests en cualquier subcarpeta dentro de `tests/` siempre que el archivo cumpla con el patrón de nombres.
 
----
 
 ## Convención de nombres
 
@@ -152,6 +151,30 @@ def test_mi_funcionalidad():
     assert resultado == valor_esperado, "Mensaje de error si falla"
 ```
 
+### Tests Parametrizados (¡Nuevo!)
+
+Para evitar repetir código cuando queremos probar la misma función con diferentes datos (como hicimos con los números de teléfono), usamos el decorador `@pytest.mark.parametrize`.
+
+**Antes (Repetitivo):**
+```python
+def test_telefono():
+    assert limpiar("0280") == "280"
+    assert limpiar("1544") == "44"  # Tendríamos que escribir una línea por caso
+```
+
+**Ahora (Parametrizado):**
+```python
+@pytest.mark.parametrize("entrada, esperado", [
+    ("0280", "280"),
+    ("1544", "44"),
+    ("(280)", "280"),
+])
+def test_telefono_limpio(entrada, esperado):
+    # Este test se ejecutará 3 veces automáticamente
+    assert limpiar(entrada) == esperado
+```
+Esto hace que el reporte de tests sea más detallado y el código más limpio.
+
 ### Patrón TDD (Test-Driven Development)
 
 En este proyecto seguimos el patrón **Red-Green-Refactor**:
@@ -191,21 +214,42 @@ pytest-mock
 
 ### Ejecutar todos los tests
 
+Si la carpeta se llama `tests` y `pytest.ini` está configurado correctamente:
 ```powershell
-# Desde la raíz del proyecto
 python -m pytest
 ```
 
 ### Ejecutar una caneta específica
 
-```powershell
-# Todos los tests de la fase 4.1
-python -m pytest test/refactorizacion/fase-4-1-configuracion-arranque -v
 
-# Un test específico por nombre
+1. Para ejecutar SOLO un test específico:
+Este verificará específicamente que el scroll use bind_all y que los textos estén corregidos.
+
+```bash
+python -m pytest test/refactorizacion/4_test_ficha_tecnica.py -v
+```
+
+
+2. Para ejecutar TODOS los tests de refactorización
+Esto correrá todos los tests que has hecho hasta ahora (constants, utilidades, cleanup y ficha_tecnica).
+
+```bash
+python -m pytest test/refactorizacion/ -v
+```
+
+
+3. Para ejecutar todos los tests de la fase 4.1
+```bash
+python -m pytest test/refactorizacion/fase-4-1-configuracion-arranque -v
+```
+
+4. Otro ejemplo para  test específico por nombre
+```bash
 python -m pytest -k "crear_clase_scraper" -v
+```
 
 # Un archivo específico
+```
 python -m pytest test/refactorizacion/fase-4-1-configuracion-arranque/4_1_13_test_crear_clase_scraper.py -v
 ```
 
@@ -323,7 +367,7 @@ addopts = -s
 
 Cuando crees un nuevo test, sigue este checklist:
 
-- [ ] Archivo en carpeta `test/` con nombre `*_test_*.py` (en español)
+- [ ] Archivo en carpeta `tests/` con nombre `*_test_*.py` (en español)
 - [ ] Función comienza con `test_`
 - [ ] Descripción clara en el nombre (qué se prueba)
 - [ ] Docstring explicando la intención
@@ -345,3 +389,9 @@ Cuando crees un nuevo test, sigue este checklist:
 
 **Última actualización**: 27 de febrero de 2026  
 **Responsable**: Proyecto Recolecta Emprendimientos
+
+
+
+
+---
+COLOCALO ANTES DE ESTO
