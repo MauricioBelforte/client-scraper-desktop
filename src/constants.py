@@ -1,18 +1,27 @@
 # src/constants.py
 # Este archivo contendrá todas las constantes y configuraciones estáticas de la aplicación.
 
+# Lista de rubros sugeridos para la búsqueda, ordenada alfabéticamente para fácil mantenimiento.
 RUBROS_SUGERIDOS = [
-    "Gimnasios", "Restaurantes", "Talleres Mecánicos", "Peluquerías",
-    "Odontólogos", "Abogados", "Inmobiliarias", "Cervecerías", "Veterinarias",
-    "Pizzerías", "Farmacias", "Escuelas de danza", "Estudios Contables",
-    "Ferreterías", "Centros de Estética", "Barberías", "Psicólogos",
-    "Nutricionistas", "Kinesiólogos", "Arquitectos", "Constructoras",
-    "Salones de Eventos", "Servicios de Catering", "Escuelas de Idiomas",
-    "Pet Shops", "Mueblerías", "Casas de Repuestos", "Heladerías", "Barbería",   # <-- Añadir
-    "Tattoo",     # <-- Añadir
-    "Bares",      # <-- Añadir
-    "Cafeterías", "Pastelerías", "Panaderías", "Kioscos", "Carnicerías",
-    "Pollerías", "Verdulerías"
+    "Abogados", "Arquitectos",
+    "Bares", "Barberías",
+    "Cafeterías", "Carnicerías", "Casas de Repuestos", "Celulares",
+    "Centros de Estética", "Cervecerías", "Constructoras",
+    "Escuelas de danza", "Escuelas de Idiomas", "Estudios Contables",
+    "Farmacias", "Ferreterías",
+    "Gimnasios",
+    "Heladerías",
+    "Inmobiliarias",
+    "Kinesiólogos", "Kioscos",
+    "Mueblerías",
+    "Nutricionistas",
+    "Odontólogos",
+    "Panaderías", "Pastelerías", "Peluquerías", "Pet Shops", "Pizzerías",
+    "Pollerías", "Psicólogos",
+    "Restaurantes",
+    "Salones de Eventos", "Servicio Técnico", "Servicios de Catering",
+    "Talleres Mecánicos", "Tatuajes",
+    "Verdulerías", "Veterinarias"
 ]
 
 # Nombres de las carpetas del sistema.
@@ -273,19 +282,19 @@ PALETAS_COLORES = {
             "acento": "#c21b6c",         # Rosa oscuro
 
             # --- Variables V2 ---
-            "fondo_botones": "#d63384",
-            "fondo_botones_hover": "#c21b6c",
+            "fondo_botones": "#F06292",
+            "fondo_botones_hover": "#EC407A",
             "texto_botones": "#ffffff",
             "texto_general": "#7a3c5c",
             "texto_hero": "#ffffff",
-            "texto_cards": "#7a3c5c",
-            "titulos": "#d63384",
+            "texto_cards": "#7a3c5c", # Texto oscuro sobre tarjeta blanca
+            "titulos": "#F06292",
             "titulo_h1": "#ffffff",
             "titulo_h2": "#7a3c5c",
-            "fondo_general": "#fff0f5",
-            "fondo_cards": "#ffe5fa",
+            "fondo_general": "#fff0f5", # Fondo rosado muy claro (como V1)
+            "fondo_cards": "#ffffff",   # Tarjetas blancas (como V1)
             "overlay_hero": "#0000004f",
-            "borde_sutil": "rgba(214, 51, 132, 0.1)", # Borde rosado muy sutil
+            "borde_sutil": "rgba(240, 98, 146, 0.2)", # Borde rosado sutil
 
             # --- Variables V1 (Específicas One Page) ---
             "v1_hero_titulo": "#ffffff",
@@ -487,41 +496,41 @@ PALETAS_COLORES = {
     },
     "FUERZA_TECNICA": {
         "colores": {
-            "primario": "#ff4500",       # Naranja Rojizo (OrangeRed)
+            "primario": "#007bff",       # Azul Técnico (Antes Naranja)
             "fondo": "#1a1a1a",          # Gris muy oscuro
             "texto": "#f0f0f0",          # Blanco grisáceo
-            "texto_inverso": "#ffffff",  # Blanco sobre naranja
-            "overlay": "#000000d9",      # Oscurecer fondo fuerte
+            "texto_inverso": "#ffffff",  # Blanco sobre azul
+            "overlay": "#00000066",      # Overlay más claro (40% opacidad) para ver el fondo
             "fondo_tarjeta": "#ffffff",  # Fondo tarjeta (Blanco)
-            "acento": "#cc3700",         # Naranja oscuro
+            "acento": "#0056b3",         # Azul oscuro (Antes Naranja oscuro)
 
             # --- Variables V2 ---
-            "fondo_botones": "#ff4500",
-            "fondo_botones_hover": "#cc3700",
+            "fondo_botones": "#007bff",
+            "fondo_botones_hover": "#0056b3",
             "texto_botones": "#ffffff",
             "texto_general": "#f0f0f0",
             "texto_hero": "#ffffff",
             "texto_cards": "#1a1a1a",    # Texto oscuro sobre tarjeta blanca (Inverso del general)
-            "titulos": "#ff4500",
+            "titulos": "#007bff",
             "titulo_h1": "#ffffff",
             "titulo_h2": "#f0f0f0",
             "fondo_general": "#1a1a1a",
             "fondo_cards": "#ffffff",
-            "overlay_hero": "#000000d9",
+            "overlay_hero": "#00000066",
             "borde_sutil": "rgba(255,255,255,0.1)",
 
             # --- Variables V1 (Específicas One Page) ---
-            "v1_hero_titulo": "#ff4500",      # Naranja industrial
+            "v1_hero_titulo": "#007bff",      # Azul industrial
             "v1_hero_texto_secundario": "#ffffff", # Blanco
             "v1_hero_lema": "#ffffff",
-            "v1_boton_fondo": "#ff4500",
+            "v1_boton_fondo": "#007bff",
             "v1_boton_texto": "#ffffff",
             "v1_seccion_fondo": "#212121",    # Gris oscuro industrial
-            "v1_seccion_titulos": "#ff4500",
+            "v1_seccion_titulos": "#007bff",
             "v1_seccion_texto": "#f5f5f5",    # Blanco humo
             "v1_card_fondo": "#333333",       # Gris maquinaria
             "v1_card_texto": "#ffffff",
-            "v1_card_borde": "#ff4500"        # Borde naranja
+            "v1_card_borde": "#007bff"        # Borde azul
         },
         "categorias": [
             "taller", "talleres", "mecanic", "mecánic", "mecanico", "mecánico", 
@@ -624,6 +633,94 @@ PALETAS_COLORES = {
         "categorias": [
             "carniceria", "carnicería", "carnicerias", "carnicerías",
             "polleria", "pollería", "pollerias", "pollerías"
+        ]
+    },
+    "TECNO_BLUE_GREY": {
+        "colores": {
+            "primario": "#455A64",       # Blue Grey Oscuro (Profesional)
+            "fondo": "#F5F7FA",          # Blanco grisáceo (Limpio)
+            "texto": "#263238",          # Casi negro
+            "texto_inverso": "#ffffff",  # Blanco
+            "overlay": "#00000080",      # Overlay oscuro
+            "fondo_tarjeta": "#ffffff",  # Blanco
+            "acento": "#607D8B",         # Blue Grey medio
+
+            # --- Variables V2 ---
+            "fondo_botones": "#455A64",
+            "fondo_botones_hover": "#263238",
+            "texto_botones": "#ffffff",
+            "texto_general": "#263238",
+            "texto_hero": "#ffffff",
+            "texto_cards": "#263238",
+            "titulos": "#455A64",
+            "titulo_h1": "#ffffff",
+            "titulo_h2": "#37474F",
+            "fondo_general": "#F5F7FA",
+            "fondo_cards": "#ffffff",
+            "overlay_hero": "#00000080",
+            "borde_sutil": "#CFD8DC",
+
+            # --- Variables V1 ---
+            "v1_hero_titulo": "#ffffff",
+            "v1_hero_texto_secundario": "#ECEFF1",
+            "v1_hero_lema": "#90A4AE",
+            "v1_boton_fondo": "#455A64",
+            "v1_boton_texto": "#ffffff",
+            "v1_seccion_fondo": "#F5F7FA",
+            "v1_seccion_titulos": "#37474F",
+            "v1_seccion_texto": "#263238",
+            "v1_card_fondo": "#ffffff",
+            "v1_card_texto": "#263238",
+            "v1_card_borde": "#B0BEC5"
+        },
+        "categorias": [
+            "celular", "celulares", "movil", "moviles", "móvil", "móviles", 
+            "telefonia", "telefonía", "smartphone", "smartphones", "iphone", 
+            "samsung", "xiaomi", "motorola", "accesorios celular", "tienda movil"
+        ]
+    },
+    "REPARACION_DARK": {
+        "colores": {
+            "primario": "#29B6F6",       # Light Blue (Electric) para resaltar sobre negro
+            "fondo": "#121212",          # Negro
+            "texto": "#ECEFF1",          # Blanco grisáceo
+            "texto_inverso": "#000000",  # Negro
+            "overlay": "#000000cc",      # Muy oscuro
+            "fondo_tarjeta": "#1E1E1E",  # Gris oscuro
+            "acento": "#039BE5",         # Azul más oscuro
+
+            # --- Variables V2 ---
+            "fondo_botones": "#29B6F6",
+            "fondo_botones_hover": "#039BE5",
+            "texto_botones": "#000000",
+            "texto_general": "#ECEFF1",
+            "texto_hero": "#ffffff",
+            "texto_cards": "#ECEFF1",
+            "titulos": "#29B6F6",
+            "titulo_h1": "#ffffff",
+            "titulo_h2": "#29B6F6",
+            "fondo_general": "#121212",
+            "fondo_cards": "#1E1E1E",
+            "overlay_hero": "#000000cc",
+            "borde_sutil": "#333333",
+
+            # --- Variables V1 ---
+            "v1_hero_titulo": "#29B6F6",
+            "v1_hero_texto_secundario": "#ffffff",
+            "v1_hero_lema": "#ffffff",
+            "v1_boton_fondo": "#29B6F6",
+            "v1_boton_texto": "#000000",
+            "v1_seccion_fondo": "#121212",
+            "v1_seccion_titulos": "#29B6F6",
+            "v1_seccion_texto": "#B0BEC5",
+            "v1_card_fondo": "#1E1E1E",
+            "v1_card_texto": "#ECEFF1",
+            "v1_card_borde": "#29B6F6"
+        },
+        "categorias": [
+            "reparacion celular", "reparación celular", "servicio tecnico", 
+            "servicio técnico", "fix", "repair", "tecnico celular", "técnico celular",
+            "pantalla rota", "cambio de modulo", "cambio de módulo"
         ]
     }
 }

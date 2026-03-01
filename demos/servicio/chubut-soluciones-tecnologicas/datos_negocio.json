@@ -1,0 +1,30 @@
+{
+  "nombre": "Chubut Soluciones Tecnológicas",
+  "categoria": "Servicio tecnico",
+  "direccion": "Avenida Fontana 550, Trelew, Chubut",
+  "telefono": "+54 9 280 4567890",
+  "rating": "4.7",
+  "horarios_detallados": [
+    "Lunes: 09:30-13:30, 15:30-19:30",
+    "Martes: 09:30-13:30, 15:30-19:30",
+    "Miércoles: 09:30-13:30, 15:30-19:30",
+    "Jueves: 09:30-13:30, 15:30-19:30",
+    "Viernes: 09:30-13:30, 15:30-19:30",
+    "Sábado: 10:00-13:00",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Juan Pérez",
+      "texto": "Excelente atención y rápida solución a mi problema con la computadora. Muy profesionales.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "María Gómez",
+      "texto": "Me arreglaron el celular en tiempo récord. Muy amables y con precios justos.",
+      "rating": "4 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/ChubutSolucionesTecnologicas",
+  "instagram": "https://instagram.com/ChubutTech"
+}

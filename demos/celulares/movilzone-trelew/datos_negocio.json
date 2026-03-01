@@ -1,0 +1,30 @@
+{
+  "nombre": "MovilZone Trelew",
+  "categoria": "celulares",
+  "direccion": "Avenida Fontana 540, Trelew, Chubut",
+  "telefono": "+54 9 280 4567890",
+  "rating": "4.8",
+  "horarios_detallados": [
+    "Lunes: 09:00-13:00, 16:00-20:00",
+    "Martes: 09:00-13:00, 16:00-20:00",
+    "Miércoles: 09:00-13:00, 16:00-20:00",
+    "Jueves: 09:00-13:00, 16:00-20:00",
+    "Viernes: 09:00-13:00, 16:00-20:00",
+    "Sábado: 10:00-14:00",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Martín G.",
+      "texto": "Excelente atención y variedad de equipos. ¡Siempre tienen lo último y con buenos precios!",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Andrea R.",
+      "texto": "Muy buena experiencia, el personal es amable y te asesoran muy bien. Conseguí mi nuevo celu sin problemas.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/MovilZoneTrelew",
+  "instagram": "https://instagram.com/MovilZoneTrelew"
+}

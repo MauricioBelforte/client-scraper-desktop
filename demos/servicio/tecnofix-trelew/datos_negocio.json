@@ -1,0 +1,30 @@
+{
+  "nombre": "TecnoFix Trelew",
+  "categoria": "Servicio tecnico",
+  "direccion": "Ameghino 245, Trelew, Chubut",
+  "telefono": "+54 9 280 4357890",
+  "rating": "4.9",
+  "horarios_detallados": [
+    "Lunes: 09:00-13:00, 16:00-20:00",
+    "Martes: 09:00-13:00, 16:00-20:00",
+    "Miércoles: 09:00-13:00, 16:00-20:00",
+    "Jueves: 09:00-13:00, 16:00-20:00",
+    "Viernes: 09:00-13:00, 16:00-20:00",
+    "Sábado: 10:00-14:00",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Mariana R.",
+      "texto": "Excelente servicio, repararon mi notebook en tiempo récord y el precio fue muy justo. ¡Los recomiendo!",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Pedro G.",
+      "texto": "Llevé mi celular y lo dejaron como nuevo. Muy profesionales y atentos. Sin duda volveré si necesito otra reparación.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/TecnoFixTrelew",
+  "instagram": "https://instagram.com/tecnofixtrelew"
+}

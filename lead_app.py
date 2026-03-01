@@ -1018,7 +1018,7 @@ class TrelewLeadApp:
             messagebox.showwarning("Atención", constantes.MSJ_ADVERTENCIA_RUBRO)
             return
         
-        self.archivo_activo = f"{rubro}.json" # Establecer archivo activo para guardados futuros
+        self.archivo_activo = rubro # Establecer archivo activo para guardados futuros
         self.btn_rapido.config(state="disabled")
         self.btn_humano.config(state="disabled")
         self.tree.delete(*self.tree.get_children())

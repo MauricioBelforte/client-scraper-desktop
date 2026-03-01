@@ -1,0 +1,30 @@
+{
+  "nombre": "Conexión Digital Trelew",
+  "categoria": "Servicio tecnico",
+  "direccion": "Avenida Gales 456, Trelew, Chubut",
+  "telefono": "+54 9 280 4357890",
+  "rating": "4.9",
+  "horarios_detallados": [
+    "Lunes: 09:00-13:00, 16:00-20:00",
+    "Martes: 09:00-13:00, 16:00-20:00",
+    "Miércoles: 09:00-13:00, 16:00-20:00",
+    "Jueves: 09:00-13:00, 16:00-20:00",
+    "Viernes: 09:00-13:00, 16:00-20:00",
+    "Sábado: 10:00-14:00",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Martín R.",
+      "texto": "Excelente servicio y atención. Repararon mi notebook en tiempo récord. Muy recomendables!",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Sofía G.",
+      "texto": "Siempre resuelven mis problemas tecnológicos. Profesionales y honestos, ¡un placer!",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/ConexionDigitalTrelew",
+  "instagram": "https://instagram.com/ConexionDigitalTrelew"
+}

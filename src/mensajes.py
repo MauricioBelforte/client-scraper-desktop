@@ -137,8 +137,11 @@ TEMPLATES_POR_ARCHIVO = {
     "Peluquerías": {
         "intro": "Estoy ofreciendo mis servicios a distintas peluquerías locales.",
         "modelos": [
-            "Modelo 1: https://tinta-austral.netlify.app/",
-            "Modelo 2: https://patagonia-urbana-inmobiliaria.netlify.app/"
+            "Modelo 1: https://corte-perfecto-estilistas.netlify.app/",
+            "Modelo 2: https://glamour-tijeras.netlify.app/",
+            "Modelo 3: https://barberia-el-puerto.netlify.app/",
+            "Modelo 4: https://el-patron-barberia.netlify.app/",
+            "Modelo 5: https://tinta-austral.netlify.app/"
         ]
     },
     "Centros de Estética": {
@@ -148,11 +151,35 @@ TEMPLATES_POR_ARCHIVO = {
             "Modelo 2: https://patagonia-urbana-inmobiliaria.netlify.app/"
         ]
     },
-    "Barbería": {
-        "intro": "Estoy ofreciendo mis servicios a barberías y peluquerías locales.",
+    "Barberías": {
+        "intro": "Estoy ofreciendo mis servicios a barberías y peluquerías de la ciudad.",
         "modelos": [
-            "Modelo 1: https://tinta-austral.netlify.app/",
-            "Modelo 2: https://patagonia-urbana-inmobiliaria.netlify.app/"
+            "Modelo 1: https://barberia-el-puerto.netlify.app/",
+            "Modelo 2: https://el-patron-barberia.netlify.app/",
+            "Modelo 3: https://tinta-austral.netlify.app/",
+            "Modelo 4: https://patagonia-urbana-inmobiliaria.netlify.app/",
+            "Modelo 5: https://espacio-psicologico-conexion.netlify.app/"
+        ]
+    },
+    # --- ALIAS PARA ROBUSTEZ (Singular y Sin Acento) ---
+    "Barbería": {
+        "intro": "Estoy ofreciendo mis servicios a barberías y peluquerías de la ciudad.",
+        "modelos": [
+            "Modelo 1: https://barberia-el-puerto.netlify.app/",
+            "Modelo 2: https://el-patron-barberia.netlify.app/",
+            "Modelo 3: https://corte-perfecto-estilistas.netlify.app/",
+            "Modelo 4: https://glamour-tijeras.netlify.app/",
+            "Modelo 5: https://tinta-austral.netlify.app/"
+        ]
+    },
+    "Barberia": {
+        "intro": "Estoy ofreciendo mis servicios a barberías y peluquerías de la ciudad.",
+        "modelos": [
+            "Modelo 1: https://barberia-el-puerto.netlify.app/",
+            "Modelo 2: https://el-patron-barberia.netlify.app/",
+            "Modelo 3: https://corte-perfecto-estilistas.netlify.app/",
+            "Modelo 4: https://glamour-tijeras.netlify.app/",
+            "Modelo 5: https://tinta-austral.netlify.app/"
         ]
     },
     "Tatuajes": {
@@ -189,7 +216,7 @@ TEMPLATES_POR_ARCHIVO = {
         ]
     },
     "Psicólogos": {
-        "intro": "Estoy ofreciendo mis servicios a psicólogos y profesionales de la salud mental.",
+        "intro": "Estoy ofreciendo mis servicios a psicólogos y profesionales de la salud.",
         "modelos": [
             "Modelo 1: https://espacio-psicologico-conexion.netlify.app/",
             "Modelo 2: https://centro-psicologico-conexion-interior.netlify.app/",
@@ -244,7 +271,16 @@ def generar_mensaje_whatsapp(nombre_negocio, nombre_archivo):
         generar_mensaje_whatsapp("Unknown", "ArchivoNoConfigurado")  # Usa TEMPLATE_DEFAULT
     """
     # Obtener configuración del archivo, si no existe usar default
-    config_seleccionada = TEMPLATES_POR_ARCHIVO.get(nombre_archivo, TEMPLATE_DEFAULT)
+    # Lógica de búsqueda robusta (Case Insensitive)
+    config_seleccionada = TEMPLATE_DEFAULT
+    
+    if nombre_archivo in TEMPLATES_POR_ARCHIVO:
+        config_seleccionada = TEMPLATES_POR_ARCHIVO[nombre_archivo]
+    else:
+        # Intentar normalizar a Title Case (ej: "barberías" -> "Barberías")
+        nombre_title = str(nombre_archivo).title()
+        if nombre_title in TEMPLATES_POR_ARCHIVO:
+            config_seleccionada = TEMPLATES_POR_ARCHIVO[nombre_title]
     
     # Construir lista de modelos
     lista_modelos = "\n".join(config_seleccionada["modelos"])

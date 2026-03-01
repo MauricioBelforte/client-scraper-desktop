@@ -293,6 +293,14 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
                 "testimonio": "person training in a gym, happy, sweating, fitness lifestyle, photorealistic, real person, 8k, photography style"
             }
         },
+        "CELULARES": {
+            "keywords": ["celular", "movil", "móvil", "telefonia", "telefonía", "smartphone", "iphone", "samsung", "reparacion", "reparación", "tecnico", "técnico", "fix", "xiaomi", "motorola"],
+            "prompts": {
+                "logo": f"modern minimalist logo for mobile phone shop or repair service, {nombre_negocio}, technology icon, circuit or phone silhouette, vector style, blue and grey colors",
+                "fondo": "modern high-tech mobile phone store interior with smartphones on display and repair workbench, clean lighting, futuristic design, professional photography",
+                "testimonio": "happy customer holding a new smartphone, smiling, modern tech store background, photorealistic, real person, 8k, photography style"
+            }
+        },
         "OFICIOS_TALLER": {
             "keywords": ["taller", "mecanic", "mecánic", "ferreteria", "construc", "reparacion", "repuestos", "automotor", "chapa", "pintura", "obra", "electricista", "plomero"],
             "prompts": {

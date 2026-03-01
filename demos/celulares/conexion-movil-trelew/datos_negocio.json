@@ -1,0 +1,30 @@
+{
+  "nombre": "Conexión Móvil Trelew",
+  "categoria": "celulares",
+  "direccion": "Av. Fontana 587, Trelew, Chubut",
+  "telefono": "+54 9 280 4456789",
+  "rating": "4.7",
+  "horarios_detallados": [
+    "Lunes: 09:30-13:00, 16:30-20:30",
+    "Martes: 09:30-13:00, 16:30-20:30",
+    "Miércoles: 09:30-13:00, 16:30-20:30",
+    "Jueves: 09:30-13:00, 16:30-20:30",
+    "Viernes: 09:30-13:00, 16:30-20:30",
+    "Sábado: 10:00-14:00",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Mariana R.",
+      "texto": "Excelente atención y variedad de modelos. ¡Mi nuevo teléfono anda de diez!",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Facundo P.",
+      "texto": "Siempre encuentro lo que busco, y la post-venta es impecable. Muy recomendable.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/ConexionMovilTrelew",
+  "instagram": "https://instagram.com/conexionmovil.tw"
+}

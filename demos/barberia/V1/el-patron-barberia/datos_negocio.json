@@ -1,0 +1,30 @@
+{
+  "nombre": "El Patrón Barbería",
+  "categoria": "barberia",
+  "direccion": "Av. Fontana 620, Trelew, Chubut",
+  "telefono": "+54 9 280 4567890",
+  "rating": "4.8",
+  "horarios_detallados": [
+    "Lunes: 09:00-13:00, 16:00-20:00",
+    "Martes: 09:00-13:00, 16:00-20:00",
+    "Miércoles: 09:00-13:00, 16:00-20:00",
+    "Jueves: 09:00-13:00, 16:00-20:00",
+    "Viernes: 09:00-13:00, 16:00-20:00",
+    "Sábado: 10:00-14:00",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Ricardo M.",
+      "texto": "Excelente servicio y ambiente, siempre salgo con un corte impecable. ¡La mejor barbería de Trelew!",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Facundo P.",
+      "texto": "Los barberos son verdaderos artistas. Atención al detalle y un desvanecido perfecto. ¡Muy recomendable!",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/elpatronbarberia.tw",
+  "instagram": "https://instagram.com/elpatronbarberia_trelew"
+}

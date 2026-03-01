@@ -1,0 +1,30 @@
+{
+  "nombre": "Corte Perfecto Estilistas",
+  "categoria": "Peluquerías",
+  "direccion": "Urquiza 350, Trelew, Chubut",
+  "telefono": "+54 9 280 4357890",
+  "rating": "4.7",
+  "horarios_detallados": [
+    "Lunes: 09:00-13:00, 16:00-20:00",
+    "Martes: 09:00-13:00, 16:00-20:00",
+    "Miércoles: 09:00-13:00, 16:00-20:00",
+    "Jueves: 09:00-13:00, 16:00-20:00",
+    "Viernes: 09:00-13:00, 16:00-20:00",
+    "Sábado: 10:00-14:00",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Sofía G.",
+      "texto": "¡Excelente atención y resultados! Siempre salgo feliz con mi corte y color. ¡Super recomendados!",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Martín R.",
+      "texto": "Un lugar moderno con profesionales de verdad. Te asesoran muy bien y el ambiente es muy agradable. Volveré pronto.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/CortePerfectoEstilistas",
+  "instagram": "https://instagram.com/corteperfecto_estilistas"
+}

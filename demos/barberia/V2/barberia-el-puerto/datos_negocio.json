@@ -1,0 +1,30 @@
+{
+  "nombre": "Barbería El Puerto",
+  "categoria": "barberia",
+  "direccion": "Av. Fontana 345, Trelew, Chubut",
+  "telefono": "+54 9 280 4321789",
+  "rating": "4.9",
+  "horarios_detallados": [
+    "Lunes: 09:00-13:00, 16:00-20:00",
+    "Martes: 09:00-13:00, 16:00-20:00",
+    "Miércoles: 09:00-13:00, 16:00-20:00",
+    "Jueves: 09:00-13:00, 16:00-20:00",
+    "Viernes: 09:00-13:00, 16:00-20:00",
+    "Sábado: 10:00-14:00",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Martín Gómez",
+      "texto": "¡Excelente atención y cortes impecables! El ambiente es muy bueno, siempre salgo satisfecho.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Lucas Torres",
+      "texto": "Los mejores barberos de Trelew sin dudas. Profesionalismo y calidad en cada detalle. ¡Súper recomendado!",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/BarberiaElPuertoTW",
+  "instagram": "https://instagram.com/barberiaelpuerto_tw"
+}

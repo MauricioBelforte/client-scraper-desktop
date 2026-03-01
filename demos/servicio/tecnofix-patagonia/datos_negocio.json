@@ -1,0 +1,30 @@
+{
+  "nombre": "TecnoFix Patagonia",
+  "categoria": "Servicio tecnico",
+  "direccion": "Ameghino 789, Trelew, Chubut",
+  "telefono": "+54 9 280 4789012",
+  "rating": "4.9",
+  "horarios_detallados": [
+    "Lunes: 09:00-13:00, 16:00-20:00",
+    "Martes: 09:00-13:00, 16:00-20:00",
+    "Miércoles: 09:00-13:00, 16:00-20:00",
+    "Jueves: 09:00-13:00, 16:00-20:00",
+    "Viernes: 09:00-13:00, 16:00-20:00",
+    "Sábado: 10:00-14:00",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Martina R.",
+      "texto": "Excelente servicio, arreglaron mi notebook en tiempo récord y el precio fue muy justo. ¡Los recomiendo!",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Juan P. G.",
+      "texto": "Llevé mi celular que no encendía y lo dejaron como nuevo. Muy buena atención y técnicos super capacitados.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/TecnoFixPatagonia",
+  "instagram": "https://instagram.com/tecnofix.patagonia"
+}
