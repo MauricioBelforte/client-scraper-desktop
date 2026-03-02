@@ -725,17 +725,36 @@ class TrelewLeadApp:
         tk.Label(alta_win, text="Agregar Nuevo Lead", font=constantes.FUENTE_TITULO, bg=constantes.COLOR_BLANCO, fg=constantes.COLOR_PRIMARIO, pady=15).pack()
         tk.Label(alta_win, text="Completa los datos que tengas. Los vacíos se guardarán como 'No detectado'.", font=constantes.FUENTE_PEQUENA, bg=constantes.COLOR_BLANCO, fg=constantes.COLOR_TEXTO_TENUE).pack(pady=(0, 10))
 
-        # Contenedor con Scroll para el formulario
-        canvas = tk.Canvas(alta_win, bg=constantes.COLOR_BLANCO, highlightthickness=0)
-        scrollbar = ttk.Scrollbar(alta_win, orient="vertical", command=canvas.yview)
+        # Contenedor con Scroll para el formulario (Implementación mejorada)
+        container = tk.Frame(alta_win, bg=constantes.COLOR_BLANCO)
+        container.pack(fill="both", expand=True)
+
+        canvas = tk.Canvas(container, bg=constantes.COLOR_BLANCO, highlightthickness=0)
+        scrollbar = ttk.Scrollbar(container, orient="vertical", command=canvas.yview)
         form_frame = tk.Frame(canvas, bg=constantes.COLOR_BLANCO, padx=20, pady=10)
 
+        # Configurar el frame para que se expanda y actualice el scroll
         form_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
-        canvas.create_window((0, 0), window=form_frame, anchor="nw", width=500)
-        canvas.configure(yscrollcommand=scrollbar.set)
+        window_id = canvas.create_window((0, 0), window=form_frame, anchor="nw")
+        canvas.bind("<Configure>", lambda e: canvas.itemconfig(window_id, width=e.width))
 
+        canvas.configure(yscrollcommand=scrollbar.set)
         canvas.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
+
+        # Habilitar scroll con la rueda del ratón
+        def _on_mousewheel(event):
+            try:
+                canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+            except tk.TclError:
+                pass
+        canvas.bind_all("<MouseWheel>", _on_mousewheel)
+
+        # Limpiar evento al cerrar la ventana
+        def on_close():
+            canvas.unbind_all("<MouseWheel>")
+            alta_win.destroy()
+        alta_win.protocol("WM_DELETE_WINDOW", on_close)
 
         entries = {}
 
