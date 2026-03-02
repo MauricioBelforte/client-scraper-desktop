@@ -135,16 +135,24 @@ class TrelewLeadApp:
 
         tk.Label(left_panel, text="Emprendimientos Encontrados", font=constantes.FUENTE_NEGRITA, bg=constantes.COLOR_BLANCO, pady=5).pack()
 
-        columns = ("nombre", "estado", "propuesta", "web")
+        columns = ("nombre", "estado", "propuesta", "web", "wa", "ig", "fb", "mail")
         self.tree = ttk.Treeview(left_panel, columns=columns, show="headings")
         self.tree.heading("nombre", text="Nombre")
         self.tree.heading("estado", text="Estado")
         self.tree.heading("propuesta", text="Propuesta")
         self.tree.heading("web", text="Web")
+        self.tree.heading("wa", text="WA")
+        self.tree.heading("ig", text="IG")
+        self.tree.heading("fb", text="FB")
+        self.tree.heading("mail", text="@")
         self.tree.column("nombre", width=250)
         self.tree.column("estado", width=100)
         self.tree.column("propuesta", width=100, anchor="center")
         self.tree.column("web", width=80, anchor="center")
+        self.tree.column("wa", width=40, anchor="center")
+        self.tree.column("ig", width=40, anchor="center")
+        self.tree.column("fb", width=40, anchor="center")
+        self.tree.column("mail", width=40, anchor="center")
         
         # --- BUSCADOR / FILTRO (NUEVO) ---
         # Instanciamos el buscador pasándole el panel y el treeview.
@@ -253,6 +261,23 @@ class TrelewLeadApp:
     def _get_web_status_text(self, datos):
         """Helper para obtener el texto visual si tiene web."""
         return "🌐 Sí" if datos.get("website") else "-"
+    
+    def _get_channel_check(self, datos, key):
+        """Helper para obtener el check de un canal específico."""
+        return "✔" if datos.get(key) else ""
+    
+    def _get_row_values(self, nombre, datos, estado_scraping="GUARDADO 💾"):
+        """Helper para construir la tupla de valores del Treeview."""
+        return (
+            nombre, 
+            estado_scraping, 
+            self._get_propuesta_status_text(datos), 
+            self._get_web_status_text(datos),
+            self._get_channel_check(datos, "propuesta_wa"),
+            self._get_channel_check(datos, "propuesta_ig"),
+            self._get_channel_check(datos, "propuesta_fb"),
+            self._get_channel_check(datos, "propuesta_mail")
+        )
 
     def normalizar_texto(self, texto):
         """Normaliza texto para comparación: minúsculas, sin acentos, sin caracteres especiales."""
@@ -357,10 +382,9 @@ class TrelewLeadApp:
             items_ordenados = sorted(self.prospectos_datos.items(), key=lambda x: calcular_calidad_lead(x[1]), reverse=True)
             
             for nombre, datos in items_ordenados:
-                prop_status = self._get_propuesta_status_text(datos)
-                web_status = self._get_web_status_text(datos)
                 # IMPORTANTE: Asignar iid=nombre para poder actualizar la fila después
-                self.tree.insert("", "end", iid=nombre, values=(nombre, "GUARDADO 💾", prop_status, web_status))
+                values = self._get_row_values(nombre, datos)
+                self.tree.insert("", "end", iid=nombre, values=values)
             
             # Actualizar el cache del buscador con los nuevos datos cargados
             self.buscador.actualizar_cache()
@@ -506,11 +530,13 @@ class TrelewLeadApp:
                            command=lambda: self.lanzar_generacion_web(nombre, datos, "v2"))
         btn_web_v2.grid(row=0, column=1, padx=2, sticky="ew")
 
-        # --- SECCIÓN ESTADO DE PROPUESTA ---
-        propuesta_frame = tk.Frame(body, bg=constantes.COLOR_BLANCO)
-        propuesta_frame.pack(fill="x", pady=(15, 5))
+        # --- SECCIÓN ESTADO DE PROPUESTA (NUEVO DISEÑO) ---
+        propuesta_frame = tk.LabelFrame(body, text=" Control de Propuesta ", font=constantes.FUENTE_PEQUENA_NEGRITA, bg=constantes.COLOR_BLANCO, padx=10, pady=10)
+        propuesta_frame.pack(fill="x", pady=(15, 5), padx=2)
         
         estado_propuesta = datos.get("propuesta_enviada", False)
+        
+        # 1. Botón Principal (Toggle)
         if estado_propuesta:
             btn_prop_text = "↩️ Desmarcar Propuesta"
             btn_prop_bg = "#ff8787" # Rojo claro para cancelar
@@ -520,7 +546,53 @@ class TrelewLeadApp:
             
         tk.Button(propuesta_frame, text=btn_prop_text, bg=btn_prop_bg, fg="white",
                   font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2",
-                  command=lambda: self.toggle_propuesta(nombre)).pack(fill="x")
+                  command=lambda: self.toggle_propuesta(nombre)).pack(fill="x", pady=(0, 10))
+
+        # 2. Sub-botones de Canales (Grid)
+        channels_frame = tk.Frame(propuesta_frame, bg=constantes.COLOR_BLANCO)
+        channels_frame.pack(fill="x")
+        channels_frame.columnconfigure(0, weight=1)
+        channels_frame.columnconfigure(1, weight=1)
+        channels_frame.columnconfigure(2, weight=1)
+        channels_frame.columnconfigure(3, weight=1)
+
+        # Definición de canales y sus colores
+        canales = [
+            ("WA", "propuesta_wa", constantes.COLOR_WHATSAPP, has_wa),
+            ("IG", "propuesta_ig", constantes.COLOR_INSTAGRAM, has_ig),
+            ("FB", "propuesta_fb", constantes.COLOR_FACEBOOK, has_fb),
+            ("Mail", "propuesta_mail", constantes.COLOR_EMAIL, has_email)
+        ]
+
+        for idx, (label, key, color_activo, disponible) in enumerate(canales):
+            enviado_por_canal = datos.get(key, False)
+            
+            # Lógica de Estado y Color
+            state = "normal"
+            bg_color = "#e9ecef" # Gris muy claro por defecto (inactivo)
+            fg_color = "#adb5bd" # Texto gris (inactivo)
+            cursor = "arrow"
+
+            if estado_propuesta: # Solo si la propuesta global está enviada se habilitan
+                if disponible:
+                    cursor = "hand2"
+                    if enviado_por_canal:
+                        bg_color = color_activo
+                        fg_color = "white" if label != "Mail" else "black"
+                    else:
+                        bg_color = "#dee2e6" # Gris habilitado pero no seleccionado
+                        fg_color = "#495057"
+                else:
+                    state = "disabled" # No disponible (no tiene ese dato)
+            else:
+                state = "disabled" # Bloqueado globalmente
+
+            cmd = lambda k=key: self.toggle_canal_propuesta(nombre, k)
+            
+            btn = tk.Button(channels_frame, text=label, bg=bg_color, fg=fg_color, 
+                            font=("Segoe UI", 8, "bold"), relief="flat", 
+                            state=state, cursor=cursor, command=cmd)
+            btn.grid(row=0, column=idx, padx=2, sticky="ew")
 
 
     def contactar_todos(self, nombre, datos):
@@ -544,33 +616,49 @@ class TrelewLeadApp:
         if email and "No detectado" not in email:
             webbrowser.open(f"mailto:{email}")
 
+    def toggle_canal_propuesta(self, nombre, key_canal):
+        """Alterna el estado de envío de un canal específico (WA, IG, FB, Mail)."""
+        if nombre in self.prospectos_datos:
+            datos = self.prospectos_datos[nombre]
+            # Invertir estado del canal
+            datos[key_canal] = not datos.get(key_canal, False)
+            self.prospectos_datos[nombre] = datos
+            
+            self._guardar_cambios_y_actualizar_ui(nombre, datos)
+
     def toggle_propuesta(self, nombre):
         """Cambia el estado de 'propuesta_enviada' y actualiza la UI y el archivo."""
         if nombre in self.prospectos_datos:
             datos = self.prospectos_datos[nombre]
             # Invertir estado
             datos["propuesta_enviada"] = not datos.get("propuesta_enviada", False)
+            
+            # Si se desmarca la propuesta global, opcionalmente podríamos limpiar los canales
+            # pero por ahora mantenemos el estado por si fue un error de clic.
             self.prospectos_datos[nombre] = datos
             
-            # Guardar cambios en el archivo correspondiente
-            # Usamos el archivo activo si existe, sino intentamos deducirlo
-            if self.archivo_activo:
-                 self.gestor_datos.guardar_datos(self.archivo_activo, self.prospectos_datos)
-            else:
-                 rubro = self.entry_rubro.get()
-                 if rubro:
-                     self.gestor_datos.guardar_datos(f"{rubro}.json", self.prospectos_datos)
+            self._guardar_cambios_y_actualizar_ui(nombre, datos)
 
-            # Actualizar fila en Treeview sin perder el estado de scraping
-            if self.tree.exists(nombre):
-                vals = self.tree.item(nombre)['values']
-                estado_scraping = vals[1] # Mantener "NUEVO", "GUARDADO", etc.
-                prop_status = self._get_propuesta_status_text(datos)
-                web_status = self._get_web_status_text(datos)
-                self.tree.item(nombre, values=(nombre, estado_scraping, prop_status, web_status))
-            
-            # Refrescar panel lateral para actualizar el botón
-            self.mostrar_detalle(None)
+    def _guardar_cambios_y_actualizar_ui(self, nombre, datos):
+        """Método auxiliar para guardar y refrescar la vista."""
+        # Guardar cambios en el archivo correspondiente
+        # Usamos el archivo activo si existe, sino intentamos deducirlo
+        if self.archivo_activo:
+            self.gestor_datos.guardar_datos(self.archivo_activo, self.prospectos_datos)
+        else:
+            rubro = self.entry_rubro.get()
+            if rubro:
+                self.gestor_datos.guardar_datos(f"{rubro}.json", self.prospectos_datos)
+
+        # Actualizar fila en Treeview sin perder el estado de scraping
+        if self.tree.exists(nombre):
+            vals = self.tree.item(nombre)['values']
+            estado_scraping = vals[1] # Mantener estado actual (ej: "NUEVO", "GUARDADO")
+            new_values = self._get_row_values(nombre, datos, estado_scraping)
+            self.tree.item(nombre, values=new_values)
+        
+        # Refrescar panel lateral para actualizar el botón
+        self.mostrar_detalle(None)
 
     def gestionar_web_manual(self, nombre):
         """Permite al usuario ingresar manualmente una URL para el negocio."""
@@ -692,16 +780,15 @@ class TrelewLeadApp:
             # Actualizar UI Principal (Treeview)
             if self.tree.exists(nombre):
                 vals = self.tree.item(nombre)['values']
-                estado = vals[1]
-                propuesta = self._get_propuesta_status_text(datos)
-                web_status = self._get_web_status_text(datos)
+                estado_scraping = vals[1]
+                new_values = self._get_row_values(nombre_final, datos, estado_scraping)
                 
                 if nuevo_nombre != nombre:
                     self.tree.delete(nombre)
-                    self.tree.insert("", "end", iid=nuevo_nombre, values=(nuevo_nombre, estado, propuesta, web_status))
+                    self.tree.insert("", "end", iid=nuevo_nombre, values=new_values)
                     self.tree.selection_set(nuevo_nombre)
                 else:
-                    self.tree.item(nombre, values=(nombre, estado, propuesta, web_status))
+                    self.tree.item(nombre, values=new_values)
 
             # Actualizar Card Lateral
             self.mostrar_detalle(None)
@@ -820,8 +907,8 @@ class TrelewLeadApp:
             self.gestor_datos.guardar_datos(archivo_destino, self.prospectos_datos)
 
             # Actualizar UI
-            web_status = self._get_web_status_text(nuevo_lead)
-            self.tree.insert("", 0, iid=nombre, values=(nombre, "MANUAL ✍️", "❌ Pendiente", web_status)) # Insertar al principio
+            values = self._get_row_values(nombre, nuevo_lead, "MANUAL ✍️")
+            self.tree.insert("", 0, iid=nombre, values=values) # Insertar al principio
             self.tree.selection_set(nombre) # Seleccionar el nuevo
             self.mostrar_detalle(None) # Mostrar ficha
             self.buscador.actualizar_cache() # Actualizar buscador
@@ -1056,9 +1143,8 @@ class TrelewLeadApp:
             items_ordenados = sorted(self.prospectos_datos.items(), key=lambda x: calcular_calidad_lead(x[1]), reverse=True)
             
             for nombre, datos in items_ordenados:
-                prop_status = self._get_propuesta_status_text(datos)
-                web_status = self._get_web_status_text(datos)
-                self.tree.insert("", "end", iid=nombre, values=(nombre, "HISTÓRICO 📁", prop_status, web_status))
+                values = self._get_row_values(nombre, datos, "HISTÓRICO 📁")
+                self.tree.insert("", "end", iid=nombre, values=values)
             
             # Actualizar cache del buscador con históricos
             self.buscador.actualizar_cache()
@@ -1146,9 +1232,8 @@ class TrelewLeadApp:
             self.root.after(0, lambda: self.tree.delete(*self.tree.get_children()))
             for nombre in self.prospectos_datos:
                 datos = self.prospectos_datos[nombre]
-                prop_status = self._get_propuesta_status_text(datos)
-                web_status = self._get_web_status_text(datos)
-                self.root.after(0, lambda n=nombre, p=prop_status, w=web_status: self.tree.insert("", "end", iid=n, values=(n, "OPTIMIZADO ⚡", p, w)))
+                values = self._get_row_values(nombre, datos, "OPTIMIZADO ⚡")
+                self.root.after(0, lambda n=nombre, v=values: self.tree.insert("", "end", iid=n, values=v))
 
             driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
             driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
@@ -1179,9 +1264,8 @@ class TrelewLeadApp:
                     
                     if actualizado:
                         self.prospectos_datos[nombre] = datos
-                        prop_status = self._get_propuesta_status_text(datos)
-                        web_status = self._get_web_status_text(datos)
-                        self.root.after(0, lambda n=nombre, p=prop_status, w=web_status: self.tree.item(n, values=(n, "ENRIQUECIDO 🌟", p, w)) if self.tree.exists(n) else None)
+                        values = self._get_row_values(nombre, datos, "ENRIQUECIDO 🌟")
+                        self.root.after(0, lambda n=nombre, v=values: self.tree.item(n, values=v) if self.tree.exists(n) else None)
                 
                 time.sleep(random.uniform(2, 4))
 
@@ -1392,7 +1476,8 @@ class TrelewLeadApp:
                         
                         # --- FEEDBACK INMEDIATO: Listar antes de procesar ---
                         # Insertamos el item en la lista visualmente (con propuesta pendiente por defecto)
-                        self.root.after(0, lambda n=nombre: self.tree.insert("", "end", iid=n, values=(n, "⏳ PROCESANDO...", "❌ Pendiente", "-")) if not self.tree.exists(n) else None)
+                        # Nota: Usamos valores vacíos para las columnas de canales
+                        self.root.after(0, lambda n=nombre: self.tree.insert("", "end", iid=n, values=(n, "⏳ PROCESANDO...", "❌ Pendiente", "-", "", "", "", "")) if not self.tree.exists(n) else None)
                         # ----------------------------------------------------
 
                         driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", local) # Asegurar visibilidad
@@ -1414,7 +1499,7 @@ class TrelewLeadApp:
                         
                         if not click_hecho:
                             self.log(f"⚠️ No se pudo hacer clic en {nombre}")
-                            self.root.after(0, lambda n=nombre: self.tree.item(n, values=(n, "❌ ERROR CLIC", "❌ Pendiente", "-")) if self.tree.exists(n) else None)
+                            self.root.after(0, lambda n=nombre: self.tree.item(n, values=(n, "❌ ERROR CLIC", "❌ Pendiente", "-", "", "", "", "")) if self.tree.exists(n) else None)
                             continue
 
                         # --- VALIDACIÓN DE CARGA (Anti-Datos Pegados) ---
@@ -1457,7 +1542,7 @@ class TrelewLeadApp:
                                 # CAMBIO CRÍTICO: Si falla la validación, NO detenemos el proceso.
                                 # Solo advertimos y seguimos. A veces Google cambia los títulos ligeramente.
                                 self.log(f"⚠️ Advertencia Sync: Panel '{titulo_panel}' vs Lista '{nombre}'. Extrayendo igual...")
-                                self.root.after(0, lambda n=nombre: self.tree.item(n, values=(n, "⚠️ SYNC?", "⏳...", "-")) if self.tree.exists(n) else None)
+                                self.root.after(0, lambda n=nombre: self.tree.item(n, values=(n, "⚠️ SYNC?", "⏳...", "-", "", "", "", "")) if self.tree.exists(n) else None)
                                 # continue  <-- ELIMINADO PARA QUE NO SE TRABE
 
                         except Exception:
@@ -1886,12 +1971,12 @@ class TrelewLeadApp:
                         
                         # Actualizar UI de forma inteligente (sin duplicar filas)
                         def actualizar_ui(n):
-                            prop_status = self._get_propuesta_status_text(datos_fusionados)
-                            web_status = self._get_web_status_text(datos_fusionados)
+                            estado_visual = "ACTUALIZADO ✨" if estado_lead == "SIN WEB 🎯" else estado_lead
+                            new_values = self._get_row_values(n, datos_fusionados, estado_visual)
                             if self.tree.exists(n):
-                                self.tree.item(n, values=(n, "ACTUALIZADO ✨" if estado_lead == "SIN WEB 🎯" else estado_lead, prop_status, web_status))
+                                self.tree.item(n, values=new_values)
                             else:
-                                self.tree.insert("", "end", iid=n, values=(n, estado_lead, prop_status, web_status))
+                                self.tree.insert("", "end", iid=n, values=new_values)
                         
                         self.root.after(0, lambda n=nombre: actualizar_ui(n))
                     
