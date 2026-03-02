@@ -341,6 +341,9 @@ class TrelewLeadApp:
         if not seleccion:
             return
         
+        # Actualizar el campo de búsqueda con el nombre del archivo (sin extensión)
+        self.entry_rubro.set(seleccion.replace(".json", ""))
+
         try:
             datos_cargados = self.gestor_datos.cargar_datos(seleccion)
             

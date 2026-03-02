@@ -156,9 +156,17 @@ En este proyecto seguimos el patrón **Red-Green-Refactor**:
 ### Ejecutar todos los tests
 
 Si la carpeta se llama `tests` y `pytest.ini` está configurado correctamente:
-```powershell
-python -m pytest
-```
+   ```powershell
+   python -m pytest
+   ```
+
+O sino tambien
+   ```bash
+   python -m pytest tests/ -v
+   ```
+
+
+
 
 ### Ejecutar una carpeta o archivo específico
 
