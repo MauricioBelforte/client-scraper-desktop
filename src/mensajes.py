@@ -197,6 +197,16 @@ TEMPLATES_POR_ARCHIVO = {
     },
 
     # Otros Rubros
+    "Servicio Técnico": {
+        "intro": "Estoy ofreciendo mis servicios a servicios técnicos y locales de reparación para potenciar su presencia digital.",
+        "modelos": [
+            "Modelo 1: https://tecnofix-patagonia.netlify.app/",
+            "Modelo 2: https://chubut-soluciones-tecnologicas.netlify.app/",
+            "Modelo 3: https://el-patron-barberia.netlify.app/",
+            "Modelo 4: https://valle-azul-propiedades.netlify.app/",
+            "Modelo 5: https://tinta-austral.netlify.app/"
+        ]
+    },
     "Talleres Mecánicos": {
         "intro": "Estoy ofreciendo mis servicios a talleres mecánicos y de chapa y pintura.",
         "modelos": [
