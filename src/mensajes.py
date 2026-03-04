@@ -1,4 +1,5 @@
 import urllib.parse
+import unicodedata
 
 # --- CONFIGURACIÓN DE PLANTILLAS POR ARCHIVO JSON ---
 # Las claves son los nombres de los archivos (sin .json)
@@ -164,27 +165,6 @@ TEMPLATES_POR_ARCHIVO = {
             "Modelo 5: https://espacio-psicologico-conexion.netlify.app/"
         ]
     },
-    # --- ALIAS PARA ROBUSTEZ (Singular y Sin Acento) ---
-    "Barbería": {
-        "intro": "Estoy ofreciendo mis servicios a barberías y peluquerías de la ciudad.",
-        "modelos": [
-            "Modelo 1: https://barberia-el-puerto.netlify.app/",
-            "Modelo 2: https://el-patron-barberia.netlify.app/",
-            "Modelo 3: https://corte-perfecto-estilistas.netlify.app/",
-            "Modelo 4: https://glamour-tijeras.netlify.app/",
-            "Modelo 5: https://tinta-austral.netlify.app/"
-        ]
-    },
-    "Barberia": {
-        "intro": "Estoy ofreciendo mis servicios a barberías y peluquerías de la ciudad.",
-        "modelos": [
-            "Modelo 1: https://barberia-el-puerto.netlify.app/",
-            "Modelo 2: https://el-patron-barberia.netlify.app/",
-            "Modelo 3: https://corte-perfecto-estilistas.netlify.app/",
-            "Modelo 4: https://glamour-tijeras.netlify.app/",
-            "Modelo 5: https://tinta-austral.netlify.app/"
-        ]
-    },
     "Tatuajes": {
         "intro": "Estoy ofreciendo mis servicios a estudios de tatuajes y tatuadores locales.",
         "modelos": [
@@ -259,6 +239,18 @@ TEMPLATE_DEFAULT = {
     ]
 }
 
+def _normalizar_clave(texto: str) -> str:
+    """
+    Convierte un texto a minúsculas y le quita los acentos para una comparación robusta.
+    Ej: "Servicio Técnico" -> "servicio tecnico"
+    """
+    if not texto:
+        return ""
+    # Normaliza a NFD (Canonical Decomposition) para separar letras de acentos
+    texto_nfd = unicodedata.normalize('NFD', str(texto).lower().strip())
+    # Elimina los caracteres diacríticos (acentos)
+    return "".join(c for c in texto_nfd if unicodedata.category(c) != 'Mn')
+
 def generar_mensaje_whatsapp(nombre_negocio, nombre_archivo):
     """
     Genera el mensaje de WhatsApp personalizado basado en el nombre del archivo JSON.
@@ -283,17 +275,24 @@ def generar_mensaje_whatsapp(nombre_negocio, nombre_archivo):
         generar_mensaje_whatsapp("Estudio P&M", "Abogados")
         generar_mensaje_whatsapp("Unknown", "ArchivoNoConfigurado")  # Usa TEMPLATE_DEFAULT
     """
-    # Obtener configuración del archivo, si no existe usar default
-    # Lógica de búsqueda robusta (Case Insensitive)
+    # --- LÓGICA DE BÚSQUEDA MEJORADA (INSENSIBLE A ACENTOS Y MAYÚSCULAS) ---
     config_seleccionada = TEMPLATE_DEFAULT
+    nombre_normalizado = _normalizar_clave(nombre_archivo)
     
-    if nombre_archivo in TEMPLATES_POR_ARCHIVO:
-        config_seleccionada = TEMPLATES_POR_ARCHIVO[nombre_archivo]
-    else:
-        # Intentar normalizar a Title Case (ej: "barberías" -> "Barberías")
-        nombre_title = str(nombre_archivo).title()
-        if nombre_title in TEMPLATES_POR_ARCHIVO:
-            config_seleccionada = TEMPLATES_POR_ARCHIVO[nombre_title]
+    # Búsqueda insensible a acentos y mayúsculas/minúsculas
+    for clave, config in TEMPLATES_POR_ARCHIVO.items():
+        clave_norm = _normalizar_clave(clave)
+        
+        # 1. Coincidencia exacta
+        if clave_norm == nombre_normalizado:
+            config_seleccionada = config
+            break # Encontramos la coincidencia, salimos del bucle
+        
+        # 2. Coincidencia de plurales (ej: "Barberia" vs "Barberias", "Bar" vs "Bares")
+        if clave_norm in [nombre_normalizado + "s", nombre_normalizado + "es"] or \
+           nombre_normalizado in [clave_norm + "s", clave_norm + "es"]:
+            config_seleccionada = config
+            break
     
     # Construir lista de modelos
     lista_modelos = "\n".join(config_seleccionada["modelos"])
