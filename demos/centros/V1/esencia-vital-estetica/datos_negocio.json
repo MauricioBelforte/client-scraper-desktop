@@ -1,0 +1,30 @@
+{
+  "nombre": "Esencia Vital Estética",
+  "categoria": "Centros de Estética",
+  "direccion": "Av. Fontana 678, Trelew, Chubut",
+  "telefono": "+54 9 280 4789012",
+  "rating": "4.9",
+  "horarios_detallados": [
+    "Lunes: 09:00-13:00, 16:00-20:00",
+    "Martes: 09:00-13:00, 16:00-20:00",
+    "Miércoles: 09:00-13:00, 16:00-20:00",
+    "Jueves: 09:00-13:00, 16:00-20:00",
+    "Viernes: 09:00-13:00, 16:00-20:00",
+    "Sábado: 10:00-14:00",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Florencia R.",
+      "texto": "¡Excelente atención y los resultados son increíbles! Súper recomendable el tratamiento facial.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Martina S.",
+      "texto": "El lugar es muy lindo y la gente muy profesional. Me siento renovada cada vez que voy.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/EsenciaVitalEsteticaTW",
+  "instagram": "https://instagram.com/esencia_vital_estetica"
+}

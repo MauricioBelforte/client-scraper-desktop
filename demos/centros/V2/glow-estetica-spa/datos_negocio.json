@@ -1,0 +1,30 @@
+{
+  "nombre": "Glow Estética & Spa",
+  "categoria": "Centros de Estética",
+  "direccion": "Avenida 9 de Julio 580, Trelew, Chubut",
+  "telefono": "+54 9 280 4357890",
+  "rating": "4.9",
+  "horarios_detallados": [
+    "Lunes: 09:30-13:30, 16:00-20:00",
+    "Martes: 09:30-13:30, 16:00-20:00",
+    "Miércoles: 09:30-13:30, 16:00-20:00",
+    "Jueves: 09:30-13:30, 16:00-20:00",
+    "Viernes: 09:30-13:30, 16:00-20:00",
+    "Sábado: 10:00-14:30",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Florencia Gómez",
+      "texto": "¡Excelente atención y tratamientos de primera! Salí renovada. Súper recomendable.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Martina Suárez",
+      "texto": "El ambiente es muy relajante y las chicas son unas genias. Siempre vuelvo por sus masajes.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/GlowEsteticaTrelew",
+  "instagram": "https://instagram.com/glow.estetica.trelew"
+}

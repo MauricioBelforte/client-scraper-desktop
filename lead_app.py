@@ -732,6 +732,7 @@ class TrelewLeadApp:
         # Campos editables
         crear_campo("Nombre del Negocio:", "nombre", nombre)
         crear_campo("Rubro / Categoría:", "categoria", datos.get("categoria", ""))
+        crear_campo("Dirección:", "direccion", datos.get("direccion", ""))
         crear_campo("Teléfono:", "telefono", datos.get("telefono", ""))
         crear_campo("Email:", "email", datos.get("email", ""))
         crear_campo("Sitio Web:", "website", datos.get("website", ""))
@@ -746,6 +747,7 @@ class TrelewLeadApp:
 
             # Actualizar datos en el diccionario
             datos["categoria"] = entries["categoria"].get().strip()
+            datos["direccion"] = entries["direccion"].get().strip() or "No disponible"
             datos["telefono"] = entries["telefono"].get().strip() or "Sin teléfono"
             
             email = entries["email"].get().strip()

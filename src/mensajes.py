@@ -151,8 +151,11 @@ TEMPLATES_POR_ARCHIVO = {
     "Centros de Estética": {
         "intro": "Estoy ofreciendo mis servicios a centros de estética y profesionales de la belleza.",
         "modelos": [
-            "Modelo 1: https://tinta-austral.netlify.app/",
-            "Modelo 2: https://patagonia-urbana-inmobiliaria.netlify.app/"
+            "Modelo 1: https://glow-estetica-spa.netlify.app/",
+            "Modelo 2: https://esencia-vital-estetica.netlify.app/",
+            "Modelo 3: https://barberia-el-puerto.netlify.app/",
+            "Modelo 4: https://el-patron-barberia.netlify.app/",
+            "Modelo 5: https://tinta-austral.netlify.app/"
         ]
     },
     "Barberías": {
@@ -178,7 +181,17 @@ TEMPLATES_POR_ARCHIVO = {
 
     # Otros Rubros
     "Servicio Técnico": {
-        "intro": "Estoy ofreciendo mis servicios a servicios técnicos y locales de reparación para potenciar su presencia digital.",
+        "intro": "Estoy ofreciendo mis servicios a locales de reparación y servicios técnicos de la ciudad.",
+        "modelos": [
+            "Modelo 1: https://tecnofix-patagonia.netlify.app/",
+            "Modelo 2: https://chubut-soluciones-tecnologicas.netlify.app/",
+            "Modelo 3: https://el-patron-barberia.netlify.app/",
+            "Modelo 4: https://valle-azul-propiedades.netlify.app/",
+            "Modelo 5: https://tinta-austral.netlify.app/"
+        ]
+    },
+    "Celulares": {
+        "intro": "Estoy ofreciendo mis servicios a distintos locales de venta y reparación de celulares de la ciudad.",
         "modelos": [
             "Modelo 1: https://tecnofix-patagonia.netlify.app/",
             "Modelo 2: https://chubut-soluciones-tecnologicas.netlify.app/",
