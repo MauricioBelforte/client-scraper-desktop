@@ -135,16 +135,17 @@ class TrelewLeadApp:
 
         tk.Label(left_panel, text="Emprendimientos Encontrados", font=constantes.FUENTE_NEGRITA, bg=constantes.COLOR_BLANCO, pady=5).pack()
 
-        columns = ("nombre", "estado", "propuesta", "web", "wa", "ig", "fb", "mail")
+        columns = ("nombre", "estado", "propuesta", "web", "wa", "ig", "fb", "mail", "nulo")
         self.tree = ttk.Treeview(left_panel, columns=columns, show="headings")
         self.tree.heading("nombre", text="Nombre")
         self.tree.heading("estado", text="Estado")
-        self.tree.heading("propuesta", text="Propuesta")
+        self.tree.heading("propuesta", text="Analizado")
         self.tree.heading("web", text="Web")
         self.tree.heading("wa", text="WA")
         self.tree.heading("ig", text="IG")
         self.tree.heading("fb", text="FB")
         self.tree.heading("mail", text="@")
+        self.tree.heading("nulo", text="∅")
         self.tree.column("nombre", width=250)
         self.tree.column("estado", width=100)
         self.tree.column("propuesta", width=100, anchor="center")
@@ -153,6 +154,7 @@ class TrelewLeadApp:
         self.tree.column("ig", width=40, anchor="center")
         self.tree.column("fb", width=40, anchor="center")
         self.tree.column("mail", width=40, anchor="center")
+        self.tree.column("nulo", width=40, anchor="center")
         
         # --- BUSCADOR / FILTRO (NUEVO) ---
         # Instanciamos el buscador pasándole el panel y el treeview.
@@ -255,8 +257,8 @@ class TrelewLeadApp:
         self.root.update_idletasks()
 
     def _get_propuesta_status_text(self, datos):
-        """Helper para obtener el texto visual del estado de la propuesta."""
-        return "✅ Enviada" if datos.get("propuesta_enviada") else "❌ Pendiente"
+        """Helper para obtener el texto visual del estado de análisis."""
+        return "✅ Sí" if datos.get("propuesta_enviada") else "❌ No"
 
     def _get_web_status_text(self, datos):
         """Helper para obtener el texto visual si tiene web."""
@@ -276,7 +278,8 @@ class TrelewLeadApp:
             self._get_channel_check(datos, "propuesta_wa"),
             self._get_channel_check(datos, "propuesta_ig"),
             self._get_channel_check(datos, "propuesta_fb"),
-            self._get_channel_check(datos, "propuesta_mail")
+            self._get_channel_check(datos, "propuesta_mail"),
+            self._get_channel_check(datos, "contacto_nulo")
         )
 
     def normalizar_texto(self, texto):
@@ -530,18 +533,18 @@ class TrelewLeadApp:
                            command=lambda: self.lanzar_generacion_web(nombre, datos, "v2"))
         btn_web_v2.grid(row=0, column=1, padx=2, sticky="ew")
 
-        # --- SECCIÓN ESTADO DE PROPUESTA (NUEVO DISEÑO) ---
-        propuesta_frame = tk.LabelFrame(body, text=" Control de Propuesta ", font=constantes.FUENTE_PEQUENA_NEGRITA, bg=constantes.COLOR_BLANCO, padx=10, pady=10)
+        # --- SECCIÓN ESTADO DE ANÁLISIS (NUEVO DISEÑO) ---
+        propuesta_frame = tk.LabelFrame(body, text=" Estado del Análisis ", font=constantes.FUENTE_PEQUENA_NEGRITA, bg=constantes.COLOR_BLANCO, padx=10, pady=10)
         propuesta_frame.pack(fill="x", pady=(15, 5), padx=2)
         
         estado_propuesta = datos.get("propuesta_enviada", False)
         
         # 1. Botón Principal (Toggle)
         if estado_propuesta:
-            btn_prop_text = "↩️ Desmarcar Propuesta"
+            btn_prop_text = "↩️ Desmarcar como Analizado"
             btn_prop_bg = "#ff8787" # Rojo claro para cancelar
         else:
-            btn_prop_text = "✅ Marcar Propuesta ENVIADA"
+            btn_prop_text = "✅ Marcar como Analizado"
             btn_prop_bg = "#69db7c" # Verde claro para confirmar
             
         tk.Button(propuesta_frame, text=btn_prop_text, bg=btn_prop_bg, fg="white",
@@ -555,13 +558,15 @@ class TrelewLeadApp:
         channels_frame.columnconfigure(1, weight=1)
         channels_frame.columnconfigure(2, weight=1)
         channels_frame.columnconfigure(3, weight=1)
+        channels_frame.columnconfigure(4, weight=1)
 
         # Definición de canales y sus colores
         canales = [
             ("WA", "propuesta_wa", constantes.COLOR_WHATSAPP, has_wa),
             ("IG", "propuesta_ig", constantes.COLOR_INSTAGRAM, has_ig),
             ("FB", "propuesta_fb", constantes.COLOR_FACEBOOK, has_fb),
-            ("Mail", "propuesta_mail", constantes.COLOR_EMAIL, has_email)
+            ("Mail", "propuesta_mail", constantes.COLOR_EMAIL, has_email),
+            ("NULO", "contacto_nulo", constantes.COLOR_TEXTO_TENUE, True)
         ]
 
         for idx, (label, key, color_activo, disponible) in enumerate(canales):
@@ -617,11 +622,23 @@ class TrelewLeadApp:
             webbrowser.open(f"mailto:{email}")
 
     def toggle_canal_propuesta(self, nombre, key_canal):
-        """Alterna el estado de envío de un canal específico (WA, IG, FB, Mail)."""
+        """Alterna el estado de envío de un canal específico (WA, IG, FB, Mail, Nulo)."""
         if nombre in self.prospectos_datos:
             datos = self.prospectos_datos[nombre]
-            # Invertir estado del canal
-            datos[key_canal] = not datos.get(key_canal, False)
+            
+            # Invertir estado del canal clickeado
+            estado_actual = datos.get(key_canal, False)
+            datos[key_canal] = not estado_actual
+
+            # Lógica de exclusión mutua
+            if key_canal == 'contacto_nulo' and datos[key_canal]: # Si se activa NULO
+                datos['propuesta_wa'] = False
+                datos['propuesta_ig'] = False
+                datos['propuesta_fb'] = False
+                datos['propuesta_mail'] = False
+            elif key_canal != 'contacto_nulo' and datos[key_canal]: # Si se activa otro canal
+                datos['contacto_nulo'] = False
+
             self.prospectos_datos[nombre] = datos
             
             self._guardar_cambios_y_actualizar_ui(nombre, datos)
@@ -900,7 +917,8 @@ class TrelewLeadApp:
                 "comentarios": [], # Lista vacía inicial
                 "imagenes": [],
                 "horarios_detallados": [],
-                "propuesta_enviada": False
+                "propuesta_enviada": False,
+                "contacto_nulo": False
             }
 
             # Guardar en memoria y disco
