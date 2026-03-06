@@ -1,0 +1,30 @@
+{
+  "nombre": "El Horno Patagónico",
+  "categoria": "Panaderías",
+  "direccion": "Av. Fontana 789, Trelew, Chubut",
+  "telefono": "+54 9 280 4678901",
+  "rating": "4.7",
+  "horarios_detallados": [
+    "Lunes: 08:30-13:30, 16:30-20:30",
+    "Martes: 08:30-13:30, 16:30-20:30",
+    "Miércoles: 08:30-13:30, 16:30-20:30",
+    "Jueves: 08:30-13:30, 16:30-20:30",
+    "Viernes: 08:30-13:30, 16:30-20:30",
+    "Sábado: 09:00-14:00",
+    "Domingo: Cerrado"
+  ],
+  "comentarios": [
+    {
+      "autor": "Valeria R.",
+      "texto": "¡Excelente panadería! El pan de campo es espectacular y las facturas siempre frescas. Mi lugar favorito en Trelew para el desayuno.",
+      "rating": "5 estrellas"
+    },
+    {
+      "autor": "Martín G.",
+      "texto": "Increíble calidad y variedad. Probé sus tortas y son deliciosas, se nota el esmero en cada detalle. Volveré sin duda.",
+      "rating": "5 estrellas"
+    }
+  ],
+  "facebook": "https://facebook.com/elhornopatagonico",
+  "instagram": "https://instagram.com/elhornopatagonico"
+}

@@ -146,15 +146,15 @@ class TrelewLeadApp:
         self.tree.heading("fb", text="FB")
         self.tree.heading("mail", text="@")
         self.tree.heading("nulo", text="∅")
-        self.tree.column("nombre", width=250)
-        self.tree.column("estado", width=100)
-        self.tree.column("propuesta", width=100, anchor="center")
-        self.tree.column("web", width=80, anchor="center")
-        self.tree.column("wa", width=40, anchor="center")
-        self.tree.column("ig", width=40, anchor="center")
-        self.tree.column("fb", width=40, anchor="center")
-        self.tree.column("mail", width=40, anchor="center")
-        self.tree.column("nulo", width=40, anchor="center")
+        self.tree.column("nombre", width=300)
+        self.tree.column("estado", width=60)
+        self.tree.column("propuesta", width=30, anchor="center")
+        self.tree.column("web", width=20, anchor="center")
+        self.tree.column("wa", width=20, anchor="center")
+        self.tree.column("ig", width=20, anchor="center")
+        self.tree.column("fb", width=20, anchor="center")
+        self.tree.column("mail", width=20, anchor="center")
+        self.tree.column("nulo", width=20, anchor="center")
         
         # --- BUSCADOR / FILTRO (NUEVO) ---
         # Instanciamos el buscador pasándole el panel y el treeview.
@@ -178,7 +178,7 @@ class TrelewLeadApp:
         self.tree.bind("<<TreeviewSelect>>", self.mostrar_detalle)
 
         # Panel Derecho: Card de Detalle Visual
-        self.right_panel = tk.Frame(main_container, width=350, bg=constantes.COLOR_FONDO, padx=20)
+        self.right_panel = tk.Frame(main_container, width=400, bg=constantes.COLOR_FONDO, padx=20)
         self.right_panel.pack(side="right", fill="both")
         self.right_panel.pack_propagate(False)
 
@@ -437,7 +437,18 @@ class TrelewLeadApp:
         self.create_info_row(body, "Categoría:", datos.get('categoria', 'General'))
         self.create_info_row(body, "📱 Teléfono:", datos.get('telefono', 'No disponible'))
         self.create_info_row(body, "🌐 Web:", datos.get('website', 'No posee'))
-        self.create_info_row(body, "🏠 Dirección:", datos.get('direccion', 'No disponible'))
+
+        # --- LÓGICA PARA LIMPIAR DIRECCIÓN (evita redundancia con "Ciudad") ---
+        direccion_completa = datos.get('direccion', 'No disponible')
+        # Dividimos la dirección por comas y filtramos las partes que contienen "Trelew" o "Chubut"
+        partes = direccion_completa.split(',')
+        partes_filtradas = [p for p in partes if 'trelew' not in p.lower() and 'chubut' not in p.lower()]
+        # Unimos las partes restantes y limpiamos comas/espacios sobrantes al final
+        direccion_limpia = ','.join(partes_filtradas).strip().rstrip(',')
+        # Si después de limpiar no queda nada (ej: la dirección era solo "Trelew"), mostramos la original.
+        direccion_final = direccion_limpia if direccion_limpia else direccion_completa
+
+        self.create_info_row(body, "🏠 Dirección:", direccion_final)
         self.create_info_row(body, "📍 Ciudad:", "Trelew, Chubut")
 
         # Separador visual

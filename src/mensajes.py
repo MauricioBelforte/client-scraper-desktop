@@ -74,8 +74,11 @@ TEMPLATES_POR_ARCHIVO = {
     "Panaderías": {
         "intro": "Estoy ofreciendo mis servicios a panaderías y locales de barrio.",
         "modelos": [
-            "Modelo 1: https://centro-psicologico-conexion-interior.netlify.app/",
-            "Modelo 2: https://patagonia-urbana-inmobiliaria.netlify.app/"
+            "Modelo 1: https://la-miga-dorada.netlify.app/",
+            "Modelo 2: https://el-horno-patagonico.netlify.app/",
+            "Modelo 3: https://tinta-austral.netlify.app/",
+            "Modelo 4: https://valle-azul-propiedades.netlify.app/",
+            "Modelo 5: https://espacio-psicologico-conexion.netlify.app/"
         ]
     },
     "Carnicerías": {

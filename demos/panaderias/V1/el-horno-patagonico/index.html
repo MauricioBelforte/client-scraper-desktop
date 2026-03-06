@@ -1,0 +1,341 @@
+
+    <!DOCTYPE html> <!-- MAQUETA V1 -->
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>El Horno Patagónico | Oficial</title>
+        
+        <!-- SEO & Metadatos (Privacidad activada: No Index) -->
+        <meta name="robots" content="noindex, nofollow">
+        <meta name="description" content="Bienvenido a El Horno Patagónico, donde cada producto se elabora con la pasión y frescura de nuestra tierra. Descubre la calidad artesanal en nuestro pan de cam">
+        <meta property="og:title" content="El Horno Patagónico">
+        <meta property="og:description" content="Bienvenido a El Horno Patagónico, donde cada producto se elabora con la pasión y frescura de nuestra tierra. Descubre la calidad artesanal en nuestro pan de cam">
+        
+        <style>
+    /* --- Reset y Variables (Basado en instrucciones_sistema.md) --- */
+    :root {
+        /* --- SISTEMA DE COLORES SEMÁNTICO V1 (Personalizado por Rubro) --- */
+        
+        /* Hero (Portada) */
+        --v1-hero-titulo: #4e342e;
+        --v1-hero-texto-secundario: #795548;
+        --v1-hero-lema: #4e342e;
+        --v1-hero-overlay: #0000004f;
+
+        /* Botones */
+        --v1-boton-fondo: #ffcfe7;
+        --v1-boton-texto: #4e342e;
+
+        /* Secciones de Contenido */
+        --v1-seccion-fondo: #fffde7;
+        --v1-seccion-titulos: #9a4972;
+        --v1-seccion-texto: #5d4037;
+
+        /* Tarjetas (Beneficios, Testimonios) */
+        --v1-card-fondo: #ffffff;
+        --v1-card-texto: #5d4037;
+        --v1-card-borde: #ffcfe7;
+        
+        /* Fuentes (de las instrucciones) */
+        --fuente-base: 'El Messiri', 'Georgia', sans-serif;
+        --fuente-secundaria: 'Libre Baskerville', serif;
+
+        /* Tamaños de Fuente (de las instrucciones) */
+        --font-size-xxs: 0.875rem;
+        --font-size-xs: 1rem;
+        --font-size-sm: 1.25rem;
+        --font-size-md: 1.5rem;
+        --font-size-lg: 1.75rem;
+        --font-size-xl: 2.5rem;
+        --font-size-xxl: 3.5rem;
+
+        /* Espaciados (de las instrucciones) */
+        --espaciado-sm: 1rem;
+        --espaciado-md: 1.5rem;
+        --espaciado-lg: 2rem;
+        --espaciado-xl: 4rem;
+
+        /* Utilidades */
+        --transicion-estandar: all 0.3s ease;
+        --radio-card: 0.75rem;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { 
+        font-family: var(--fuente-base); 
+        background: linear-gradient(180deg, var(--v1-hero-overlay) 42%, var(--v1-hero-overlay) 84%), url('assets/img/fondo_hero.jpg');
+        background-size: cover; background-attachment: fixed; 
+        color: var(--v1-seccion-texto);
+        background-color: var(--v1-seccion-fondo);
+        font-size: var(--font-size-xs);
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    h1, h2, h3 { font-family: var(--fuente-secundaria); color: var(--v1-seccion-titulos); text-shadow: 0 1px 3px rgba(0,0,0,0.4); }
+
+    /* --- Estilos Generales y Componentes --- */
+    .barra-navegacion { width: 100%; display: flex; flex-direction: column; align-items: center; padding: var(--espaciado-sm); }
+    .logo img { width: 10.5rem; height: 10.5rem; border-radius: 50%; border: 3px solid var(--v1-boton-fondo); }
+    .seccion-hero { text-align: center; padding: var(--espaciado-lg) var(--espaciado-md); min-height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    .seccion-hero h1 { font-size: var(--font-size-xxl); color: var(--v1-hero-titulo); }
+    .lema-hero { text-transform: uppercase; font-weight: 700; font-size: var(--font-size-xxs); opacity: 0.9; margin-top: var(--espaciado-sm); color: var(--v1-hero-lema); }
+    .cta-button { background-color: var(--v1-boton-fondo); color: var(--v1-boton-texto); padding: 0.75rem 1.5rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; display: inline-block; margin-top: var(--espaciado-md); border: 1px solid var(--v1-boton-fondo); transition: var(--transicion-estandar); }
+    .cta-button:hover { transform: scale(1.05); filter: brightness(1.1); }
+    .contenedor-tarjetas { display: grid; grid-template-columns: 1fr; gap: var(--espaciado-md); }
+    .tarjeta-producto { background: var(--v1-card-fondo); border: 1px solid var(--v1-card-borde); border-radius: var(--radio-card); padding: 1.5rem; color: var(--v1-card-texto); transition: var(--transicion-estandar); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .tarjeta-producto:hover { transform: translateY(-5px); }
+    .tarjeta-producto img { width: 100%; height: 15rem; object-fit: cover; border-radius: 0.5rem; }
+    .tarjeta-beneficio { background: var(--v1-card-fondo); color: var(--v1-card-texto); text-align: center; padding: 2rem 1rem; display: flex; align-items: center; justify-content: center; border: 1px solid var(--v1-card-borde); }
+    .tarjeta-beneficio h3 { font-size: var(--font-size-sm); color: var(--v1-seccion-titulos); }
+    
+    /* --- Estilos Nuevos para Testimonios --- */
+    .tarjeta-testimonio { background: var(--v1-card-fondo); border-radius: var(--radio-card); padding: 2rem; display: flex; flex-direction: column; align-items: center; text-align: center; color: var(--v1-card-texto); transition: var(--transicion-estandar); position: relative; border: 1px solid var(--v1-card-borde); }
+    .tarjeta-testimonio:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+    .tarjeta-testimonio img { width: 6rem; height: 6rem; border-radius: 50%; object-fit: cover; border: 3px solid var(--v1-boton-fondo); margin-bottom: 1rem; }
+    .comillas-testimonio { font-size: 4rem; line-height: 0.5; font-family: serif; color: var(--v1-seccion-titulos); display: block; margin-bottom: 1rem; margin-top: 0.5rem; opacity: 0.8; }
+    .texto-testimonio { font-style: italic; margin-bottom: 1rem; font-size: 1.1rem; }
+    .estrellas-testimonio { color: #FFD700; margin-bottom: 0.5rem; font-size: 1.2rem; letter-spacing: 2px; }
+    .autor-testimonio { font-weight: bold; font-family: var(--fuente-secundaria); font-size: 1rem; text-transform: uppercase; color: var(--v1-seccion-titulos); }
+
+    .precio-real { color: var(--v1-boton-fondo); font-weight: bold; font-size: var(--font-size-sm); margin-top: var(--espaciado-sm); display: block; }
+    .posicion-fixed { position: fixed; bottom: 5vh; right: 2vw; background: #2cc748; border-radius: 50%; padding: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 1000; }
+    .seccion-beneficios, .seccion-presentacion, .seccion-productos { padding: var(--espaciado-lg) var(--espaciado-md); text-align: center; background-color: var(--v1-seccion-fondo); }
+    .seccion-beneficios h2, .seccion-presentacion h2, .seccion-productos h2 { margin-bottom: var(--espaciado-md); font-size: var(--font-size-xl); }
+    
+    /* --- NUEVO: Estilos para iconos de redes sociales --- */
+    .social-icons { display: flex; justify-content: center; gap: 2rem; margin-top: 1rem; }
+    .social-icon svg { width: 40px; height: 40px; transition: var(--transicion-estandar); }
+    .social-icon.instagram { color: #E1306C; }
+    .social-icon.facebook { color: #1877F2; }
+    .social-icon.active-link { cursor: pointer; }
+    .social-icon.active-link:hover { opacity: 0.8; transform: scale(1.1); }
+    .social-icon:not(.active-link) { cursor: default; opacity: 0.5; }
+
+    /* --- Estrategia Responsive (Mobile First) --- */
+    /* Tablet */
+    @media (min-width: 769px) {
+        .contenedor-tarjetas { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* Desktop */
+    @media (min-width: 1201px) {
+        .contenedor-tarjetas { grid-template-columns: repeat(3, 1fr); max-width: 1200px; margin: 0 auto; }
+        .seccion-hero, .seccion-presentacion, .seccion-beneficios, .seccion-productos { padding-left: var(--espaciado-xl); padding-right: var(--espaciado-xl); }
+    }
+    </style>
+        <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <nav class="barra-navegacion">
+            <div class="logo">
+                <img src="assets/img/logo.png" alt="Logo de El Horno Patagónico">
+            </div>
+        </nav>
+
+        <section class="seccion-hero">
+            <div class="contenedor-hero">
+                <h1 class="el-messiri" style="text-transform: capitalize;">El Horno Patagónico</h1>
+                <div class="texto-adornado">
+                    <p class="lema-hero">Frescura diaria, calidad artesanal.</p>
+                </div>
+                <a href="#productos" class="cta-button">Ver Productos</a>
+                <p style="font-size: 1.5rem; margin-top: 10vh; font-weight: 300; color: var(--v1-hero-texto-secundario); text-shadow: 0 1px 2px rgba(0,0,0,0.5);">Delicias Patagónicas: Frescura y Sabor</p>
+            </div>
+        </section>
+
+        <section class="seccion-presentacion">
+            <h2 class="libre-baskerville">Sobre Nosotros</h2>
+            <p style="max-width: 800px; margin: 0 auto; font-size: 1.2rem;">Bienvenido a El Horno Patagónico, donde cada producto se elabora con la pasión y frescura de nuestra tierra. Descubre la calidad artesanal en nuestro pan de campo, facturas recién horneadas y exquisitas tortas que deleitan todos tus sentidos.</p>
+            
+            <!-- NUEVO: Sección de Horarios -->
+            <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.1);">
+                <h3 class="libre-baskerville" style="font-size: 2rem; margin-bottom: 1rem;">Horarios</h3>
+                <p id="estado-horario" style="font-weight: bold; font-size: 1.5rem; color: var(--v1-boton-fondo); margin-bottom: 0.5rem;">Cerrado</p>
+                <p id="proximo-horario" style="font-size: 1.2rem; margin-bottom: 1.5rem;">Abre hoy a las 16:30</p>
+                
+                <!-- Horarios detallados en un formato más discreto -->
+                <div style="font-size: 1.1rem; color: var(--v1-seccion-texto); opacity: 0.9;">
+                    <p>Lunes: 08:30-13:30, 16:30-20:30</p><p>Martes: 08:30-13:30, 16:30-20:30</p><p>Miércoles: 08:30-13:30, 16:30-20:30</p><p>Jueves: 08:30-13:30, 16:30-20:30</p><p>Viernes: 08:30-13:30, 16:30-20:30</p><p>Sábado: 09:00-14:00</p><p>Domingo: Cerrado</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="seccion-beneficios"><h2 class="el-messiri">Por qué elegirnos</h2><div class="contenedor-tarjetas">
+            <article class="tarjeta-producto tarjeta-beneficio">
+                <h3 class="libre-baskerville">✓ Pan de campo icónico</h3>
+            </article>
+            
+            <article class="tarjeta-producto tarjeta-beneficio">
+                <h3 class="libre-baskerville">✓ Facturas siempre frescas</h3>
+            </article>
+            
+            <article class="tarjeta-producto tarjeta-beneficio">
+                <h3 class="libre-baskerville">✓ Calidad artesanal garantizada</h3>
+            </article>
+            </div></section>
+
+        <section class="seccion-productos">
+            <h2 class="el-messiri">Experiencias de nuestros clientes</h2>
+            <div class="contenedor-tarjetas">
+                
+        <article class="tarjeta-testimonio">
+            <img src="assets/img/testimonio_sintetico_0.jpg" alt="Foto de Valeria R.">
+            <span class="comillas-testimonio">“</span>
+            <p class="texto-testimonio">"¡Excelente panadería! El pan de campo es espectacular y las facturas siempre frescas. Mi lugar favorito en Trelew para el desayuno...."</p>
+            <div class="estrellas-testimonio">⭐⭐⭐⭐⭐</div>
+            <h3 class="autor-testimonio">Valeria R.</h3>
+        </article>
+        
+        <article class="tarjeta-testimonio">
+            <img src="assets/img/testimonio_sintetico_1.jpg" alt="Foto de Martín G.">
+            <span class="comillas-testimonio">“</span>
+            <p class="texto-testimonio">"Increíble calidad y variedad. Probé sus tortas y son deliciosas, se nota el esmero en cada detalle. Volveré sin duda...."</p>
+            <div class="estrellas-testimonio">⭐⭐⭐⭐⭐</div>
+            <h3 class="autor-testimonio">Martín G.</h3>
+        </article>
+        
+        <article class="tarjeta-testimonio">
+            <img src="assets/img/testimonio_sintetico_2.jpg" alt="Foto de José López">
+            <span class="comillas-testimonio">“</span>
+            <p class="texto-testimonio">"La calidad es increíble y el trato muy amable. 100% recomendado...."</p>
+            <div class="estrellas-testimonio">⭐⭐⭐⭐⭐</div>
+            <h3 class="autor-testimonio">José López</h3>
+        </article>
+        
+            </div>
+        </section>
+
+        
+
+        
+        <section class="seccion-presentacion">
+            <h2 class="el-messiri">Dónde Estamos</h2>
+            <p style="max-width: 800px; margin: 0 auto; font-size: 1.2rem;">Av. Fontana 789, Trelew, Chubut</p>
+            <a href="https://www.google.com/maps/search/?api=1&query=Av.%20Fontana%20789%2C%20Trelew%2C%20Chubut" target="_blank" class="cta-button" style="margin-top: 1.5rem;">VER EN MAPA</a>
+        </section>
+        
+
+        <a href="https://wa.me/5492804678901" class="posicion-fixed" aria-label="Contactar por WhatsApp">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="40" height="40">
+        </a>
+
+        
+    <footer id="contacto" style="background: #181818; padding: 4rem 2rem; text-align: center; color: #aaa; font-size: 0.9rem;">
+        <h2 class="el-messiri" style="color: white; margin-bottom: 2rem;">Contacto y Redes Sociales</h2>
+        <div class="social-icons"><a href="https://instagram.com/elhornopatagonico" target="_blank" class="social-icon instagram active-link" aria-label="Instagram"><svg fill="currentColor" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Instagram</title><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.936 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.314.936 20.644.523 19.854.218 19.095-.08 18.225-.282 16.947-.341 15.667-.398 15.26-.413 12-.413h0zm0 2.163c3.204 0 3.584.012 4.85.07 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.055 1.17-.249 1.805-.413 2.227-.217.562-.477.96-.896 1.382-.42.419-.819.679-1.381.896-.422.164-1.057.36-2.227.413-1.266.057-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.055-1.805-.249-2.227-.413-.562-.217-.96-.477-1.382-.896-.419-.42-.679-.819-.896-1.381-.164-.422-.36-1.057-.413-2.227-.057-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.055-1.17.249-1.805.413-2.227.217-.562.477.96.896-1.382.42-.419.819.679 1.381-.896.422-.164 1.057.36 2.227-.413 1.266-.057 1.646-.07 4.85.07zM12 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.88 1.44 1.44 0 000-2.88z"/></svg></a><a href="https://facebook.com/elhornopatagonico" target="_blank" class="social-icon facebook active-link" aria-label="Facebook"><svg fill="currentColor" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Facebook</title><path d="M22.675 0h-21.35C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.732 0 1.323-.593 1.323-1.325V1.325C24 .593 23.407 0 22.675 0z"/></svg></a></div>
+        <p style="margin-top: 2rem;">&copy; 2026 El Horno Patagónico. Todos los derechos reservados.</p>
+    </footer>
+    
+
+        <script>
+        (function() {
+            const horarios = ["Lunes: 08:30-13:30, 16:30-20:30", "Martes: 08:30-13:30, 16:30-20:30", "Mi\u00e9rcoles: 08:30-13:30, 16:30-20:30", "Jueves: 08:30-13:30, 16:30-20:30", "Viernes: 08:30-13:30, 16:30-20:30", "S\u00e1bado: 09:00-14:00", "Domingo: Cerrado"];
+            const statusEl = document.getElementById('estado-horario');
+            const nextEl = document.getElementById('proximo-horario');
+            
+            if (!statusEl || !horarios || horarios.length === 0) return;
+
+            const diasSemana = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+            const now = new Date();
+            const diaActual = now.getDay(); // 0-6
+            const minutosActuales = now.getHours() * 60 + now.getMinutes();
+
+            // Parsear horarios
+            const agenda = {};
+            
+            horarios.forEach(h => {
+                const partes = h.split(': ');
+                if (partes.length < 2) return;
+                
+                let diaNombre = partes[0].toLowerCase().trim();
+                // Normalizar nombres
+                diaNombre = diaNombre.replace('é', 'e').replace('á', 'a');
+                if (diaNombre === 'miercoles') diaNombre = 'miércoles';
+                if (diaNombre === 'sabado') diaNombre = 'sábado';
+
+                const rangosStr = partes[1];
+                if (rangosStr.toLowerCase().includes('cerrado')) return;
+
+                const diaIndex = diasSemana.indexOf(diaNombre);
+                if (diaIndex === -1) return;
+
+                const rangos = [];
+                rangosStr.split(', ').forEach(r => {
+                    const [inicio, fin] = r.split('-');
+                    if (inicio && fin) {
+                        const [h1, m1] = inicio.split(':').map(Number);
+                        const [h2, m2] = fin.split(':').map(Number);
+                        rangos.push({
+                            inicio: h1 * 60 + m1,
+                            fin: h2 * 60 + m2
+                        });
+                    }
+                });
+                agenda[diaIndex] = rangos.sort((a, b) => a.inicio - b.inicio);
+            });
+
+            function formatearHora(minutos) {
+                const h = Math.floor(minutos / 60).toString().padStart(2, '0');
+                const m = (minutos % 60).toString().padStart(2, '0');
+                return `${h}:${m}`;
+            }
+
+            // Determinar estado
+            let estaAbierto = false;
+            let textoEstado = "Cerrado";
+            let textoProximo = "";
+            let color = "#dc3545"; // Rojo
+
+            const rangosHoy = agenda[diaActual] || [];
+            let cierreHoy = null;
+
+            for (const rango of rangosHoy) {
+                if (minutosActuales >= rango.inicio && minutosActuales < rango.fin) {
+                    estaAbierto = true;
+                    cierreHoy = rango.fin;
+                    break;
+                }
+            }
+
+            if (estaAbierto) {
+                textoEstado = "Abierto ahora";
+                color = "#28a745"; // Verde
+                textoProximo = `Cierra a las ${formatearHora(cierreHoy)}`;
+            } else {
+                // Buscar próxima apertura
+                let encontrado = false;
+                // 1. Resto de hoy
+                for (const rango of rangosHoy) {
+                    if (minutosActuales < rango.inicio) {
+                        textoProximo = `Abre hoy a las ${formatearHora(rango.inicio)}`;
+                        encontrado = true;
+                        break;
+                    }
+                }
+                // 2. Días siguientes
+                if (!encontrado) {
+                    for (let i = 1; i <= 7; i++) {
+                        const diaCheck = (diaActual + i) % 7;
+                        const rangosCheck = agenda[diaCheck];
+                        if (rangosCheck && rangosCheck.length > 0) {
+                            const diaNombre = i === 1 ? "mañana" : "el " + diasSemana[diaCheck];
+                            textoProximo = `Abre ${diaNombre} a las ${formatearHora(rangosCheck[0].inicio)}`;
+                            encontrado = true;
+                            break;
+                        }
+                    }
+                }
+                if (!encontrado) textoProximo = "Horarios no disponibles";
+            }
+
+            statusEl.textContent = textoEstado;
+            statusEl.style.color = color;
+            if (nextEl) nextEl.textContent = textoProximo;
+        })();
+        </script>
+    </body>
+    </html>
+    
