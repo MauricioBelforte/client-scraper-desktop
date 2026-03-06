@@ -436,7 +436,8 @@ class TrelewLeadApp:
         # Filas de información
         self.create_info_row(body, "Categoría:", datos.get('categoria', 'General'))
         self.create_info_row(body, "📱 Teléfono:", datos.get('telefono', 'No disponible'))
-        self.create_info_row(body, "🌐 Web:", datos.get('website', 'No posee (Oportunidad)'))
+        self.create_info_row(body, "🌐 Web:", datos.get('website', 'No posee'))
+        self.create_info_row(body, "🏠 Dirección:", datos.get('direccion', 'No disponible'))
         self.create_info_row(body, "📍 Ciudad:", "Trelew, Chubut")
 
         # Separador visual
