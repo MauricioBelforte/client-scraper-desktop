@@ -135,8 +135,11 @@ TEMPLATES_POR_ARCHIVO = {
     "Kinesiólogos": {
         "intro": "Estoy ofreciendo mis servicios a kinesiólogos y centros de rehabilitación.",
         "modelos": [
-            "Modelo 1: https://espacio-psicologico-conexion.netlify.app/",
-            "Modelo 2: https://patagonia-urbana-inmobiliaria.netlify.app/"
+            "Modelo 1: https://kinesis-salud-integral.netlify.app/",
+            "Modelo 2: https://kinesis-vital-trelew.netlify.app/",
+            "Modelo 3: https://valle-azul-propiedades.netlify.app/",
+            "Modelo 4: https://la-miga-dorada.netlify.app/",
+            "Modelo 5: https://sabores-del-valle.netlify.app/"
         ]
     },
 
