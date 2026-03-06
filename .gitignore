@@ -15,6 +15,7 @@ fichas_leads/*.json
 fichas_respaldo/*.json
 Imagenes extras/
 sitios/
+demos/
 
 # Environment variables
 .env
