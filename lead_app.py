@@ -723,15 +723,43 @@ class TrelewLeadApp:
         """Abre una ventana de edición para los datos del lead."""
         edit_win = tk.Toplevel(self.root)
         edit_win.title(f"Editar: {nombre}")
-        edit_win.geometry("500x600")
+        edit_win.geometry("550x750")
         edit_win.configure(bg=constantes.COLOR_BLANCO)
         edit_win.transient(parent) # Hacerla modal respecto a la ficha
         edit_win.grab_set()
 
         tk.Label(edit_win, text="Editar Información", font=constantes.FUENTE_SUBTITULO, bg=constantes.COLOR_BLANCO, fg=constantes.COLOR_PRIMARIO, pady=15).pack()
 
-        form_frame = tk.Frame(edit_win, bg=constantes.COLOR_BLANCO, padx=20)
-        form_frame.pack(fill="both", expand=True)
+        # --- CONFIGURACIÓN DE SCROLL (Canvas + Scrollbar) ---
+        container = tk.Frame(edit_win, bg=constantes.COLOR_BLANCO)
+        container.pack(fill="both", expand=True)
+
+        canvas = tk.Canvas(container, bg=constantes.COLOR_BLANCO, highlightthickness=0)
+        scrollbar = ttk.Scrollbar(container, orient="vertical", command=canvas.yview)
+        form_frame = tk.Frame(canvas, bg=constantes.COLOR_BLANCO, padx=20, pady=10)
+
+        # Configurar el frame para que se expanda y actualice el scroll
+        form_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+        window_id = canvas.create_window((0, 0), window=form_frame, anchor="nw")
+        canvas.bind("<Configure>", lambda e: canvas.itemconfig(window_id, width=e.width))
+
+        canvas.configure(yscrollcommand=scrollbar.set)
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+
+        # Habilitar scroll con la rueda del ratón
+        def _on_mousewheel(event):
+            try:
+                canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+            except tk.TclError:
+                pass
+        canvas.bind_all("<MouseWheel>", _on_mousewheel)
+
+        # Limpiar evento al cerrar la ventana
+        def on_close():
+            canvas.unbind_all("<MouseWheel>")
+            edit_win.destroy()
+        edit_win.protocol("WM_DELETE_WINDOW", on_close)
 
         entries = {}
 
@@ -817,9 +845,9 @@ class TrelewLeadApp:
             parent.destroy() # Cerramos la ficha vieja
             self.mostrar_info_detallada(nombre_final, datos) # Abrimos la nueva actualizada
 
-        btn_guardar = tk.Button(edit_win, text="💾 GUARDAR CAMBIOS", bg=constantes.COLOR_BTN_INFO, fg="white",
+        btn_guardar = tk.Button(form_frame, text="💾 GUARDAR CAMBIOS", bg=constantes.COLOR_BTN_INFO, fg="white",
                                 font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2", command=guardar)
-        btn_guardar.pack(pady=20, fill="x", padx=20)
+        btn_guardar.pack(pady=20, fill="x")
 
     def abrir_alta_manual(self):
         """Abre un formulario completo para dar de alta un nuevo emprendimiento manualmente."""
@@ -2035,4 +2063,4 @@ class TrelewLeadApp:
 if __name__ == "__main__":
     root = tk.Tk()
     app = TrelewLeadApp(root)
-    root.mainloop()
+    root.mainloop()    
