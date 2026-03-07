@@ -26,7 +26,7 @@ except Exception as e:
 MODELOS_A_PROBAR = [
     "gemini-2.5-flash",
     "gemini-2.5-flash-lite",
-    "gemini-1.5-flash"
+    "gemini-1.5-flash-latest"
 ]
 
 def generar_contenido_ia(nombre_negocio, data_json):
@@ -129,7 +129,9 @@ def generar_contenido_ia(nombre_negocio, data_json):
                 time.sleep(delay)
                 # El bucle continuará con el siguiente intento
             except Exception as e:
-                print(f"[ERROR] Error con el modelo '{nombre_modelo}': {e}. Probando el siguiente modelo de respaldo...")
+                # Sanitize error message for printing on Windows consoles to prevent 'charmap' codec errors
+                error_message = str(e).encode('ascii', 'ignore').decode('ascii')
+                print(f"[ERROR] Error con el modelo '{nombre_modelo}': {error_message}. Probando el siguiente modelo de respaldo...")
                 break # Ir al siguiente modelo
 
     print(f"[FALLO] Fallaron todos los modelos de IA para '{nombre_negocio}'. El generador usara textos por defecto.")
@@ -176,7 +178,9 @@ def limpiar_datos_ia(data_json):
                 print(f"[AVISO] Cuota excedida para {nombre_modelo}. Reintentando en {delay} segundos...")
                 time.sleep(delay)
             except Exception as e:
-                print(f"[AVISO] Fallo limpieza con {nombre_modelo}: {e}")
+                # Sanitize error message for printing on Windows consoles
+                error_message = str(e).encode('ascii', 'ignore').decode('ascii')
+                print(f"[AVISO] Fallo limpieza con {nombre_modelo}: {error_message}")
                 break # Ir al siguiente modelo
             
     print("[ERROR] No se pudieron limpiar los datos con IA. Se usaran los originales.")
@@ -232,7 +236,9 @@ def generar_datos_demo(categoria):
                 print(f"[AVISO] Cuota excedida para {nombre_modelo}. Reintentando en {delay} segundos...")
                 time.sleep(delay)
             except Exception as e:
-                print(f"[AVISO] Fallo generación demo con {nombre_modelo}: {e}")
+                # Sanitize error message for printing on Windows consoles
+                error_message = str(e).encode('ascii', 'ignore').decode('ascii')
+                print(f"[AVISO] Fallo generación demo con {nombre_modelo}: {error_message}")
                 break # Ir al siguiente modelo
             
     return None
