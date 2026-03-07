@@ -42,8 +42,8 @@ TEMPLATES_POR_ARCHIVO = {
         "modelos": [
             "Modelo 1: https://sabores-del-valle.netlify.app/",
             "Modelo 2: https://sabor-patagonico.netlify.app/",
-            "Modelo 3: https://patagonia-habitat-inmobiliaria.netlify.app/",
-            "Modelo 4: https://centro-psicologico-conexion-interior.netlify.app/",
+            "Modelo 3: https://espacio-psicologico-conexion.netlify.app/",
+            "Modelo 4: https://cerveceria-rio-chubut.netlify.app/",
             "Modelo 5: https://tinta-austral.netlify.app/"
         ]
     },
@@ -100,8 +100,11 @@ TEMPLATES_POR_ARCHIVO = {
     "Gimnasios": {
         "intro": "Estoy ofreciendo mis servicios a gimnasios y centros de fitness locales.",
         "modelos": [
-            "Modelo 1: https://espacio-psicologico-conexion.netlify.app/",
-            "Modelo 2: https://patagonia-urbana-inmobiliaria.netlify.app/"
+            "Modelo 1: https://energia-fitness-trelew.netlify.app/",
+            "Modelo 2: https://punto-fit-trelew.netlify.app/",
+            "Modelo 3: https://kinesis-salud-integral.netlify.app/",
+            "Modelo 4: https://barberia-el-puerto.netlify.app/",
+            "Modelo 5: https://tecnofix-patagonia.netlify.app/"
         ]
     },
     "Odontólogos": {
@@ -179,9 +182,9 @@ TEMPLATES_POR_ARCHIVO = {
         "modelos": [
             "Modelo 1: https://tinta-austral.netlify.app/",
             "Modelo 2: https://tinta-patagonica-tattoo-studio.netlify.app/",
-            "Modelo 3: https://patagonia-urbana-inmobiliaria.netlify.app/",
-            "Modelo 4: https://valle-azul-propiedades.netlify.app/",
-            "Modelo 5: https://centro-psicologico-conexion-interior.netlify.app/"
+            "Modelo 3: https://barberia-el-puerto.netlify.app/",
+            "Modelo 4: https://el-patron-barberia.netlify.app/",
+            "Modelo 5: https://sabores-del-valle.netlify.app/"
         ]
     },
 
@@ -232,9 +235,9 @@ TEMPLATES_POR_ARCHIVO = {
         "modelos": [
             "Modelo 1: https://espacio-psicologico-conexion.netlify.app/",
             "Modelo 2: https://centro-psicologico-conexion-interior.netlify.app/",
-            "Modelo 3: https://patagonia-urbana-inmobiliaria.netlify.app/",
-            "Modelo 4: https://valle-azul-propiedades.netlify.app/",
-            "Modelo 5: https://tinta-austral.netlify.app/"
+            "Modelo 3: https://kinesis-salud-integral.netlify.app/",
+            "Modelo 4: https://kinesis-vital-trelew.netlify.app/",
+            "Modelo 5: https://glow-estetica-spa.netlify.app/"
         ]
     },
     "Servicios de Catering": {
