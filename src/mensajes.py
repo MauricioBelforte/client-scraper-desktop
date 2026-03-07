@@ -65,10 +65,13 @@ TEMPLATES_POR_ARCHIVO = {
         ]
     },
     "Pizzerías": {
-        "intro": "Estoy ofreciendo mis servicios a pizzerías y locales de comida.",
+           "intro": "Estoy ofreciendo mis servicios a pizzerías y locales de comida.",
         "modelos": [
-            "Modelo 1: https://centro-psicologico-conexion-interior.netlify.app/",
-            "Modelo 2: https://patagonia-urbana-inmobiliaria.netlify.app/"
+            "Modelo 1: https://pizzeria-la-fogata.netlify.app/",
+            "Modelo 2: https://la-casona-de-la-pizza.netlify.app/",
+            "Modelo 3: https://la-miga-dorada.netlify.app/",
+            "Modelo 4: https://valle-azul-propiedades.netlify.app/",
+            "Modelo 5: https://tinta-austral.netlify.app/"
         ]
     },
     "Panaderías": {
@@ -131,8 +134,11 @@ TEMPLATES_POR_ARCHIVO = {
     "Nutricionistas": {
         "intro": "Estoy ofreciendo mis servicios a nutricionistas y consultorios de salud.",
         "modelos": [
-            "Modelo 1: https://espacio-psicologico-conexion.netlify.app/",
-            "Modelo 2: https://patagonia-urbana-inmobiliaria.netlify.app/"
+            "Modelo 1: https://nutrivida-patagonia.netlify.app/",
+            "Modelo 2: https://nutriequilibrio-trelew-lic-ana-gimene.netlify.app/",
+            "Modelo 3: https://valle-azul-propiedades.netlify.app/",
+            "Modelo 4: https://sabor-patagonico.netlify.app/",
+            "Modelo 5: https://glow-estetica-spa.netlify.app/"
         ]
     },
     "Kinesiólogos": {
