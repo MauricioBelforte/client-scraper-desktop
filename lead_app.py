@@ -28,6 +28,7 @@ from generador_web import generar_web_profesional
 from src.enriquecedor import buscar_datos_externos, ejecutar_enriquecimiento_global
 from src.ui_search import BuscadorVisual
 from src.mensajes import generar_mensaje_whatsapp
+from src.sincronizador_leads import SincronizadorLeads
 
 def abrir_whatsapp(nombre, telefono, nombre_archivo="General"):
     """Abre WhatsApp Web con un mensaje personalizado basado en el archivo JSON."""
@@ -64,6 +65,9 @@ class TrelewLeadApp:
 
         # Inicializar Gestor de Datos
         self.gestor_datos = GestorDatos(constantes.CARPETA_DATOS)
+
+        # Inicializar Sincronizador de Leads
+        self.sincronizador = SincronizadorLeads(constantes.CARPETA_DATOS)
 
         # Configuración de Estilos para una apariencia moderna
         self.style = ttk.Style()
@@ -161,11 +165,23 @@ class TrelewLeadApp:
         # Se empaqueta automáticamente dentro de left_panel.
         self.buscador = BuscadorVisual(left_panel, self.tree)
 
-        # Botón para AGREGAR MANUALMENTE (Debajo del buscador)
-        self.btn_agregar = tk.Button(left_panel, text="➕ Agregar Emprendimiento", bg="#6c757d", fg="white",
+        # Frame para botones de acciones (Agregar y Sincronizar)
+        btn_frame = tk.Frame(left_panel, bg=constantes.COLOR_FONDO)
+        btn_frame.pack(fill="x", padx=5, pady=(0, 5))
+        btn_frame.columnconfigure(0, weight=1)
+        btn_frame.columnconfigure(1, weight=1)
+
+        # Botón para AGREGAR MANUALMENTE
+        self.btn_agregar = tk.Button(btn_frame, text="➕ Agregar", bg="#6c757d", fg="white",
                                      font=constantes.FUENTE_PEQUENA_NEGRITA, relief="flat", cursor="hand2", state="disabled",
                                      command=self.abrir_alta_manual)
-        self.btn_agregar.pack(fill="x", padx=5, pady=(0, 5))
+        self.btn_agregar.grid(row=0, column=0, padx=2, sticky="ew")
+
+        # Botón para SINCRONIZAR TODOS LOS DUPLICADOS
+        self.btn_sync_all = tk.Button(btn_frame, text="🔍 Sincronizar Todo", bg="#ff6b6b", fg="white",
+                                      font=constantes.FUENTE_PEQUENA_NEGRITA, relief="flat", cursor="hand2", state="disabled",
+                                      command=self.sincronizar_todos_duplicados_ficha)
+        self.btn_sync_all.grid(row=0, column=1, padx=2, sticky="ew")
         
         # Empaquetamos el treeview DESPUÉS del buscador para que quede abajo
         scrollbar = ttk.Scrollbar(left_panel, orient="vertical", command=self.tree.yview)
@@ -394,6 +410,7 @@ class TrelewLeadApp:
             
             self.log(f"Ficha '{seleccion}' cargada exitosamente. ({len(datos_cargados)} registros)")
             self.btn_agregar.config(state="normal") # Habilitar botón de agregar
+            self.btn_sync_all.config(state="normal") # Habilitar botón de sincronización
             
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo cargar la ficha: {e}")
@@ -502,6 +519,12 @@ class TrelewLeadApp:
                            font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2",
                            command=lambda: self.mostrar_info_detallada(nombre, datos))
         btn_info.pack(fill="x", pady=5)
+
+        # Botón para buscar duplicados
+        btn_duplicados = tk.Button(body, text="🔍 BUSCAR DUPLICADOS", bg="#ff6b6b", fg=constantes.COLOR_BLANCO, 
+                                 font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2",
+                                 command=lambda: self.buscar_duplicados(nombre))
+        btn_duplicados.pack(fill="x", pady=5)
 
         # --- SECCIÓN WEB MANUAL ---
         web_frame = tk.Frame(body, bg=constantes.COLOR_BLANCO)
@@ -660,7 +683,12 @@ class TrelewLeadApp:
         if nombre in self.prospectos_datos:
             datos = self.prospectos_datos[nombre]
             # Invertir estado
-            datos["propuesta_enviada"] = not datos.get("propuesta_enviada", False)
+            nuevo_estado = not datos.get("propuesta_enviada", False)
+            datos["propuesta_enviada"] = nuevo_estado
+            
+            # Si se marca como enviada, sincronizar con otras fichas
+            if nuevo_estado:
+                self.sincronizador.actualizar_lead_en_todas_fichas(nombre, {"propuesta_enviada": True})
             
             # Si se desmarca la propuesta global, opcionalmente podríamos limpiar los canales
             # pero por ahora mantenemos el estado por si fue un error de clic.
@@ -688,6 +716,256 @@ class TrelewLeadApp:
         
         # Refrescar panel lateral para actualizar el botón
         self.mostrar_detalle(None)
+
+    def buscar_duplicados(self, nombre):
+        """Busca si este lead existe en otras fichas y permite copiar datos del más completo."""
+        if not nombre:
+            return
+
+        self.log("Buscando duplicados en otras fichas...")
+
+        # Buscar en todas las fichas
+        resultados = self.sincronizador.buscar_lead_por_nombre(nombre)
+
+        if not resultados:
+            messagebox.showinfo("Sin Duplicados", f"No se encontraron duplicados de '{nombre}' en otras fichas.")
+            return
+
+        # Calcular scores y encontrar el más completo
+        def calcular_score(datos):
+            score = 0
+            canales = ['propuesta_wa', 'propuesta_ig', 'propuesta_fb', 'propuesta_mail']
+            for canal in canales:
+                if datos.get(canal):
+                    score += 10
+            campos_contacto = ['telefono', 'email', 'whatsapp', 'instagram', 'facebook', 'website']
+            for campo in campos_contacto:
+                valor = datos.get(campo, '')
+                if valor and str(valor).lower() not in ['no detectado', 'sin teléfono', 'no disponible', '']:
+                    score += 1
+            if datos.get('propuesta_enviada'):
+                score += 5
+            return score
+
+        scores = {archivo: calcular_score(datos) for archivo, datos in resultados.items()}
+        archivo_mas_completo = max(scores, key=scores.get)
+        max_score = scores[archivo_mas_completo]
+
+        # Mostrar resultados
+        mensaje = f"Se encontraron duplicados de '{nombre}' en {len(resultados)} fichas:\n\n"
+        for archivo, datos in resultados.items():
+            score = scores[archivo]
+            completo = " ⭐ MÁS COMPLETO" if archivo == archivo_mas_completo else ""
+            propuesta = "✅ Sí" if datos.get("propuesta_enviada") else "❌ No"
+            canales_contactados = sum(1 for c in ['propuesta_wa', 'propuesta_ig', 'propuesta_fb', 'propuesta_mail'] if datos.get(c))
+            mensaje += f"📁 {archivo}: Propuesta: {propuesta}, Canales: {canales_contactados}, Score: {score}{completo}\n"
+
+        mensaje += f"\n¿Copiar datos del lead más completo ({archivo_mas_completo}) a todas las fichas?"
+
+        if messagebox.askyesno("Duplicados Encontrados", mensaje):
+            # Obtener datos del más completo
+            datos_completos = resultados[archivo_mas_completo]
+
+            # Actualizar todas las fichas
+            archivos_actualizados = self.sincronizador.actualizar_lead_en_todas_fichas(nombre, datos_completos)
+            
+            # Actualizar datos locales si es necesario
+            if nombre in self.prospectos_datos:
+                self.prospectos_datos[nombre].update(datos_completos)
+                self._guardar_cambios_y_actualizar_ui(nombre, self.prospectos_datos[nombre])
+            
+            messagebox.showinfo("Datos Sincronizados", f"Datos copiados a {len(archivos_actualizados)} fichas adicionales.")
+
+    def sincronizar_todos_duplicados_ficha(self):
+        """Sincroniza TODOS los leads de la ficha actual buscando duplicados en otras fichas."""
+        if not self.prospectos_datos:
+            messagebox.showwarning("Sin Datos", "No hay emprendimientos en esta ficha para sincronizar.")
+            return
+
+        self.log("Sincronizando todos los duplicados...")
+        
+        informe = {
+            "total_leads": len(self.prospectos_datos),
+            "leads_con_duplicados": 0,
+            "fichás_actualizadas": 0,
+            "detalles": []
+        }
+
+        archivos_consolidados = set()
+
+        for nombre in list(self.prospectos_datos.keys()):
+            # Buscar duplicados para este lead
+            resultados = self.sincronizador.buscar_lead_por_nombre(nombre)
+            
+            if len(resultados) > 1:  # Solo si hay duplicados
+                informe["leads_con_duplicados"] += 1
+                
+                # Obtener datos completos del más completo
+                datos_completos = self.sincronizador.obtener_datos_completos_lead(nombre)
+                
+                if datos_completos:
+                    # Encontrar cuál es el más completo
+                    mejor_archivo, mejor_score = None, -1
+                    
+                    def calcular_score(datos):
+                        score = 0
+                        for canal in ['propuesta_wa', 'propuesta_ig', 'propuesta_fb', 'propuesta_mail']:
+                            if datos.get(canal):
+                                score += 10
+                        for campo in ['telefono', 'email', 'whatsapp', 'instagram', 'facebook', 'website']:
+                            if datos.get(campo) and str(datos.get(campo, '')).lower() not in ['no detectado', 'sin teléfono', 'no disponible', '']:
+                                score += 1
+                        if datos.get('propuesta_enviada'):
+                            score += 5
+                        return score
+                    
+                    for archivo, datos in resultados.items():
+                        score = calcular_score(datos)
+                        if score > mejor_score:
+                            mejor_score = score
+                            mejor_archivo = archivo
+                    
+                    # Actualizar todas las fichas
+                    archivos_actualizados = self.sincronizador.actualizar_lead_en_todas_fichas(nombre, datos_completos)
+                    
+                    for archivo in archivos_actualizados:
+                        archivos_consolidados.add(archivo)
+                    
+                    informe["fichás_actualizadas"] += len(archivos_actualizados)
+                    informe["detalles"].append({
+                        "nombre": nombre,
+                        "fuente": mejor_archivo,
+                        "fichas_actualizadas": len(archivos_actualizados)
+                    })
+
+        # Mostrar informe
+        self.mostrar_informe_sincronizacion(informe, archivos_consolidados)
+        
+        # Recargar datos si es la ficha actual
+        if self.archivo_activo:
+            self.prospectos_datos = self.gestor_datos.cargar_datos(self.archivo_activo)
+            self.cargar_leads_en_tabla()
+
+    def mostrar_informe_sincronizacion(self, informe, archivos_consolidados):
+        """Muestra un informe detallado de la sincronización realizada."""
+        # Crear ventana de informe
+        informe_win = tk.Toplevel(self.root)
+        informe_win.title("Informe de Sincronización")
+        informe_win.geometry("700x600")
+        informe_win.configure(bg=constantes.COLOR_BLANCO)
+        
+        # Header
+        header = tk.Frame(informe_win, bg=constantes.COLOR_PRIMARIO, pady=15)
+        header.pack(fill="x")
+        tk.Label(header, text="📊 Informe de Sincronización", font=constantes.FUENTE_SUBTITULO, 
+                 bg=constantes.COLOR_PRIMARIO, fg=constantes.COLOR_BLANCO).pack()
+        
+        # Resumen
+        resumen_text = f"""
+Total de Emprendimientos: {informe['total_leads']}
+Emprendimientos con Duplicados: {informe['leads_con_duplicados']}
+Fichas Actualizadas: {informe['fichás_actualizadas']}
+        """.strip()
+        
+        tk.Label(informe_win, text=resumen_text, font=constantes.FUENTE_PEQUENA, 
+                 bg=constantes.COLOR_BLANCO, justify="left", padx=15, pady=10).pack(fill="x")
+        
+        # Separador
+        tk.Frame(informe_win, height=2, bg=constantes.COLOR_BORDE).pack(fill="x", pady=5)
+        
+        # Canvas con Scrollbar para los detalles
+        container = tk.Frame(informe_win, bg=constantes.COLOR_BLANCO)
+        container.pack(fill="both", expand=True, padx=15, pady=10)
+        
+        canvas = tk.Canvas(container, bg=constantes.COLOR_BLANCO, highlightthickness=0)
+        scrollbar = ttk.Scrollbar(container, orient="vertical", command=canvas.yview)
+        detalles_frame = tk.Frame(canvas, bg=constantes.COLOR_BLANCO)
+        
+        detalles_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+        window_id = canvas.create_window((0, 0), window=detalles_frame, anchor="nw")
+        canvas.bind("<Configure>", lambda e: canvas.itemconfig(window_id, width=e.width))
+        
+        canvas.configure(yscrollcommand=scrollbar.set)
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+        
+        # Detalles de cada lead sincronizado
+        if informe["detalles"]:
+            tk.Label(detalles_frame, text="Detalles de Sincronización:", font=constantes.FUENTE_PEQUENA_NEGRITA, 
+                    bg=constantes.COLOR_BLANCO, justify="left").pack(anchor="w", pady=(0, 10))
+            
+            for detalle in informe["detalles"]:
+                texto = f"✅ {detalle['nombre']}\n   Fuente: {detalle['fuente']}\n   Fichas actualizadas: {detalle['fichas_actualizadas']}\n"
+                tk.Label(detalles_frame, text=texto, font=constantes.FUENTE_PEQUENA, 
+                        bg=constantes.COLOR_BLANCO, justify="left", wraplength=600).pack(anchor="w", pady=5)
+        
+        # Botón para guardar informe
+        btn_frame = tk.Frame(informe_win, bg=constantes.COLOR_BLANCO)
+        btn_frame.pack(fill="x", padx=15, pady=15)
+        btn_frame.columnconfigure(0, weight=1)
+        btn_frame.columnconfigure(1, weight=1)
+        
+        tk.Button(btn_frame, text="💾 Guardar Informe", bg=constantes.COLOR_BTN_INFO, fg="white",
+                 font=constantes.FUENTE_PEQUENA_NEGRITA, relief="flat", cursor="hand2",
+                 command=lambda: self.guardar_informe_txt(informe)).grid(row=0, column=0, padx=5, sticky="ew")
+        
+        tk.Button(btn_frame, text="Cerrar", bg="#6c757d", fg="white",
+                 font=constantes.FUENTE_PEQUENA_NEGRITA, relief="flat", cursor="hand2",
+                 command=informe_win.destroy).grid(row=0, column=1, padx=5, sticky="ew")
+
+    def guardar_informe_txt(self, informe):
+        """Guarda el informe de sincronización en un archivo txt."""
+        import os
+        from datetime import datetime
+        
+        # Crear carpeta si no existe
+        carpeta_informes = "sincronizacion_informes"
+        if not os.path.exists(carpeta_informes):
+            os.makedirs(carpeta_informes)
+        
+        # Generar nombre del archivo
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        rubro = self.archivo_activo.replace(".json", "") if self.archivo_activo else "general"
+        nombre_archivo = os.path.join(carpeta_informes, f"sincronizacion_{rubro}_{timestamp}.txt")
+        
+        # Generar contenido
+        contenido = f"""╔══════════════════════════════════════════════════════════════╗
+║          INFORME DE SINCRONIZACIÓN DE DUPLICADOS                       ║
+╚══════════════════════════════════════════════════════════════╝
+
+Fecha y Hora: {datetime.now().strftime("%d/%m/%Y %H:%M:%S")}
+Rubro: {rubro}
+
+RESUMEN:
+--------
+Total de Emprendimientos: {informe['total_leads']}
+Emprendimientos con Duplicados: {informe['leads_con_duplicados']}
+Fichas Actualizadas: {informe['fichás_actualizadas']}
+
+DETALLES DE SINCRONIZACIÓN:
+----------------------------
+"""
+        
+        for detalle in informe["detalles"]:
+            contenido += f"""
+✅ Emprendimiento: {detalle['nombre']}
+   Fuente de datos: {detalle['fuente']}
+   Fichas actualizadas: {detalle['fichas_actualizadas']}
+"""
+        
+        contenido += """
+═════════════════════════════════════════════════════════════
+Fin del Informe
+═════════════════════════════════════════════════════════════
+"""
+        
+        # Guardar archivo
+        try:
+            with open(nombre_archivo, 'w', encoding='utf-8') as f:
+                f.write(contenido)
+            messagebox.showinfo("Informe Guardado", f"Informe guardado en:\n{nombre_archivo}")
+        except Exception as e:
+            messagebox.showerror("Error", f"No se pudo guardar el informe:\n{str(e)}")
 
     def gestionar_web_manual(self, nombre):
         """Permite al usuario ingresar manualmente una URL para el negocio."""
@@ -1209,6 +1487,7 @@ class TrelewLeadApp:
             # Actualizar cache del buscador con históricos
             self.buscador.actualizar_cache()
             self.btn_agregar.config(state="normal") # Habilitar botón agregar
+            self.btn_sync_all.config(state="normal") # Habilitar botón de sincronización
             self.log(f"Se cargaron {len(self.prospectos_datos)} registros previos. Buscando actualizaciones...")
         
         threading.Thread(target=self.ejecutar_scraping, args=(rubro, estrategia), daemon=True).start()
