@@ -81,6 +81,7 @@ def generar_maqueta_v2(datos):
         /* Textos Generales */
         --color-texto-general: {paleta.get('texto_general', paleta['texto'])};
         --color-texto-hero: {paleta.get('texto_hero', '#ffffff')}; /* El hero siempre tiene fondo oscuro/imagen */
+        --color-lema-hero: {paleta.get('v2_lema_hero', '#e9e9e9')}; /* Para el lema pequeño y en mayúsculas */
         --color-texto-cards: {paleta.get('texto_cards', paleta['texto_inverso'])}; /* Solicitado explícitamente */
         
         /* Títulos */
@@ -122,6 +123,17 @@ def generar_maqueta_v2(datos):
     body {{ font-family: var(--fuente-base); background-color: var(--color-fondo-general); color: var(--color-texto-general); line-height: 1.6; }}
     img {{ max-width: 100%; height: auto; display: block; }}
     h1, h2, h3 {{ font-family: var(--fuente-secundaria); text-shadow: 0 1px 3px rgba(0,0,0,0.4); }}
+    
+    /* --- Estilo para el lema del Hero (copiado de V1) --- */
+    .lema-hero {{
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: var(--font-size-xxs);
+        opacity: 0.9;
+        margin-top: var(--espaciado-sm);
+        color: var(--color-lema-hero);
+        letter-spacing: 1px;
+    }}
     
     /* --- Barra de Navegación (Extraída de la web de ejemplo) --- */
     #nav {{ 
@@ -248,10 +260,8 @@ def generar_maqueta_v2(datos):
         <main>
             <section id="hero" class="seccion-hero">
                 <h1 class="el-messiri" style="text-transform: capitalize;">{nombre_negocio}</h1>
-                <p style="font-size: 1.5rem; margin-top: 0.5rem; font-weight: 300;">{lema_hero}</p>
-                <a href="{cta_button_link}" class="cta-button">{cta_button_text}</a>
-                <p style="font-size: 2rem; margin-top: 20vh;margin-bottom: 0.5rem; font-weight: 700;">{titulo_hero}</p>
-            </section>
+                <p href="{cta_button_link}" class="cta-button">{cta_button_text}</a>
+                <p style="font-size: 1.5rem; margin-top: 15vh; margin-bottom: 0.5r
 
             <section id="sobre-nosotros" class="seccion-ubicacion">
                 <h2 class="libre-baskerville">Sobre Nosotros</h2>

@@ -85,7 +85,7 @@ PALETAS_COLORES = {
             "fondo": "#111111",          # Negro
             "texto": "#e9e9e9",          # Blanco humo
             "texto_inverso": "#181818",  # Texto oscuro sobre dorado
-            "overlay": "#000000b8",      # Oscurecer fondo
+            "overlay": "#000000cc",      # Overlay FUERTE (Bares/Restaurantes)
             "fondo_tarjeta": "#ffffff",  # Fondo tarjeta (Blanco)
             "acento": "#c69f3a",         # Dorado oscuro
             
@@ -102,7 +102,7 @@ PALETAS_COLORES = {
             "titulo_h2": "#e9e9e9",
             "fondo_general": "#111111",
             "fondo_cards": "#ffffff",
-            "overlay_hero": "#000000b8",
+            "overlay_hero": "#000000cc",
             "borde_sutil": "rgba(255,255,255,0.1)",
 
             # --- Variables V1 (Específicas One Page) ---
@@ -135,7 +135,7 @@ PALETAS_COLORES = {
             "fondo": "#fffde7",          # Amarillo muy claro (Pastel) para un fondo suave y luminoso
             "texto": "#4e342e",          # Marrón oscuro para buen contraste y legibilidad
             "texto_inverso": "#4e342e",  # Marrón oscuro para texto sobre el rosa pastel (en lugar de blanco, para mejor legibilidad)
-            "overlay": "#0000004f",      # 
+            "overlay": "#00000000",      # Overlay NULO (H1 Marrón fuerte)
             "fondo_tarjeta": "#ffffff",  # Fondo tarjeta blanco para mantener la limpieza visual
             "acento": "#fa9fcb",         # Rosa más claro para acentos y detalles, manteniendo la armonía pastel
 
@@ -152,7 +152,7 @@ PALETAS_COLORES = {
             "titulo_h2": "#4e342e",
             "fondo_general": "#fffde7",
             "fondo_cards": "#ffffff",
-            "overlay_hero": "#0000004f",
+            "overlay_hero": "#00000000",
             "borde_sutil": "rgba(0,0,0,0.05)",
 
             # --- Variables V1 (Específicas One Page) ---
@@ -182,7 +182,7 @@ PALETAS_COLORES = {
             "fondo": "#dbdce2",          
             "texto": "#212529",          # Gris oscuro
             "texto_inverso": "#ffffff",  # Blanco sobre azul
-            "overlay": "#ffffff00",      # Aclarar fondo (Overlay blanco)
+            "overlay": "#0000001a",      # Overlay PEQUEÑO/CASI TRANSPARENTE (Medicina)
             "fondo_tarjeta": "#ffffff",  # Fondo tarjeta
             "acento": "#0b5ed7",         # Azul intenso
 
@@ -199,7 +199,7 @@ PALETAS_COLORES = {
             "titulo_h2": "#212529",
             "fondo_general": "#dbdce2",
             "fondo_cards": "#ffffff",
-            "overlay_hero": "#00000066", # Un poco de oscuridad para que el texto blanco del hero se lea
+            "overlay_hero": "#0000001a",
             "borde_sutil": "rgba(0,0,0,0.1)",
 
             # --- Variables V1 (Específicas One Page) ---
@@ -233,7 +233,7 @@ PALETAS_COLORES = {
             "fondo": "#313447",         # Fondo oscuro elegante
             "texto": "#c5ccd3",         # Texto gris claro
             "texto_inverso": "#152141", # Texto oscuro para botones
-            "overlay": "#00000066",     # Overlay
+            "overlay": "#0000004d",     # Overlay MEDIO (Profesional)
             "fondo_tarjeta": "#ffffff", # Tarjeta blanca
             "acento": "#5280c3",        # Azul medio (Hover)
 
@@ -251,7 +251,7 @@ PALETAS_COLORES = {
             "titulo_h2": "#e7f3ff",
             "fondo_general": "#313447",
             "fondo_cards": "#ffffff",
-            "overlay_hero": "#00000066",
+            "overlay_hero": "#0000004d",
             "borde_sutil": "#838383", # Borde gris medio para tarjetas
 
             # --- Variables V1 (Específicas One Page) ---
@@ -281,7 +281,7 @@ PALETAS_COLORES = {
             "fondo": "#fff0f5",          # Lavanda muy claro / Blanco rosado
             "texto": "#7a3c5c",          
             "texto_inverso": "#ffffff",  # Blanco sobre rosa
-            "overlay": "#0000004f",      # Oscurecer fondo (Overlay negro semitransparente)   
+            "overlay": "#0000001a",      # Overlay PEQUEÑO (Estética/Belleza)
             "fondo_tarjeta": "#ffe5fa",  # Fondo tarjeta (Rosa claro)
             "acento": "#c21b6c",         # Rosa oscuro
 
@@ -298,7 +298,7 @@ PALETAS_COLORES = {
             "titulo_h2": "#7a3c5c",
             "fondo_general": "#fff0f5", # Fondo rosado muy claro (como V1)
             "fondo_cards": "#ffffff",   # Tarjetas blancas (como V1)
-            "overlay_hero": "#0000004f",
+            "overlay_hero": "#0000001a",
             "borde_sutil": "rgba(240, 98, 146, 0.2)", # Borde rosado sutil
 
             # --- Variables V1 (Específicas One Page) ---
@@ -332,7 +332,7 @@ PALETAS_COLORES = {
             "fondo": "#F8F8F8",          # Blanco humo / Gris muy claro
             "texto": "#514a4a",          # Blanco
             "texto_inverso": "#ffffff",  # Blanco
-            "overlay": "#00000047",      # Oscuro semitransparente
+            "overlay": "#00000033",      # Overlay PEQUEÑO/MEDIO
             "fondo_tarjeta": "#ffffff",  # Fondo tarjeta
             "acento": "#804020",         # Marrón oscuro
 
@@ -349,7 +349,7 @@ PALETAS_COLORES = {
             "titulo_h2": "#514a4a",
             "fondo_general": "#F8F8F8",
             "fondo_cards": "#ffffff",
-            "overlay_hero": "#00000047",
+            "overlay_hero": "#00000033",
             "borde_sutil": "rgba(160, 82, 45, 0.1)",
 
             # --- Variables V1 (Específicas One Page) ---
@@ -370,7 +370,7 @@ PALETAS_COLORES = {
             "decoracion", "decoración", "decoraciones", "interiorismo", "sofa", "sofá", 
             "sofas", "sofás", "colchon", "colchón", "colchones", "colchonería", 
             "colchonerias", "carpinteria", "carpintería", "carpinterias", "carpinterías",
-            "bazar"
+            "bazar", "deco"
         ]
     },
     "NATURALEZA_FRESCA": {
@@ -379,7 +379,7 @@ PALETAS_COLORES = {
             "fondo": "#f0fff0",          # Honeydew (Verde muy pálido)
             "texto": "#1e4d2b",          # Verde muy oscuro (Corregido para contraste)
             "texto_inverso": "#ffffff",  # Blanco
-            "overlay": "#00000066",      # Overlay oscuro para contraste
+            "overlay": "#00000026",      # Overlay PEQUEÑO (Naturaleza/Fresco)
             "fondo_tarjeta": "#ffffff",  # Fondo tarjeta blanco
             "acento": "#218838",         # Verde oscuro
 
@@ -396,7 +396,7 @@ PALETAS_COLORES = {
             "titulo_h2": "#1e4d2b",
             "fondo_general": "#f0fff0",
             "fondo_cards": "#ffffff",
-            "overlay_hero": "#00000066",
+            "overlay_hero": "#00000026",
             "borde_sutil": "rgba(40, 167, 69, 0.1)",
 
             # --- Variables V1 (Específicas One Page) ---
@@ -429,7 +429,7 @@ PALETAS_COLORES = {
             "fondo": "#1a1a1a",         # Fondo oscuro
             "texto": "#f0f0f0",         # Texto claro
             "texto_inverso": "#111111",
-            "overlay": "#000000b8",     # Overlay oscuro
+            "overlay": "#000000d9",     # Overlay FUERTE (Barbería)
             "fondo_tarjeta": "#2a2a2a", # Tarjeta oscura (Gris muy oscuro)
             "acento": "#a67f4d",        # Bronce oscuro
 
@@ -446,7 +446,7 @@ PALETAS_COLORES = {
             "titulo_h2": "#f0f0f0",
             "fondo_general": "#1a1a1a",
             "fondo_cards": "#2a2a2a",
-            "overlay_hero": "#000000b8",
+            "overlay_hero": "#000000d9",
             "borde_sutil": "rgba(255,255,255,0.05)", # Borde claro sutil
 
             # --- Variables V1 (Específicas One Page) ---
@@ -470,7 +470,7 @@ PALETAS_COLORES = {
             "fondo": "#121212",         # Fondo muy oscuro, casi negro
             "texto": "#ffffff",         # Texto blanco puro
             "texto_inverso": "#000000", # Negro
-            "overlay": "#000000b3",     # Overlay muy oscuro (casi negro)
+            "overlay": "#000000e6",     # Overlay MUY FUERTE (Tattoo)
             "fondo_tarjeta": "#1e1e1e", # Tarjeta gris oscuro (casi negro)
             "acento": "#c62828",        # Rojo oscuro
 
@@ -487,7 +487,7 @@ PALETAS_COLORES = {
             "titulo_h2": "#ffffff",
             "fondo_general": "#121212",
             "fondo_cards": "#1e1e1e",
-            "overlay_hero": "#000000d9",
+            "overlay_hero": "#000000e6",
             "borde_sutil": "rgba(255,255,255,0.08)",
 
             # --- Variables V1 (Específicas One Page) ---
@@ -510,7 +510,7 @@ PALETAS_COLORES = {
             "fondo": "#1a1a1a",          # Gris muy oscuro
             "texto": "#f0f0f0",          # Blanco grisáceo
             "texto_inverso": "#ffffff",  # Blanco sobre azul
-            "overlay": "#00000066",      # Overlay más claro (40% opacidad) para ver el fondo
+            "overlay": "#00000000",      # Overlay NULO (H1 Azul Fuerte)
             "fondo_tarjeta": "#ffffff",  # Fondo tarjeta (Blanco)
             "acento": "#0056b3",         # Azul oscuro (Antes Naranja oscuro)
 
@@ -527,7 +527,7 @@ PALETAS_COLORES = {
             "titulo_h2": "#f0f0f0",
             "fondo_general": "#1a1a1a",
             "fondo_cards": "#ffffff",
-            "overlay_hero": "#00000066",
+            "overlay_hero": "#00000000",
             "borde_sutil": "rgba(255,255,255,0.1)",
 
             # --- Variables V1 (Específicas One Page) ---
@@ -609,7 +609,7 @@ PALETAS_COLORES = {
             "fondo": "#f8f9fa",         # Gris muy claro (limpio)
             "texto": "#212529",         # Negro suave
             "texto_inverso": "#ffffff", # Blanco
-            "overlay": "#0000001a",     # Overlay muy sutil para el hero
+            "overlay": "#0000001a",     # Overlay PEQUEÑO (Carnicería)
             "fondo_tarjeta": "#ffffff", # Tarjetas blancas
             "acento": "#a41e22",        # Rojo oscuro para hover
 
@@ -627,7 +627,7 @@ PALETAS_COLORES = {
             "titulo_h2": "#212529",
             "fondo_general": "#f8f9fa",
             "fondo_cards": "#ffffff",
-            "overlay_hero": "#0000004d", # Overlay para que el texto blanco del hero se lea
+            "overlay_hero": "#0000001a",
             "borde_sutil": "#dee2e6",
 
             # --- Variables V1 (Específicas One Page) ---

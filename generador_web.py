@@ -246,15 +246,23 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
     # Elige el conjunto de prompts correcto basado en la categoría para darle un estilo visual específico.
     prompts_por_categoria = {
         "SALUD": {
-            "keywords": ["veterinaria", "odont", "medico", "médico", "kinesio", "salud", "clinic", "clínica", "farmacia", "psicolog", "nutricion", "consultorio"],
+            "keywords": ["veterinaria", "odont", "medico", "médico", "kinesio", "salud", "clinic", "clínica", "farmacia", "psicolog", "nutricion", "consultorio", "psicologia"],
             "prompts": {
                 "logo": f"clean modern minimalist logo for health service, {nombre_negocio}",
                 "fondo": "bright modern medical office interior, clean, professional, high-key lighting, minimalist",
                 "testimonio": "happy patient talking to a professional, bright ambient, clean background, photorealistic, real person, 8k, photography style"
             }
         },
+        "PROFESIONAL_SERIO": {
+            "keywords": ["abogado", "contab", "estudio", "inmobiliaria", "arquitecto", "escribania", "consultora", "notaria", "arquitectura"],
+            "prompts": {
+                "logo": f"elegant and serious logo for a professional firm, {nombre_negocio}, minimalist, dark blue and gold",
+                "fondo": "modern and elegant office interior, minimalist design, professional atmosphere, cinematic lighting",
+                "testimonio": "professional person talking to a client in a modern office, serious and confident, photorealistic, real person, 8k, photography style"
+            }
+        },
         "ESTETICA": {
-            "keywords": ["peluqu", "estetic", "estética", "belleza", "uñas", "makeup", "spa", "moda"],
+            "keywords": ["peluqu", "estetic", "estética", "belleza", "uñas", "makeup", "maquillaje", "spa", "moda", "danza", "masaje", "depilacion", "manicura"],
             "prompts": {
                 "logo": f"elegant stylish logo for beauty salon, {nombre_negocio}",
                 "fondo": "bright luxury beauty salon interior, elegant, clean, high-key lighting, minimalist",
@@ -278,11 +286,27 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
             }
         },
         "NOCTURNO_GOURMET": {
-            "keywords": ["restaurante", "bar", "bares", "cerveceria", "cervecería", "pub", "disco", "hamburgueseria", "hamburguesería", "pizzeria", "pizzería", "sushi", "parrilla", "gastrono", "cafeteria", "cafetería", "evento", "hotel"],
+            "keywords": ["restaurante", "bar", "bares", "cerveceria", "cervecería", "pub", "disco", "hamburgueseria", "hamburguesería", "pizzeria", "pizzería", "sushi", "parrilla", "gastrono", "cafeteria", "cafetería", "evento", "hotel", "bodega", "vinoteca", "catering"],
             "prompts": {
                 "logo": f"elegant logo for restaurant or bar, {nombre_negocio}",
                 "fondo": "cozy restaurant or bar interior with warm lighting, cinematic, dramatic shadows",
                 "testimonio": "happy customers eating and drinking, warm ambient, bokeh, photorealistic, real people, 8k, photography style"
+            }
+        },
+        "PASTELERIA_PANADERIA": {
+            "keywords": ["heladeria", "pasteleria", "panaderia", "confiteria", "reposteria", "chocolate", "chocolateria"],
+            "prompts": {
+                "logo": f"sweet elegant logo for a bakery or pastry shop, {nombre_negocio}, pastel colors",
+                "fondo": "bright cozy bakery interior, display of delicious pastries and cakes, warm lighting, photorealistic",
+                "testimonio": "happy customer enjoying a delicious cake, smiling, bright cafe background, photorealistic, real person, 8k, photography style"
+            }
+        },
+        "CARNICERIA": {
+            "keywords": ["carniceria", "polleria"],
+            "prompts": {
+                "logo": f"classic and clean logo for a butcher shop, {nombre_negocio}, emblem style with a cow or chicken silhouette",
+                "fondo": "clean and modern butcher shop interior, display of fresh meat cuts, bright lighting, professional",
+                "testimonio": "happy customer buying fresh meat from a friendly butcher, clean shop background, photorealistic, real people, 8k, photography style"
             }
         },
         "FITNESS": {
@@ -293,16 +317,24 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
                 "testimonio": "person training in a gym, happy, sweating, fitness lifestyle, photorealistic, real person, 8k, photography style"
             }
         },
-        "CELULARES": {
-            "keywords": ["celular", "movil", "móvil", "telefonia", "telefonía", "smartphone", "iphone", "samsung", "reparacion", "reparación", "tecnico", "técnico", "fix", "xiaomi", "motorola"],
+        "TECNO_VENTA": {
+            "keywords": ["celular", "movil", "móvil", "telefonia", "telefonía", "smartphone", "iphone", "samsung", "xiaomi", "motorola", "accesorios celular", "tienda movil"],
             "prompts": {
-                "logo": f"modern minimalist logo for mobile phone shop or repair service, {nombre_negocio}, technology icon, circuit or phone silhouette, vector style, blue and grey colors",
-                "fondo": "modern high-tech mobile phone store interior with smartphones on display and repair workbench, clean lighting, futuristic design, professional photography",
+                "logo": f"modern minimalist logo for mobile phone shop, {nombre_negocio}, technology icon, circuit or phone silhouette, vector style, blue and grey colors",
+                "fondo": "modern high-tech mobile phone store interior with smartphones on display, clean lighting, futuristic design, professional photography",
                 "testimonio": "happy customer holding a new smartphone, smiling, modern tech store background, photorealistic, real person, 8k, photography style"
             }
         },
+        "TECNO_REPARACION": {
+            "keywords": ["reparacion celular", "servicio tecnico", "fix", "repair", "tecnico celular", "pantalla rota", "cambio de modulo", "computacion", "reparacion"],
+            "prompts": {
+                "logo": f"modern logo for a phone or computer repair service, {nombre_negocio}, with circuit or tool icon, blue and black colors",
+                "fondo": "tech repair workbench with tools and disassembled smartphones or laptops, focused lighting, detailed, professional photography",
+                "testimonio": "technician handing a repaired device to a happy customer, tech repair shop background, photorealistic, real person, 8k, photography style"
+            }
+        },
         "OFICIOS_TALLER": {
-            "keywords": ["taller", "mecanic", "mecánic", "ferreteria", "construc", "reparacion", "repuestos", "automotor", "chapa", "pintura", "obra", "electricista", "plomero"],
+            "keywords": ["taller", "mecanic", "mecánic", "ferreteria", "construc", "repuestos", "automotor", "chapa", "pintura", "obra", "electricista", "plomero", "pintureria"],
             "prompts": {
                 "logo": f"professional emblem logo for mechanic workshop or hardware store, {nombre_negocio}, industrial style",
                 "fondo": "clean organized mechanic workshop interior with cars and tools, professional lighting",
@@ -310,15 +342,23 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
             }
         },
         "MUEBLERIA": {
-            "keywords": ["muebleria", "mueblería", "muebles", "decoracion", "decoración", "interiorismo", "sofa", "colchon"],
+            "keywords": ["muebleria", "mueblería", "muebles", "decoracion", "decoración", "interiorismo", "sofa", "colchon", "bazar", "deco"],
             "prompts": {
                 "logo": f"elegant modern furniture store logo, minimalist, {nombre_negocio}, wood texture elements",
                 "fondo": "modern living room interior with stylish furniture, warm lighting, professional photography, high resolution, cozy atmosphere",
                 "testimonio": "happy family sitting on a comfortable sofa, smiling, bright living room background, photorealistic, real people, 8k, photography style"
             }
         },
+        "MASCOTAS": {
+            "keywords": ["pet shop", "mascota", "alimento balanceado", "forrajeria"],
+            "prompts": {
+                "logo": f"fun and friendly logo for a pet shop, {nombre_negocio}, featuring a cute animal silhouette",
+                "fondo": "bright and colorful pet shop interior, shelves full of pet products, happy pets, clean environment",
+                "testimonio": "happy person with their pet (dog or cat) in a pet shop, smiling, colorful background, photorealistic, real people, 8k, photography style"
+            }
+        },
         "NATURALEZA": {
-            "keywords": ["verduleria", "botanica", "jardineria", "jardinero", "vivero", "floreria", "organico", "dietetica", "fruteria"],
+            "keywords": ["verduleria", "botanica", "jardineria", "jardinero", "vivero", "floreria", "organico", "dietetica", "fruteria", "paisajismo"],
             "prompts": {
                 "logo": f"clean modern minimalist logo for a fresh market or garden store, {nombre_negocio}, green leaf icon",
                 "fondo": "bright modern grocery store interior with fresh vegetables and fruits, clean, natural light, professional photography",
