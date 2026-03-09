@@ -520,12 +520,6 @@ class TrelewLeadApp:
                            command=lambda: self.mostrar_info_detallada(nombre, datos))
         btn_info.pack(fill="x", pady=5)
 
-        # Botón para buscar duplicados
-        btn_duplicados = tk.Button(body, text="🔍 BUSCAR DUPLICADOS", bg="#ff6b6b", fg=constantes.COLOR_BLANCO, 
-                                 font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2",
-                                 command=lambda: self.buscar_duplicados(nombre))
-        btn_duplicados.pack(fill="x", pady=5)
-
         # --- SECCIÓN WEB MANUAL ---
         web_frame = tk.Frame(body, bg=constantes.COLOR_BLANCO)
         web_frame.pack(fill="x", pady=5)
@@ -567,6 +561,12 @@ class TrelewLeadApp:
                            font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2",
                            command=lambda: self.lanzar_generacion_web(nombre, datos, "v2"))
         btn_web_v2.grid(row=0, column=1, padx=2, sticky="ew")
+
+        # Botón para buscar duplicados
+        btn_duplicados = tk.Button(body, text="🔍 BUSCAR DUPLICADOS", bg="#ff6b6b", fg=constantes.COLOR_BLANCO, 
+                                 font=constantes.FUENTE_NEGRITA, relief="flat", cursor="hand2",
+                                 command=lambda: self.buscar_duplicados(nombre))
+        btn_duplicados.pack(fill="x", pady=5)
 
         # --- SECCIÓN ESTADO DE ANÁLISIS (NUEVO DISEÑO) ---
         propuesta_frame = tk.LabelFrame(body, text=" Estado del Análisis ", font=constantes.FUENTE_PEQUENA_NEGRITA, bg=constantes.COLOR_BLANCO, padx=10, pady=10)

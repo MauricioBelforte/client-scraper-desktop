@@ -103,14 +103,6 @@ class SincronizadorLeads:
                 datos_mas_completos = datos.copy()
                 archivo_mas_completo = archivo
 
-        # Combinar cualquier dato faltante de otros leads (por si acaso)
-        for archivo, datos in resultados.items():
-            if archivo != archivo_mas_completo:
-                for key, value in datos.items():
-                    if key not in datos_mas_completos or not datos_mas_completos[key]:
-                        if value and str(value).lower() not in ['no detectado', 'sin teléfono', 'no disponible', '']:
-                            datos_mas_completos[key] = value
-
         return datos_mas_completos
 
     def limpiar_duplicados_globales(self):
