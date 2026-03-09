@@ -260,8 +260,10 @@ def generar_maqueta_v2(datos):
         <main>
             <section id="hero" class="seccion-hero">
                 <h1 class="el-messiri" style="text-transform: capitalize;">{nombre_negocio}</h1>
-                <p href="{cta_button_link}" class="cta-button">{cta_button_text}</a>
-                <p style="font-size: 1.5rem; margin-top: 15vh; margin-bottom: 0.5r
+                <p class="lema-hero">{lema_hero}</p>
+                <a href="{cta_button_link}" class="cta-button">{cta_button_text}</a>
+                <p style="font-size: 1.5rem; margin-top: 15vh; margin-bottom: 0.5rem; font-weight: 300; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">{titulo_hero}</p>
+            </section>
 
             <section id="sobre-nosotros" class="seccion-ubicacion">
                 <h2 class="libre-baskerville">Sobre Nosotros</h2>

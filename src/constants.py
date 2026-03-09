@@ -737,5 +737,49 @@ PALETAS_COLORES = {
             "servicio técnico", "fix", "repair", "tecnico celular", "técnico celular",
             "pantalla rota", "cambio de modulo", "cambio de módulo"
         ]
+    },
+    "MONOCROMO_MINIMALISTA": {
+        "colores": {
+            "primario": "#000000",       # Negro Puro
+            "fondo": "#ffffff",          # Blanco Puro
+            "texto": "#212529",          # Gris muy oscuro (casi negro)
+            "texto_inverso": "#ffffff",  # Blanco
+            "overlay": "#00000080",      # Overlay negro al 50%
+            "fondo_tarjeta": "#f8f9fa",  # Gris muy claro
+            "acento": "#6c757d",         # Gris medio
+
+            # --- Variables V2 ---
+            "fondo_botones": "#000000",
+            "fondo_botones_hover": "#333333",
+            "texto_botones": "#ffffff",
+            "texto_general": "#212529",
+            "texto_hero": "#ffffff",
+            "v2_lema_hero": "#e9ecef",
+            "texto_cards": "#212529",
+            "titulos": "#000000",
+            "titulo_h1": "#ffffff",
+            "titulo_h2": "#000000",
+            "fondo_general": "#ffffff",
+            "fondo_cards": "#f8f9fa",
+            "overlay_hero": "#00000080",
+            "borde_sutil": "#dee2e6",
+
+            # --- Variables V1 ---
+            "v1_hero_titulo": "#ffffff",
+            "v1_hero_texto_secundario": "#f8f9fa",
+            "v1_hero_lema": "#e9ecef",
+            "v1_boton_fondo": "#000000",
+            "v1_boton_texto": "#ffffff",
+            "v1_seccion_fondo": "#ffffff",
+            "v1_seccion_titulos": "#000000",
+            "v1_seccion_texto": "#212529",
+            "v1_card_fondo": "#f8f9fa",
+            "v1_card_texto": "#212529",
+            "v1_card_borde": "#ced4da"
+        },
+        "categorias": [
+            "minimalista", "fotografia", "fotografía", "arte", "museo", 
+            "galeria", "galería", "estudio de diseño", "agencia", "monocromo"
+        ]
     }
 }

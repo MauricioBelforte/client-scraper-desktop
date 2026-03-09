@@ -204,8 +204,14 @@ def generar_web_profesional(nombre_negocio, data_json, textos_ai=None, carpeta_s
     categoria_slug = crear_slug(primera_palabra) or "general"
     nombre_slug = crear_slug(nombre_negocio)
     
-    # Nueva ruta dinámica: {carpeta_salida}/{categoria_slug}/{nombre_slug}
-    ruta_web = f"{carpeta_salida}/{categoria_slug}/{nombre_slug}"
+    # Ruta base del negocio: {carpeta_salida}/{categoria_slug}/{nombre_slug}
+    ruta_base_negocio = f"{carpeta_salida}/{categoria_slug}/{nombre_slug}"
+
+    # Determinar la carpeta de la versión (V1 o V2)
+    version_folder = "V1" if version == "v1" else "V2"
+
+    # Ruta final de la web, incluyendo la versión: {ruta_base}/{version_folder}
+    ruta_web = os.path.join(ruta_base_negocio, version_folder)
     os.makedirs(ruta_web, exist_ok=True)
     
     # Crear estructura para assets futuros (Punto 12)
