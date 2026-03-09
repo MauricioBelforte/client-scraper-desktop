@@ -94,10 +94,11 @@ PALETAS_COLORES = {
             "fondo_botones_hover": "#c69f3a",
             "texto_botones": "#181818",
             "texto_general": "#e9e9e9",
-            "texto_hero": "#ffffff",
+            "texto_hero": "#ffffff",     # Slogan
+            "v2_lema_hero": "#e9e9e9",   # Lema secundario
             "texto_cards": "#181818",    # Texto oscuro para tarjeta blanca
             "titulos": "#efc355",
-            "titulo_h1": "#ffffff",
+            "titulo_h1": "#efc355",      # Nombre del negocio
             "titulo_h2": "#e9e9e9",
             "fondo_general": "#111111",
             "fondo_cards": "#ffffff",
@@ -143,10 +144,11 @@ PALETAS_COLORES = {
             "fondo_botones_hover": "#fa9fcb",
             "texto_botones": "#4e342e",
             "texto_general": "#4e342e",
-            "texto_hero": "#ffffff",
+            "texto_hero": "#795548",
+            "v2_lema_hero": "#9a4972",
             "texto_cards": "#4e342e",
             "titulos": "#9a4972",        # Títulos suaves
-            "titulo_h1": "#ffffff",
+            "titulo_h1": "#4e342e",
             "titulo_h2": "#4e342e",
             "fondo_general": "#fffde7",
             "fondo_cards": "#ffffff",
@@ -190,6 +192,7 @@ PALETAS_COLORES = {
             "texto_botones": "#ffffff",
             "texto_general": "#212529",
             "texto_hero": "#ffffff",
+            "v2_lema_hero": "#e3f2fd",
             "texto_cards": "#212529",
             "titulos": "#0d6efd",
             "titulo_h1": "#ffffff",
@@ -240,7 +243,8 @@ PALETAS_COLORES = {
             "texto_botones": "#152141",
             "texto_botones_hover": "#ffffff",
             "texto_general": "#c5ccd3",
-            "texto_hero": "#d3a760",
+            "texto_hero": "#95c0ff",
+            "v2_lema_hero": "#c5ccd3",
             "texto_cards": "#214061",
             "titulos": "#95c0ff",
             "titulo_h1": "#ffffff",
@@ -287,6 +291,7 @@ PALETAS_COLORES = {
             "texto_botones": "#ffffff",
             "texto_general": "#7a3c5c",
             "texto_hero": "#ffffff",
+            "v2_lema_hero": "#ffe5fa",
             "texto_cards": "#7a3c5c", # Texto oscuro sobre tarjeta blanca
             "titulos": "#F06292",
             "titulo_h1": "#ffffff",
@@ -337,6 +342,7 @@ PALETAS_COLORES = {
             "texto_botones": "#ffffff",
             "texto_general": "#514a4a",
             "texto_hero": "#ffffff",
+            "v2_lema_hero": "#f0f0f0",
             "texto_cards": "#514a4a",
             "titulos": "#A0522D",
             "titulo_h1": "#ffffff",
@@ -363,7 +369,8 @@ PALETAS_COLORES = {
             "muebleria", "mueblería", "mueblerias", "mueblerías", "muebles", "mueble", 
             "decoracion", "decoración", "decoraciones", "interiorismo", "sofa", "sofá", 
             "sofas", "sofás", "colchon", "colchón", "colchones", "colchonería", 
-            "colchonerias", "carpinteria", "carpintería", "carpinterias", "carpinterías"
+            "colchonerias", "carpinteria", "carpintería", "carpinterias", "carpinterías",
+            "bazar"
         ]
     },
     "NATURALEZA_FRESCA": {
@@ -382,6 +389,7 @@ PALETAS_COLORES = {
             "texto_botones": "#ffffff",
             "texto_general": "#1e4d2b",
             "texto_hero": "#ffffff",
+            "v2_lema_hero": "#e8f5e9",
             "texto_cards": "#1e4d2b",
             "titulos": "#28a745",
             "titulo_h1": "#ffffff",
@@ -431,9 +439,10 @@ PALETAS_COLORES = {
             "texto_botones": "#111111",
             "texto_general": "#f0f0f0",
             "texto_hero": "#ffffff",
+            "v2_lema_hero": "#f0f0f0",
             "texto_cards": "#f0f0f0",   # Texto claro sobre tarjeta oscura
             "titulos": "#c89f68",
-            "titulo_h1": "#ffffff",
+            "titulo_h1": "#c89f68",
             "titulo_h2": "#f0f0f0",
             "fondo_general": "#1a1a1a",
             "fondo_cards": "#2a2a2a",
@@ -471,6 +480,7 @@ PALETAS_COLORES = {
             "texto_botones": "#ffffff", # Blanco sobre rojo
             "texto_general": "#ffffff",
             "texto_hero": "#ffffff",
+            "v2_lema_hero": "#cccccc",
             "texto_cards": "#ffffff",   # Blanco sobre tarjeta oscura
             "titulos": "#e53935",
             "titulo_h1": "#ffffff",
@@ -510,9 +520,10 @@ PALETAS_COLORES = {
             "texto_botones": "#ffffff",
             "texto_general": "#f0f0f0",
             "texto_hero": "#ffffff",
+            "v2_lema_hero": "#f0f0f0",
             "texto_cards": "#1a1a1a",    # Texto oscuro sobre tarjeta blanca (Inverso del general)
             "titulos": "#007bff",
-            "titulo_h1": "#ffffff",
+            "titulo_h1": "#007bff",
             "titulo_h2": "#f0f0f0",
             "fondo_general": "#1a1a1a",
             "fondo_cards": "#ffffff",
@@ -563,10 +574,11 @@ PALETAS_COLORES = {
             "texto_botones": "#12121f",
             "texto_botones_hover": "#12121f",
             "texto_general": "#ffffff",
-            "texto_hero": "#272727",    # Título Hero oscuro
+            "texto_hero": "#ffffff",    # Título Hero oscuro
+            "v2_lema_hero": "#65edff",
             "texto_cards": "#ffffff",
             "titulos": "#e7abc3",
-            "titulo_h1": "#272727",
+            "titulo_h1": "#fdee52",
             "titulo_h2": "#e7abc3",
             "fondo_general": "#292929",
             "fondo_cards": "#333333",
@@ -608,6 +620,7 @@ PALETAS_COLORES = {
             "texto_botones_hover": "#ffffff",
             "texto_general": "#212529",
             "texto_hero": "#ffffff",    # Texto blanco sobre imagen de hero
+            "v2_lema_hero": "#f8f9fa",
             "texto_cards": "#212529",
             "titulos": "#c8102e",
             "titulo_h1": "#ffffff",
@@ -650,7 +663,8 @@ PALETAS_COLORES = {
             "fondo_botones_hover": "#263238",
             "texto_botones": "#ffffff",
             "texto_general": "#263238",
-            "texto_hero": "#ffffff",
+            "texto_hero": "#ECEFF1",
+            "v2_lema_hero": "#CFD8DC",
             "texto_cards": "#263238",
             "titulos": "#455A64",
             "titulo_h1": "#ffffff",
@@ -695,9 +709,10 @@ PALETAS_COLORES = {
             "texto_botones": "#000000",
             "texto_general": "#ECEFF1",
             "texto_hero": "#ffffff",
+            "v2_lema_hero": "#ECEFF1",
             "texto_cards": "#ECEFF1",
             "titulos": "#29B6F6",
-            "titulo_h1": "#ffffff",
+            "titulo_h1": "#29B6F6",
             "titulo_h2": "#29B6F6",
             "fondo_general": "#121212",
             "fondo_cards": "#1E1E1E",
