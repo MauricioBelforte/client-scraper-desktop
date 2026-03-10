@@ -415,6 +415,23 @@ class TrelewLeadApp:
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo cargar la ficha: {e}")
 
+    def _recargar_treeview(self):
+        """Limpia y vuelve a cargar el Treeview con los datos actuales de self.prospectos_datos."""
+        try:
+            self.tree.delete(*self.tree.get_children())
+            
+            # Rellenar Treeview ORDENADO POR PRIORIDAD
+            items_ordenados = sorted(self.prospectos_datos.items(), key=lambda x: calcular_calidad_lead(x[1]), reverse=True)
+            
+            for nombre, datos in items_ordenados:
+                values = self._get_row_values(nombre, datos)
+                self.tree.insert("", "end", iid=nombre, values=values)
+            
+            # Actualizar el cache del buscador con los nuevos datos cargados
+            self.buscador.actualizar_cache()
+        except Exception as e:
+            messagebox.showerror("Error", f"No se pudo recargar la lista: {e}")
+
     def mostrar_detalle(self, event):
         """Genera y muestra la Card de detalle del emprendimiento seleccionado."""
         selected = self.tree.selection()
@@ -843,8 +860,8 @@ class TrelewLeadApp:
         
         # Recargar datos si es la ficha actual
         if self.archivo_activo:
-            self.prospectos_datos = self.gestor_datos.cargar_datos(self.archivo_activo)
-            self.cargar_leads_en_tabla()
+            self.prospectos_datos = self.gestor_datos.cargar_datos(self.archivo_activo) # Recargar desde disco por si otros archivos modificaron
+            self._recargar_treeview() # Actualizar la interfaz
 
     def mostrar_informe_sincronizacion(self, informe, archivos_consolidados):
         """Muestra un informe detallado de la sincronización realizada."""

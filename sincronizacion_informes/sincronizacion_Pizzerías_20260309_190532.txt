@@ -1,0 +1,83 @@
+╔══════════════════════════════════════════════════════════════╗
+║          INFORME DE SINCRONIZACIÓN DE DUPLICADOS                       ║
+╚══════════════════════════════════════════════════════════════╝
+
+Fecha y Hora: 09/03/2026 19:05:32
+Rubro: Pizzerías
+
+RESUMEN:
+--------
+Total de Emprendimientos: 21
+Emprendimientos con Duplicados: 16
+Fichas Actualizadas: 46
+
+DETALLES DE SINCRONIZACIÓN:
+----------------------------
+
+✅ Emprendimiento: Master Cheff parrilla Trelew
+   Fuente de datos: Pizzerías
+   Fichas actualizadas: 4
+
+✅ Emprendimiento: Roselli Pizza Bar
+   Fuente de datos: Cervecerías
+   Fichas actualizadas: 3
+
+✅ Emprendimiento: Popey
+   Fuente de datos: Pizzerías
+   Fichas actualizadas: 2
+
+✅ Emprendimiento: Natanael Sandwichería
+   Fuente de datos: Cafeterías
+   Fichas actualizadas: 5
+
+✅ Emprendimiento: La Pizzeria y Empanaderia del Raul
+   Fuente de datos: Pizzerías
+   Fichas actualizadas: 2
+
+✅ Emprendimiento: Primitivos
+   Fuente de datos: Pizzerías
+   Fichas actualizadas: 2
+
+✅ Emprendimiento: Bamboo
+   Fuente de datos: Carnicerías
+   Fichas actualizadas: 3
+
+✅ Emprendimiento: La Focaccia
+   Fuente de datos: Cafeterías
+   Fichas actualizadas: 4
+
+✅ Emprendimiento: Delicias
+   Fuente de datos: Cafeterías
+   Fichas actualizadas: 4
+
+✅ Emprendimiento: Cacerika pizzas
+   Fuente de datos: Pizzerías
+   Fichas actualizadas: 2
+
+✅ Emprendimiento: Cafe DONCAЯ
+   Fuente de datos: Cafeterías
+   Fichas actualizadas: 4
+
+✅ Emprendimiento: Pronto Pizza SA
+   Fuente de datos: Rotiseria
+   Fichas actualizadas: 2
+
+✅ Emprendimiento: Pizzeria Roselli Irigoyen
+   Fuente de datos: Pizzerías
+   Fichas actualizadas: 2
+
+✅ Emprendimiento: El Almacén de Román
+   Fuente de datos: Pizzerías
+   Fichas actualizadas: 2
+
+✅ Emprendimiento: rotiseria la chacha
+   Fuente de datos: Pizzerías
+   Fichas actualizadas: 3
+
+✅ Emprendimiento: Rotiserias San Cayetano
+   Fuente de datos: Pizzerías
+   Fichas actualizadas: 2
+
+═════════════════════════════════════════════════════════════
+Fin del Informe
+═════════════════════════════════════════════════════════════

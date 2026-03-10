@@ -1,0 +1,79 @@
+╔══════════════════════════════════════════════════════════════╗
+║          INFORME DE SINCRONIZACIÓN DE DUPLICADOS                       ║
+╚══════════════════════════════════════════════════════════════╝
+
+Fecha y Hora: 09/03/2026 18:07:19
+Rubro: Cervecerías
+
+RESUMEN:
+--------
+Total de Emprendimientos: 24
+Emprendimientos con Duplicados: 15
+Fichas Actualizadas: 37
+
+DETALLES DE SINCRONIZACIÓN:
+----------------------------
+
+✅ Emprendimiento: Antares Trelew
+   Fuente de datos: Bares
+   Fichas actualizadas: 2
+
+✅ Emprendimiento: BARDO - Cerveza Artesanal
+   Fuente de datos: Bares
+   Fichas actualizadas: 3
+
+✅ Emprendimiento: CERVEZA BIRRAT
+   Fuente de datos: Bares
+   Fichas actualizadas: 2
+
+✅ Emprendimiento: Birra Amapola
+   Fuente de datos: Bares
+   Fichas actualizadas: 2
+
+✅ Emprendimiento: SERES cerveceria Y lomoteca
+   Fuente de datos: Bares
+   Fichas actualizadas: 2
+
+✅ Emprendimiento: Tercer Tiempo
+   Fuente de datos: Bares
+   Fichas actualizadas: 2
+
+✅ Emprendimiento: Estación Las Chapas
+   Fuente de datos: Bares
+   Fichas actualizadas: 2
+
+✅ Emprendimiento: Punto Pulpo
+   Fuente de datos: Bares
+   Fichas actualizadas: 4
+
+✅ Emprendimiento: Welert parrilla y cerveceria
+   Fuente de datos: Bares
+   Fichas actualizadas: 4
+
+✅ Emprendimiento: Jyglo,
+   Fuente de datos: Bares
+   Fichas actualizadas: 3
+
+✅ Emprendimiento: D I N A resto bar
+   Fuente de datos: Cervecerías
+   Fichas actualizadas: 2
+
+✅ Emprendimiento: La Buena Cepa
+   Fuente de datos: Cervecerías
+   Fichas actualizadas: 2
+
+✅ Emprendimiento: PATIO BOX
+   Fuente de datos: Cervecerías
+   Fichas actualizadas: 2
+
+✅ Emprendimiento: Nuri Bikelas
+   Fuente de datos: Bares
+   Fichas actualizadas: 2
+
+✅ Emprendimiento: Roselli Pizza Bar
+   Fuente de datos: Cervecerías
+   Fichas actualizadas: 3
+
+═════════════════════════════════════════════════════════════
+Fin del Informe
+═════════════════════════════════════════════════════════════
