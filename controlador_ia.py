@@ -24,9 +24,15 @@ except Exception as e:
 
 # Lista de modelos a probar en orden de preferencia (Restaurados a petición del usuario)
 MODELOS_A_PROBAR = [
+   
     "gemini-2.5-flash",
     "gemini-2.5-flash-lite",
-    "gemini-1.5-flash-latest"
+    "gemini-1.5-flash-latest",
+    "gemini-1.5-flash",
+    "gemini-1.5-flash-8b",
+    "gemini-1.5-pro",
+    "gemini-2.0-flash-exp",
+    "gemini-1.5-flash",
 ]
 
 def generar_contenido_ia(nombre_negocio, data_json):

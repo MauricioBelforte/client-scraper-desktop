@@ -50,8 +50,11 @@ TEMPLATES_POR_ARCHIVO = {
     "Cafeterías": {
         "intro": "Estoy ofreciendo mis servicios a cafeterías y emprendimientos locales para destacar sus productos.",
         "modelos": [
-            "Modelo 1: https://centro-psicologico-conexion-interior.netlify.app/",
-            "Modelo 2: https://patagonia-urbana-inmobiliaria.netlify.app/"
+            "Modelo 1: https://sabores-del-valle.netlify.app/",
+            "Modelo 2: https://sabor-patagonico.netlify.app/",
+            "Modelo 3: https://la-miga-dorada.netlify.app/",
+            "Modelo 4: https://el-horno-patagonico.netlify.app/",
+            "Modelo 5: https://tinta-austral.netlify.app/"
         ]
     },
     "Cervecerías": {

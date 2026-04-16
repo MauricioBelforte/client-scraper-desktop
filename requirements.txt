@@ -2,6 +2,7 @@ selenium
 webdriver-manager
 python-dotenv
 requests
+google-generativeai
 
 # dependencies for running the automated test suite
 pytest
